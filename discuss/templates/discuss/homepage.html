@@ -1,0 +1,409 @@
+{% extends 'Core/snippets/base.html' %}
+
+{% load crispy_forms_tags %}
+{% block header %}
+{% include 'Core/snippets/header.html' %}
+{% endblock %}
+
+{% block style %}
+
+.django-ckeditor-widget{
+    width: 100%;
+  } 
+  .slider {
+    position: fixed;
+    width: 100%;
+    {% if not method == 'General' %}
+    height: 74%;
+    {% else %}
+    height:68%;
+    {% endif %}
+    border-top:1px solid rgb(0,0,0,0.05);
+    bottom:0;
+    overflow: hidden;
+    background-color:#fff;
+    box-shadow:2px 2px 10px rgb(0,0,0,0.2);
+    transition: all 1s;
+    overflow-y:scroll;
+  }
+  
+  .slider.close {
+   bottom:0;
+    height: 0;
+  }
+  #div_id_title label{
+      display:none;
+  }
+  .con:hover{
+      background-color:#FAFAFA;
+    
+  }
+{% endblock %}
+{% block body %}
+<div class="container-fluid">
+    <div class="row mt-5">
+        <div class="col-12 col-md-3 col-lg-2 pt-2" >
+            <div class="row pt-3" style="position: sticky; top:3rem;">
+                <div class="col-12">
+                    <a href="/discuss/?method=General" style="text-decoration: none;">
+                    <div class="card shadow-sm " style=" border-radius:0px; height:100px; border:0px;{% if method == 'General' %} border-left:2px solid #C42D63; background-color:rgb(196,45,99,0.1); {% endif %}" >
+                        <div style="position: absolute; top:0.3rem; left:0.3rem;color:rgb(196,45,99,0.2);" data-toggle="tooltip" title="Ask your doubts, questions, queries here and discuss these with others. " >
+                            <i class="fa fa-info-circle"></i>
+                        </div>
+                        <div class="card-body  ">
+
+                            <center>
+                                <p class="text-muted mt-3 mb-0" style="font-weight: 500;">
+                                    What is your Question?
+
+                                </p>
+                            </center>
+                            <center><p class="text-muted" style="font-size: 10px;">( Ask and Anwser )</p></center>
+                           
+                        </div>
+                    </div>
+                    </a>
+                </div>
+
+                <div class="col-12  mt-3">
+                    <a href="/discuss/?method=Experience" style="text-decoration: none;">
+                    <div class="card shadow-sm" style="border-radius:0px; height:100px;  border:0px;{% if method == 'Experience' %} border-left:2px solid #C42D63; background-color:rgb(196,45,99,0.1); {% endif %}">
+                        <div style="position: absolute; top:0.3rem; left:0.3rem;color:rgb(196,45,99,0.2);" data-toggle="tooltip" title="Read and write interview experience">
+                            <i class="fa fa-info-circle"></i>
+                        </div>
+                        <div class="card-body d-flex align-items-center justify-content-center">
+                            <center>
+                                <p class="text-muted mt-3" style="font-weight: 500;">
+                                    Interview Experience
+                                </p>
+                            </center>
+                        </div>
+                    </div>
+                    </a>
+                </div>
+
+                <div class="col-12 mt-3">
+                    <a href="/discuss/?method=Question" style="text-decoration: none;">
+                    <div class="card shadow-sm" style="border-radius:0px; height:100px;  border:0px;{% if method == 'Question' %} border-left:2px solid #C42D63;  background-color:rgb(196,45,99,0.1); {% endif %}">
+                        <div style="position: absolute; top:0.3rem; left:0.3rem;color:rgb(196,45,99,0.2);">
+                            <i class="fa fa-info-circle"></i>
+                        </div>
+                        <div class="card-body">
+                            <center>
+                                <p class="text-muted mt-3" style="font-weight: 500;">
+                                    Interview Question
+                                </p>
+                            </center>
+                        </div>
+                    </div>
+                    </a>
+                </div>
+
+                <div class="col-12 mt-3">
+                    <a href="/discuss/?method=Career" style="text-decoration: none;">
+                    <div class="card shadow-sm" style="border-radius:0px; height:100px;  border:0px;{% if method == 'Career' %} border-left:2px solid #C42D63;  background-color:rgb(196,45,99,0.1); {% endif %}">
+                        <div style="position: absolute; top:0.3rem; left:0.3rem;color:rgb(196,45,99,0.2);">
+                            <i class="fa fa-info-circle"></i>
+                        </div>
+                        <div class="card-body">
+                            <center>
+                                <p class="text-muted mt-3" style="font-weight: 500;">
+                                    Career and Opportunities
+                                </p>
+                            </center>
+                        </div>
+                    </div>
+                    </a>
+                </div>
+
+                <div class="col-12 mt-3">
+                    <a href="/discuss/?method=Blogs" style="text-decoration: none;">
+                    <div class="card shadow-sm" style=" border-radius:0px; height:100px;  border:0px;{% if method == 'Blogs' %} border-left:2px solid #C42D63; background-color:rgb(196,45,99,0.1); {% endif %}">
+                        <div style="position: absolute; top:0.3rem; left:0.3rem;color:rgb(196,45,99,0.2);">
+                            <i class="fa fa-info-circle"></i>
+                        </div>
+                        <div class="card-body">
+                            <center>
+                                <p class="text-muted mt-3" style="font-weight: 500;">
+                                    Blogs
+                                </p>
+                            </center>
+                         </div>
+                    </div>
+                    </a>
+                </div>
+
+                <div class="col-12 mt-3">
+                    <a href="/discuss/?method=Support" style="text-decoration: none;">
+                    <div class="card shadow-sm" style=" border-radius:0px; height:100px;  border:0px;{% if method == 'Support' %} border-left:2px solid #C42D63; background-color:rgb(196,45,99,0.1); {% endif %}">
+                        <div style="position: absolute; top:0.3rem; left:0.3rem;color:rgb(196,45,99,0.2);">
+                            <i class="fa fa-info-circle"></i>
+                        </div>
+                        <div class="card-body">
+                            <center>
+                                <p class="text-muted mt-2" style="font-weight: 500;">
+                                    Support & Help & Feedback
+                                </p>
+                            </center>
+                        </div>
+                    </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-md-7 col-lg-8 mt-3 p-3" style="">
+            <div class="card shadow-sm border-0" style="box-shadow: 2px 2px 10px rgb(0,0,0,0.05);">
+                <div class="card-body p-0 d-flex justify-content-between align-items-center" style="background-color:#FAFAFA; ">
+                    <div class="d-flex justify-content-start ">
+                    <div style="width:30px; height:30px; border-radius: 50%;" class="d-flex justify-content-center bg-dark ml-2" >
+                        <p style=" font-size: 14px; font-weight: 600; color:white;" class="mt-1">{{request.user.username|first|capfirst}}</p>
+                        
+                    </div>
+                    <div style="font-size: 12px;" class="text-muted d-flex justify-content-start align-items-center border-left ml-2">
+                        <a class="ml-3 text-muted" style="text-decoration: none;" href="/discuss/?method={{method}}"> Filter All</a>
+                        <a class="ml-3 text-muted" style="text-decoration: none;" href="/discuss/?method={{method}}"> Most Liked</a>
+                        
+                    </div>
+                    </div>
+
+                    <div  class="d-flex justify-content-end pt-2 pb-2 pr-2" >
+                        <input  class="form-control mr-2" type="text" style="width:200px; height:35px; font-size: 12px;" placeholder="Search Tags, Keywords ... ">
+                        <div>
+                            <a class="btn btn-sm border text-white trigger p-2" style="font-size: 12px; background-color: #C42D63;" ><i class="fa fa-plus"></i> New</a>
+                        </div>
+                        </div>
+                
+                       
+                </div>
+            </div>
+            <div class="card border-0">
+                {% for x in pinned %}
+                  
+                <div class="card-body p-3 pt-4 pb-4 border-bottom con" >
+                    <div style="position: absolute; top:0.1rem; left:0.3rem; color:#C42D63">
+                        <i class="fa fa-thumb-tack"></i>
+                    </div>
+                <div class="d-flex justify-content-between" >
+                    <div class="d-flex justify-content-start" style="width:80%;">
+                        <div>
+                            <img src="/media/{{x.user.profile.avatar}}/" style="height:40px; width:40px; border-radius:50%;">
+                        </div>
+                        <div class="ml-3">
+                             <div class="" style="">
+                                <p class="text-muted" style="font-size: 11px; margin-bottom: 0px;">Posted by {% if not x.anonymous %}<a style="text-decoration: none;" href="/profile/{{x.user}}/">{{x.user.profile.first_name}} {{x.user.profile.last_name}}</a>{% else %}<span class="text-dark" style="font-weight: 600;">Anonymous User</span>{% endif %}, {{x.created}}</p>
+                            </div>
+                            <a href="/discuss/{{method}}/inbox/{{x.id}}/" style="text-decoration: none; ">
+                                <div style="width:100%; display:flex; flex-wrap:wrap; " class="mt-1 text-dark">
+                                    {% if x.title2 %}
+                                    <p class="" style=" font-size: 14px;">{{x.title2|safe}}</p>
+                                    {% else %}
+                                <p class="" style=" font-size: 14px;">{{x.title|safe}}</p>
+                                {% endif %}
+                            </div>
+                        </a>
+                            <div style=" margin-top: -10px;">
+                                <span class="" style="">
+                                  
+                                    {% for i in x.tags %}
+                                    {% if i %}
+                                    <a href="?tags={{i}}&method={{method}}" class="btn btn-sm border btn-outline-dark mb-1" href="#" style="font-size: 11px;">{{i}}</a>
+                                    {% endif %}
+                                    {% endfor %}
+                                </span>
+                            </div>
+                            
+                              
+                        
+                           
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-end">
+                        <div style="font-size:12px;">
+                            <a class=" btn fa fa-thumbs-up pr-1" style="color: #E0E0E0;"></a><span style="font-size: 12px;" class="">{{x.like.all.count}}</span>
+                            <a class=" btn fa fa-thumbs-down  pr-1" style="color: #E0E0E0;"></a><span style="font-size: 12px;" class="">{{x.dislike.all.count}}</span>
+                            <a class="btn fa fa-comment  pr-1" style="color: #E0E0E0;"></a><span style="font-size: 12px;" class="">{{x.quora_comment.all.count}}</span>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+                {% endfor %}
+                    {% for x in data %}
+                  
+                    <div class="card-body p-3 pt-4 pb-4 border-bottom con" >
+
+                    <div class="d-flex justify-content-between" >
+                        <div class="d-flex justify-content-start" style="width:80%;">
+                            <div>
+                                <img src="/media/{{x.user.profile.avatar}}/" style="height:40px; width:40px; border-radius:50%;">
+                            </div>
+                            <div class="ml-3">
+                                 <div class="" style="">
+                                    <p class="text-muted" style="font-size: 11px; margin-bottom: 0px;">Posted by {% if not x.anonymous %}<a style="text-decoration: none;" href="/profile/{{x.user}}/">{{x.user.profile.first_name}} {{x.user.profile.last_name}}</a>{% else %}<span class="text-dark" style="font-weight: 600;">Anonymous User</span>{% endif %}, {{x.created}}</p>
+                                </div>
+                                <a href="/discuss/{{method}}/inbox/{{x.id}}/" style="text-decoration: none; ">
+                                    <div style="width:100%; display:flex; flex-wrap:wrap; " class="mt-1 text-dark">
+                                        {% if x.title2 %}
+                                        <p class="" style=" font-size: 14px;">{{x.title2|safe}}</p>
+                                        {% else %}
+                                    <p class="" style=" font-size: 14px;">{{x.title|safe}}</p>
+                                    {% endif %}
+                                </div>
+                            </a>
+                                <div style=" margin-top: -10px;">
+                                    <span class="" style="">
+                                      
+                                        {% for i in x.tags %}
+                                        {% if i %}
+                                        <a href="?tags={{i}}&method={{method}}" class="btn btn-sm border btn-outline-dark mb-1" href="#" style="font-size: 11px;">{{i}}</a>
+                                        {% endif %}
+                                        {% endfor %}
+                                    </span>
+                                </div>
+                                
+                                  
+                            
+                               
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-end">
+                            <div style="font-size:12px;">
+                                <a class=" btn fa fa-thumbs-up pr-1" style="color: #E0E0E0;"></a><span style="font-size: 12px;" class="">{{x.like.all.count}}</span>
+                                <a class=" btn fa fa-thumbs-down  pr-1" style="color: #E0E0E0;"></a><span style="font-size: 12px;" class="">{{x.dislike.all.count}}</span>
+                                <a class="btn fa fa-comment  pr-1" style="color: #E0E0E0;"></a><span style="font-size: 12px;" class="">{{x.quora_comment.all.count}}</span>
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                    {% endfor %}
+                <!--
+                    <nav aria-label="Page navigation example">
+                        <ul class="pagination justify-content-end mt-2 mr-2" style="font-size: 12px;">
+                          <li class="page-item disabled">
+                            <a class="page-link" href="#" tabindex="-1">Previous</a>
+                          </li>
+                          <li class="page-item"><a class="page-link" href="#">1</a></li>
+                          <li class="page-item"><a class="page-link" href="#">2</a></li>
+                          <li class="page-item"><a class="page-link" href="#">3</a></li>
+                          <li class="page-item">
+                            <a class="page-link" href="#">Next</a>
+                          </li>
+                        </ul>
+                      </nav>
+                -->
+                   
+             
+            </div>
+        </div>
+
+        <div class="col-12 col-md-2 col-lg-2 mt-3 pt-3" style="">
+            <div class="card shadow-sm border-0" style="height:300px;  position: sticky; top:4rem;">
+                <div class="card-header pb-0 d-flex align-items-center text-muted" style="background-color: white; font-size: 14px; font-weight: 600; ">
+                    <p class="">Tags</p>
+                </div>
+                <div class="card-body">
+
+                </div>
+            </div>
+        </div>
+        <div class="slider close" style="z-index:1000;">
+            <div class="row">
+                <div class="col-12 d-flex justify-content-between align-items-center p-2 pr-4" style="background-color: #FAFAFA;">
+                    <div class="d-flex align-items-center">
+                        {% if method == 'General' %}
+                        <p class=" mt-3 p-0 text-muted ml-4" style="font-size: 16px; font-weight: 500;">What is Your Question? </p> <span style="font-size: 10px; " class="text-muted ml-2"> ( Ask and anwser the question of your choice... ) </span>
+                        {% elif method == 'Experience' %}
+                        <p class=" mt-3 p-0 text-muted ml-4" style="font-size: 16px; font-weight: 500;">Share Your Interview Experience ... </p> <span style="font-size: 10px; " class="text-muted ml-2"></span>
+                        {% elif method == 'Question' %}
+                        <p class=" mt-3 p-0 text-muted ml-4" style="font-size: 16px; font-weight: 500;">Write Interview Questions to help your friends ... </p> <span style="font-size: 10px; " class="text-muted ml-2"></span>
+                        
+                        {% elif method == 'Career' %}
+                        <p class=" mt-3 p-0 text-muted ml-4" style="font-size: 16px; font-weight: 500;">Career and Opportunities </p> <span style="font-size: 10px; " class="text-muted ml-2"></span>
+                        
+                        {% elif method == 'Blogs' %}
+                        <p class=" mt-3 p-0 text-muted ml-4" style="font-size: 16px; font-weight: 500;">Blogs </p> <span style="font-size: 10px; " class="text-muted ml-2"></span>
+                        
+                        {% elif method == 'Support' %}
+                        <p class=" mt-3 p-0 text-muted ml-4" style="font-size: 16px; font-weight: 500;">Support & Help & Feedback </p> <span style="font-size: 10px; " class="text-muted ml-2"></span>
+                        
+                        
+                        {% endif %}
+                    </div>
+                    <div class="d-flex justify-content-end align-items-center">
+                    <input type="checkbox" class="mr-1 " name="anonymous" value="1" >
+                    <p class="text-muted mr-2 pt-3" style="font-size: 12px;">Appear as an Anonymous User</p>
+                    <a onclick="submit('{{method}}')" class="btn border p-2 mr-2 text-white" style="font-size: 12px; background-color: #C42D63;"><i class="fa fa-paper-plane"></i> POST</a>
+                    <a class="btn border  p-2 cancel mr-2 text-muted" style="font-size: 12px;"><i class="fa fa-times-circle-o"></i> Close</a>
+                </div>
+                </div>
+                <div class="col-12">
+                    <div id="code_data" class="" style="width: 100%;"></div>
+                 
+                    <div class=" p-4" style="width:100%;">
+                        <form id="compose_form" action="compose/" method="post" enctype="multipart/form-data">
+                            {% csrf_token %}
+                                {{form|crispy}}
+                                {{form.media}}
+                            
+                        </form>
+                    </div>
+                  
+                </div>
+            </div>
+        </div>
+    </div>
+   
+</div>
+{% endblock %}
+
+{% block script %}
+<script>
+
+
+$('.trigger, .cancel').click(function() {
+  $('.slider').toggleClass('close');
+
+});
+
+$(document).ready(function () {
+    $(".django-ckeditor-widget").css("width", "100%")
+ });
+
+
+function submit(method="General"){
+    for (var instance in CKEDITOR.instances)
+                CKEDITOR.instances[instance].updateElement();
+                var temp = CKEDITOR.instances[instance].getData();              
+                $.ajax({
+                    type: "POST",
+                    data: {
+                        method:method,
+                        title:temp,
+                        csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
+                        tags:$('input[name=tags]').val(),
+                        anonymous:$('input[name=anonymous]:checked').val(),
+                        {% if method != 'General' %}
+                        title2: $('input[name=title2]').val(),
+                        {% endif %}
+                    },
+                    url: 'quora_submit/',
+                    success: function(data) {
+                        data = JSON.parse(data);
+                        if (data[0] == 'error'){
+                            var notyf = new Notyf();
+                            notyf.error(data[1]);
+                        }
+                        else{
+                            window.location.reload();
+                            var notyf = new Notyf();
+                            notyf.success(data['status']);
+                        }
+                    }
+                });
+                return false;
+        
+        }
+</script>
+{% endblock %}

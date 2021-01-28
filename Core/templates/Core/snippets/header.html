@@ -29,7 +29,7 @@
                <a class="nav-link" href="">Coding</a>
              </li>
              <li class="nav-item"> 
-                <a class="nav-link" href="">Discuss</a>
+                <a class="nav-link" href="{% url 'discuss_homepage' %}">Discuss</a>
               </li>
              <!--
                <li class="nav-item dropdown" >
@@ -227,26 +227,26 @@
                  <a class="nav-link dropdown-toggle d-none d-sm-inline-block" href="#" data-toggle="dropdown">
      <img src="/media/{{user.profile.avatar}}" class="avatar img-fluid  mr-1 rounded-circle"  style="width:30px;"/> <span class="text-dark">{{user.username}}</span>
    </a>
-                 <div class="dropdown-menu dropdown-menu-right text-dark" style="font-size: 14px;">
-                     <a class="dropdown-item text-dark"  href="/profile/{{user}}/"><i class="fa fa-user mr-1" ></i> Profile</a>
+                 <div class="dropdown-menu dropdown-menu-right text-dark" style="font-size: 14px; color:#546E7A; width:240px;">
+                     <a class="dropdown-item  pb-2 pt-2"  href="/profile/{{user}}/"><i class="fa fa1 fa-user mr-1" ></i> Profile</a>
                      <div class="dropdown-divider"></div>
-                     <a class="dropdown-item text-dark" href="#"><i class="fa fa-certificate mr-1"></i> My Courses</a>
-                     <a class="dropdown-item text-dark" href=" 'analytics' %}?target=code"><i class="fa fa-area-chart mr-1" ></i> Analytics</a>
+                     <a class="dropdown-item  pb-2 pt-2" href="#"><i class="fa fa-certificate fa1 mr-1"></i> My Courses</a>
+                     <a class="dropdown-item  pb-2 pt-2" href=" 'analytics' %}?target=code"><i class="fa fa-area-chart fa1 mr-1" ></i> Analytics</a>
                      
                     
-                     <a class="dropdown-item text-dark" href=""><i class="fa fa-book mr-1 " ></i> Notebook</a>
-                     <a class="dropdown-item text-dark" href=""><i class="fa fa-code mr-1" ></i> Playground</a>
-                     <a class="dropdown-item text-dark" href=" 'bookmark' %}"><i class="fa fa-bookmark mr-1"></i> Bookmarks</a>
-                     <a class="dropdown-item text-dark" href=" 'notification' %}"><i class="fa fa-bell mr-1"></i> Notifications</a>
+                     <a class="dropdown-item  pb-2 pt-2" href=""><i class="fa fa1 fa-book fa1 mr-1 " ></i> Notebook</a>
+                     <a class="dropdown-item  pb-2 pt-2" href=""><i class="fa fa2 fa-code mr-1" ></i> Playground</a>
+                     <a class="dropdown-item  pb-2 pt-2" href=" 'bookmark' %}"><i class="fa fa1 fa-bookmark mr-1"></i> Bookmarks</a>
+                     <a class="dropdown-item  pb-2 pt-2" href=" 'notification' %}"><i class="fa fa1 fa-bell mr-1"></i> Notifications</a>
                      <div class="dropdown-divider"></div>
-                     <a class="dropdown-item text-dark" href=" 'setting' %}"><i class="fa fa-cog mr-1"></i> Settings & Privacy</a>
+                     <a class="dropdown-item  pb-2 pt-2" href=" 'setting' %}"><i class="fa fa1 fa-cog mr-1"></i> Settings & Privacy</a>
                      <div class="dropdown-divider"></div>
-                     <a class="dropdown-item text-dark" style="background-color: #EAEEF4;" href=""><center>Log out</center></a>
+                     <a class="dropdown-item  pb-2 pt-2" style="background-color: #EAEEF4;" href=""><center>Log out</center></a>
                  </div>
              </li>
              {% else %}
              <li class="nav-item">
-                 <a class="nav-lin text-dark btn btn-sm border-left" data-toggle="modal" data-target="#exampleModalCenter">
+                 <a class="nav-lin  btn btn-sm border-left" data-toggle="modal" data-target="#exampleModalCenter">
                     <i class="align-middle" data-feather="log-in"></i> Sign In
                  </a>
              </li>
