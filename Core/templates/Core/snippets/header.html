@@ -1,0 +1,260 @@
+{% load static %}
+<nav class="navbar navbar-expand-lg navbar-light fixed-top navbar-bg" style="height: 45px; font-size: 13px; z-index:2; box-shadow:2px 2px 10px rgb(0,0,0,0.1); background-color: white;">
+    <!-- <a class="sidebar-toggle d-flex">
+ <i class="hamburger align-self-center"></i>
+ </a>
+ 
+     <form class="d-none d-sm-inline-block">
+         <div class="input-group input-group-navbar">
+             <input type="text" class="form-control" placeholder="Search…" aria-label="Search">
+             <button class="btn" type="button">
+   <i class="align-middle" data-feather="search"></i>
+ </button>
+         </div>
+     </form>
+ --> 
+ <a class="navbar-brand text-dark "style="font-weight:600; letter-spacing:1px;" href="/"><img src="/media/users/logo.jpg" style="height:40px;"></a>
+ <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+     <span class="navbar-toggler-icon"></span>
+ </button>
+ 
+     <div class="navbar-collapse collapse" style="display: flex; justify-content: space-between;">
+         <ul class="navbar-nav">
+         
+             <li class="nav-item">
+               <a class="nav-link" href="#">Explore</a>
+             </li>
+             <li class="nav-item"><a class="nav-link" href="#">Contest</a></li>
+             <li class="nav-item"> 
+               <a class="nav-link" href="">Coding</a>
+             </li>
+             <li class="nav-item"> 
+                <a class="nav-link" href="">Discuss</a>
+              </li>
+             <!--
+               <li class="nav-item dropdown" >
+                   <a class="nav-link dropdown-toggle"  id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Aptitude </a>
+                   <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink" style="font-size: 13px;">
+                     
+                     
+                     <li><a class="dropdown-item" href=" 'prepare' %}">Practise All</a></li>
+                       <li class="dropdown-submenu"><a class="dropdown-item dropdown-toggle" >All Companies</a>
+                           <ul class="dropdown-menu" style="font-size: 13px; max-height:450px; overflow-y:scroll ;">
+                             <li><a class="dropdown-item" href=" 'all' %}">All Companies</a></li>
+                               {% for data in comp %}
+                               <li><a class="dropdown-item" href="/aptitude/companies/{{data}}/">{{data}}</a></li>
+                               {% endfor %}
+                               
+                           </ul>
+                       </li>
+                       <li class="dropdown-submenu"><a class="dropdown-item dropdown-toggle" >Aptitude</a>
+                         <ul class="dropdown-menu" style="font-size: 13px;">
+                             <li><a class="dropdown-item" href=" 'quants' %}">Quants</a></li>
+                             <li><a class="dropdown-item" href="#">Verbal</a></li>
+                             <li><a class="dropdown-item" href="#">Logical</a></li>
+                             <li><a class="dropdown-item" href="#">Data Interpretation</a></li>
+                             <li class="dropdown-submenu"><a class="dropdown-item dropdown-toggle" href="#">Technical</a>
+                               <ul class="dropdown-menu" style="font-size: 13px;">
+                                   <li><a class="dropdown-item" href="#">C MCQ's</a></li>
+                                   <li><a class="dropdown-item" href="#">CPP MCQ's</a></li>
+                                   <li><a class="dropdown-item" href="#">DBMS MCQ's</a></li>
+                                   <li><a class="dropdown-item" href="#">Operating System MCQ's</a></li>
+                                   <li><a class="dropdown-item" href="#">SDLC MCQ's</a></li>
+                                   <li><a class="dropdown-item" href="#">Networking MCQ's</a></li>
+                                   <li><a class="dropdown-item" href="#">MS Word MCQ's</a></li>
+                               </ul>
+                           </li>
+                           
+                            
+                             
+                         </ul>
+                     </li>
+                     -->
+                     <!--
+                     <li class="dropdown-submenu"><a class="dropdown-item dropdown-toggle" >Programming</a>
+                       <ul class="dropdown-menu" style="font-size: 13px;">
+                           <li><a class="dropdown-item" href="#">Top 100 Codes</a></li>
+                           <li><a class="dropdown-item" href="#">C Language</a></li>
+                           <li><a class="dropdown-item" href="#">C</a></li>
+                           <li><a class="dropdown-item" href="#">CPP MCQ's</a></li>
+                           <li><a class="dropdown-item" href="#">C MCQ's</a></li>
+                           <li><a class="dropdown-item" href="#">CPP MCQ's</a></li>
+                           <li><a class="dropdown-item" href="#">C MCQ's</a></li>
+                           <li><a class="dropdown-item" href="#">CPP MCQ's</a></li>
+                          
+                           
+                       </ul>
+                   </li>
+                   
+                   <li><a class="dropdown-item" href=" 'syllabus' %}">Syllabus</a></li>
+                   <li><a class="dropdown-item" href=" 'interview' %}">Interview Experience</a></li>
+                   <li class="dropdown-submenu"><a class="dropdown-item dropdown-toggle" >Interview Preparation</a>
+                     <ul class="dropdown-menu" style="font-size: 13px;">
+                         <li><a class="dropdown-item" href=" 'quants' %}">Resume</a></li>
+                         <li><a class="dropdown-item" href=" 'quants' %}">HR Questions</a></li>
+                         <li><a class="dropdown-item" href=" 'quants' %}">Technical Questions</a></li>
+                         <li><a class="dropdown-item" href=" 'quants' %}">Puzzles</a></li>
+                         <li><a class="dropdown-item" href=" 'quants' %}">Group Discussion</a></li>
+                         <li><a class="dropdown-item" href=" 'quants' %}">Managerial Round</a></li>
+                     </ul>
+                 </li>
+                   
+                   </ul>
+               </li>
+            -->
+                   <!--
+                 <li class="nav-item"><a class="nav-link" href=" 'mock' %}">Mock</a></li>
+               
+                 <li class="nav-item">
+                   <a class="nav-link " href="">Jobs</a>
+                 </li>
+                 <li class="nav-item">
+                     <a class="nav-link " href="#">Q/A</a>
+                   </li>
+                 
+                   <li class="nav-item">
+                     <a class="nav-link " href="#">Notes</a>
+                   </li>
+     
+                   <li class="nav-item">
+                     <a class="nav-link " href="#">Projects</a>
+                   </li>
+                   
+                   
+                   
+                   <li class="nav-item">
+                     <a class="nav-link" href="#">Learning</a>
+                   </li>
+     -->
+     <li class="nav-item">
+        <a class="nav-link " href="#">Blogs</a>
+      </li>
+                   <li class="nav-item dropdown" >
+                     <a class="nav-link text-warning "  id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-shopping-cart"></i> Store</a>
+                     <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink" style="font-size: 13px;">
+                       
+                       
+                       <li><a class="dropdown-item text-warning" href="#"><i class="fa fa-plus-circle"></i> Redeem</a></li>
+                       <li><a class="dropdown-item text-warning"  href=" 'premium' %}"><i class="fa fa-star"></i> Premium</a></li>
+                     </ul>
+                   </li>
+     
+                 </ul>
+                 
+           </ul>
+         <ul class="navbar-nav ">
+            {% if request.user.is_authenticated %}
+             <li class="nav-item mr-2 mt-2">
+                 <a class="btn p-1 pb-2 pr-2 pl-2 btn-sm btn-outline-warning" style="font-size: 12px;"  href=" 'premium' %}"><i class="fa fa-star "></i> Premium</a>
+             </li>
+ 
+             
+ 
+             <!--
+             <li class="nav-item dropdown">
+                 <a class="nav-icon dropdown-toggle" href="#" id="messagesDropdown" data-toggle="dropdown">
+                     <div class="position-relative">
+                         <i class="align-middle" data-feather="message-square"></i>
+                     </div>
+                 </a>
+                 <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right py-0" aria-labelledby="messagesDropdown">
+                     <div class="dropdown-menu-header">
+                         <div class="position-relative">
+                             4 New Messages
+                         </div>
+                     </div>
+                     <div class="list-group">
+                         <a href="#" class="list-group-item">
+                             <div class="row g-0 align-items-center">
+                                 <div class="col-2">
+                                     <img src="img/avatars/avatar-5.jpg" class="avatar img-fluid rounded-circle" alt="Vanessa Tucker">
+                                 </div>
+                                 <div class="col-10 pl-2">
+                                     <div class="text-dark">Vanessa Tucker</div>
+                                     <div class="text-darksmall mt-1">Nam pretium turpis et arcu. Duis arcu tortor.</div>
+                                     <div class="text-darksmall mt-1">15m ago</div>
+                                 </div>
+                             </div>
+                         </a>
+                         <a href="#" class="list-group-item">
+                             <div class="row g-0 align-items-center">
+                                 <div class="col-2">
+                                     <img src="img/avatars/avatar-2.jpg" class="avatar img-fluid rounded-circle" alt="William Harris">
+                                 </div>
+                                 <div class="col-10 pl-2">
+                                     <div class="text-dark">William Harris</div>
+                                     <div class="text-darksmall mt-1">Curabitur ligula sapien euismod vitae.</div>
+                                     <div class="text-darksmall mt-1">2h ago</div>
+                                 </div>
+                             </div>
+                         </a>
+                         <a href="#" class="list-group-item">
+                             <div class="row g-0 align-items-center">
+                                 <div class="col-2">
+                                     <img src="img/avatars/avatar-4.jpg" class="avatar img-fluid rounded-circle" alt="Christina Mason">
+                                 </div>
+                                 <div class="col-10 pl-2">
+                                     <div class="text-dark">Christina Mason</div>
+                                     <div class="text-darksmall mt-1">Pellentesque auctor neque nec urna.</div>
+                                     <div class="text-darksmall mt-1">4h ago</div>
+                                 </div>
+                             </div>
+                         </a>
+                         <a href="#" class="list-group-item">
+                             <div class="row g-0 align-items-center">
+                                 <div class="col-2">
+                                     <img src="img/avatars/avatar-3.jpg" class="avatar img-fluid rounded-circle" alt="Sharon Lessman">
+                                 </div>
+                                 <div class="col-10 pl-2">
+                                     <div class="text-dark">Sharon Lessman</div>
+                                     <div class="text-darksmall mt-1">Aenean tellus metus, bibendum sed, posuere ac, mattis non.</div>
+                                     <div class="text-darksmall mt-1">5h ago</div>
+                                 </div>
+                             </div>
+                         </a>
+                     </div>
+                     <div class="dropdown-menu-footer">
+                         <a href="#" class="text-dark">Show all messages</a>
+                     </div>
+                 </div>
+             </li>
+            -->
+             <li class="nav-item dropdown border-left" >
+                 <a class="nav-icon dropdown-toggle d-inline-block d-sm-none" href="#" data-toggle="dropdown">
+     <i class="align-middle" data-feather="settings"></i>
+   </a>
+ 
+                 <a class="nav-link dropdown-toggle d-none d-sm-inline-block" href="#" data-toggle="dropdown">
+     <img src="/media/{{user.profile.avatar}}" class="avatar img-fluid  mr-1 rounded-circle"  style="width:30px;"/> <span class="text-dark">{{user.username}}</span>
+   </a>
+                 <div class="dropdown-menu dropdown-menu-right text-dark" style="font-size: 14px;">
+                     <a class="dropdown-item text-dark"  href="/profile/{{user}}/"><i class="fa fa-user mr-1" ></i> Profile</a>
+                     <div class="dropdown-divider"></div>
+                     <a class="dropdown-item text-dark" href="#"><i class="fa fa-certificate mr-1"></i> My Courses</a>
+                     <a class="dropdown-item text-dark" href=" 'analytics' %}?target=code"><i class="fa fa-area-chart mr-1" ></i> Analytics</a>
+                     
+                    
+                     <a class="dropdown-item text-dark" href=""><i class="fa fa-book mr-1 " ></i> Notebook</a>
+                     <a class="dropdown-item text-dark" href=""><i class="fa fa-code mr-1" ></i> Playground</a>
+                     <a class="dropdown-item text-dark" href=" 'bookmark' %}"><i class="fa fa-bookmark mr-1"></i> Bookmarks</a>
+                     <a class="dropdown-item text-dark" href=" 'notification' %}"><i class="fa fa-bell mr-1"></i> Notifications</a>
+                     <div class="dropdown-divider"></div>
+                     <a class="dropdown-item text-dark" href=" 'setting' %}"><i class="fa fa-cog mr-1"></i> Settings & Privacy</a>
+                     <div class="dropdown-divider"></div>
+                     <a class="dropdown-item text-dark" style="background-color: #EAEEF4;" href=""><center>Log out</center></a>
+                 </div>
+             </li>
+             {% else %}
+             <li class="nav-item">
+                 <a class="nav-lin text-dark btn btn-sm border-left" data-toggle="modal" data-target="#exampleModalCenter">
+                    <i class="align-middle" data-feather="log-in"></i> Sign In
+                 </a>
+             </li>
+             {% endif %}
+         </ul>
+     </div>
+    
+ </nav>
+ 
+ 
+ 
