@@ -196,7 +196,7 @@
                             <a href="/discuss/{{method}}/inbox/{{x.id}}/" style="text-decoration: none; ">
                                 <div style="width:100%; display:flex; flex-wrap:wrap; " class="mt-1 text-dark">
                                     {% if x.title2 %}
-                                    <p class="" style=" font-size: 14px;">{{x.title2|safe}}</p>
+                                    <p class="" style=" font-size: 14px; font-weight:600;">{{x.title2|safe}}</p>
                                     {% else %}
                                 <p class="" style=" font-size: 14px;">{{x.title|safe}}</p>
                                 {% endif %}
@@ -205,7 +205,7 @@
                             <div style=" margin-top: -10px;">
                                 <span class="" style="">
                                   
-                                    {% for i in x.tags %}
+                                    {% for i in x.tags|remove %}
                                     {% if i %}
                                     <a href="?tags={{i}}&method={{method}}" class="btn btn-sm border btn-outline-dark mb-1" href="#" style="font-size: 11px;">{{i}}</a>
                                     {% endif %}
@@ -245,7 +245,7 @@
                                 <a href="/discuss/{{method}}/inbox/{{x.id}}/" style="text-decoration: none; ">
                                     <div style="width:100%; display:flex; flex-wrap:wrap; " class="mt-1 text-dark">
                                         {% if x.title2 %}
-                                        <p class="" style=" font-size: 14px;">{{x.title2|safe}}</p>
+                                        <p class="" style=" font-size: 14px; font-weight: 600;">{{x.title2|safe}}</p>
                                         {% else %}
                                     <p class="" style=" font-size: 14px;">{{x.title|safe}}</p>
                                     {% endif %}
