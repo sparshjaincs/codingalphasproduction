@@ -67,5 +67,8 @@ def quora_submit(request):
 
 
 def inside(request,method,id):
-    return render(request,'discuss/inside.html')
+    context = {}
+    context['method'] = method
+    context['data'] = Quora.objects.get(id = id)
+    return render(request,'discuss/inside.html',context)
             

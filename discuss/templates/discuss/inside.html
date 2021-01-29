@@ -1,0 +1,87 @@
+{% extends 'Core/snippets/base.html' %}
+{% load shortcut %}
+{% load crispy_forms_tags %}
+{% block header %}
+{% include 'Core/snippets/header.html' %}
+{% endblock %}
+
+
+{% block body %}
+<div class="container">
+    <div class="row">
+        <div class="col-12 mt-5 pt-3">
+            <div class="card shadow-sm border-0">
+                <div class="card-header border-0 p-2">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <a href="/discuss/?method={{method}}" class="btn btn-sm text-muted border-right"><i class="fa fa1 fa-angle-left mr-1"></i> Back</a>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <a class="btn btn-sm text-muted pr-1 ml-2" title="Upvote" data-toggle="tooltip"><i class="fa fa2 fa-thumbs-up"></i></a> <span class="text-muted " style="font-size: 14px;">{{data.like.all.count}}</span>
+                            <a class="btn btn-sm text-muted ml-3 pr-1" title="Downvote" data-toggle="tooltip"><i class="fa fa2 fa-thumbs-down"></i></a><span class="text-muted " style="font-size: 14px;">{{data.dislike.all.count}}</span>
+                           
+                            <a class="btn btn-sm text-muted ml-3" title="Follow" data-toggle="tooltip"> <i class="fa fa2 fa-user-plus"></i></a>
+                            <a class="btn btn-sm text-muted mt-1 ml-2" title="Bookmark" data-toggle="tooltip"><i class="fa fa2 fa-bookmark"></i></a>
+                            <a class="btn btn-sm text-muted ml-2" title="Share" data-toggle="tooltip"><i class="fa fa-share-square-o mt-2"></i></a>
+                            <a class="btn btn-sm text-muted mt-1 ml-2" title="Report" data-toggle="tooltip"><i class="fa  fa-exclamation-triangle"></i></a>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body pl-5 pr-5">
+                    <div style="position: absolute; left:1rem;">
+                        <img src="/media/{{data.user.profile.avatar}}" style="width:35px; height:35px; border-radius:50%;">
+                    </div>
+                    <div class="pl-4">
+                        {% if method != 'General' %}
+                        <h5 class=" text-dark mt-1">
+                            {% if data.pinned %}
+                            <i class="fa fa-thumb-tack" style="color:#C42D63"></i>
+                            {% endif %}
+                            {{data.title2}}
+                        </h5>
+                        <div class="text-muted d-flex justify-content-start pt-3" style="font-size: 12px;">
+                            <p class="">Posted By <a href="/profile/{{data.user}}/">{{data.user.profile.first_name}} {{data.user.profile.last_name}}</a> , {{data.created}} </p>
+                            <span class="ml-5"><i class="fa fa-street-view"></i> 235K Views</span>
+                            <span class="ml-5"><i class="fa fa-comment fa2"></i> {{data.quora_comment.all.count}} Comments</span>
+                        </div>
+                        {% else %}
+                        <div class="text-muted d-flex justify-content-start pt-2" style="font-size: 12px;">
+                            {% if data.pinned %}
+                                <i class="fa fa-thumb-tack mt-1 mr-2" style="color:#C42D63; font-size:14px; "></i>
+                            {% endif %}
+                            <p class="">Posted By <a href="/profile/{{data.user}}/">{{data.user.profile.first_name}} {{data.user.profile.last_name}}</a> , {{data.created}} </p>
+                            <span class="ml-5"><i class="fa fa-street-view"></i> 235K Views</span>
+                            <span class="ml-5"><i class="fa fa-comment fa2"></i> {{data.quora_comment.all.count}} Comments</span>
+                            <span class="ml-5"><i class="fa fa-reply fa1"></i> {{data.Quora_anwsers.all.count}} Anwsers</span>
+                        </div>
+                        <div class="mt-2">
+                            <center>
+                                {{data.title|safe}}
+                            </center>
+                        </div>
+                        {% endif %}
+                        
+                    </div>
+                    <div class="pl-4 pt-3">
+                        {% if method != 'General' %}
+                        {{data.title|safe}}
+                        {% else %}
+
+                        {% endif %}
+                    </div>
+                    <div class="pl-4">
+                        {% if method != 'General' %}
+                        {% for i in data.tags|remove %}
+                        {% if i %}
+                        <a class="btn btn-sm btn-outline-dark pt-1 pb-1" href="/discuss/?method={{method}}&tags={{i}}" style="font-size:10px;">{{i}}</a>
+                        {% endif %}
+                        {% endfor %}
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
