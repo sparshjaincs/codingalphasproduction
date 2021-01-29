@@ -69,6 +69,9 @@ def quora_submit(request):
 def inside(request,method,id):
     context = {}
     context['method'] = method
-    context['data'] = Quora.objects.get(id = id)
+    ins =  Quora.objects.get(id = id)
+    context['data'] =ins
+    context['like'] = True if request.user in ins.like.all() else False
+    context['dislike'] = True if request.user in ins.dislike.all() else False
     return render(request,'discuss/inside.html',context)
-            
+             

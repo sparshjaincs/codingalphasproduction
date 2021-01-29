@@ -5,7 +5,9 @@
 {% include 'Core/snippets/header.html' %}
 {% endblock %}
 
-
+{% block jscss %}
+<script src="https://cdn.jsdelivr.net/sharer.js/latest/sharer.min.js"></script>
+{% endblock %}
 {% block body %}
 <div class="container">
     <div class="row">
@@ -17,12 +19,30 @@
                             <a href="/discuss/?method={{method}}" class="btn btn-sm text-muted border-right"><i class="fa fa1 fa-angle-left mr-1"></i> Back</a>
                         </div>
                         <div class="d-flex align-items-center">
-                            <a class="btn btn-sm text-muted pr-1 ml-2" title="Upvote" data-toggle="tooltip"><i class="fa fa2 fa-thumbs-up"></i></a> <span class="text-muted " style="font-size: 14px;">{{data.like.all.count}}</span>
-                            <a class="btn btn-sm text-muted ml-3 pr-1" title="Downvote" data-toggle="tooltip"><i class="fa fa2 fa-thumbs-down"></i></a><span class="text-muted " style="font-size: 14px;">{{data.dislike.all.count}}</span>
                            
-                            <a class="btn btn-sm text-muted ml-3" title="Follow" data-toggle="tooltip"> <i class="fa fa2 fa-user-plus"></i></a>
-                            <a class="btn btn-sm text-muted mt-1 ml-2" title="Bookmark" data-toggle="tooltip"><i class="fa fa2 fa-bookmark"></i></a>
-                            <a class="btn btn-sm text-muted ml-2" title="Share" data-toggle="tooltip"><i class="fa fa-share-square-o mt-2"></i></a>
+                            <a   onclick="like1('discuss','{{data.id}}','discuss_like','like_count','dislike_count','discuss_dislike')" class="btn btn-sm text-muted pr-1 ml-2   " title="Upvote" data-toggle="tooltip"><i id="discuss_like" class="fa {% if like %} fa3{% else %}fa2 {% endif %} fa-thumbs-up"  style=""></i></a> <span class="text-muted " style="font-size: 14px;" id="like_count">{{data.like.all.count}}</span>
+                            <a  onclick="dislike1('discuss','{{data.id}}','discuss_dislike','dislike_count','like_count','discuss_like')" class="btn btn-sm text-muted ml-3 pr-1" title="Downvote" data-toggle="tooltip"><i id="discuss_dislike" class="fa {% if dislike %} fa3{%else%}fa2 {% endif %} fa-thumbs-down"></i></a><span class="text-muted " style="font-size: 14px;" id="dislike_count">{{data.dislike.all.count}}</span>
+                           
+                            <a onclick="follow('{{data.user}}','discuss_follow')" class="btn btn-sm text-muted ml-3" title="Follow" data-toggle="tooltip"> <i id="discuss_follow" class="fa {% if request.user in data.user.profile.following.all %}fa3{%else%}fa2{%endif%} fa-user-plus"></i></a>
+                            <a onclick = "bookmark('discuss','{{data.id}}','bookmark_id')"class="btn btn-sm text-muted mt-1 ml-2" title="Bookmark" data-toggle="tooltip"><i class="fa {% if data in request.user.profile.quora_discuss.all %}fa3 {%else%}fa2 {%endif%} fa-bookmark" id='bookmark_id'></i></a>
+                            <span title="Share" data-toggle="tooltip">
+                                <a class="btn btn-sm text-muted ml-2"  id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-share-square-o mt-2"></i></a>
+                                
+                                    <div class="dropdown-menu dropdown-menu-right pl-1 pr-1" aria-labelledby="dropdownMenuLink" style="width:200px;">
+                                        <input id="shareinput1" value="{{request.build_absolute_uri}}" type="text" class="form-control mr-4 mb-2" style="width:100%;">
+                                        <div class=" d-flex justify-content-center align-items-center">
+                                            <a href="#" id="share-fb" class="sharer button ml-2"><i class="fa fa-2x fa-facebook-square"></i></a>
+                                            <a href="#" id="share-tw" class="sharer button ml-2"><i class="fa fa-2x fa-twitter-square"></i></a>
+                                            <a href="#" id="share-li" class="sharer button ml-2"><i class="fa fa-2x fa-linkedin-square"></i></a>
+                                    
+                                            <a href="#" id="share-em" class="sharer button ml-2"><i class="fa fa-2x fa-envelope-square"></i></a>
+                                           
+                                            <a href="#" id="share-copy" class="btn btn-sm " style="" onclick="copyToClipboard('shareinput1')"><i class="fa fa-2x fa-clone"></i></a>
+                                         
+                                        </div>
+                                        
+                                    </div>
+                            </span>
                             <a class="btn btn-sm text-muted mt-1 ml-2" title="Report" data-toggle="tooltip"><i class="fa  fa-exclamation-triangle"></i></a>
 
                         </div>
@@ -42,6 +62,9 @@
                         </h5>
                         <div class="text-muted d-flex justify-content-start pt-3" style="font-size: 12px;">
                             <p class="">Posted By {% if data.anonymous %}<span class="text-dark" style="font-weight: 600;">Anonymous User</span> {%else%} <a href="/profile/{{data.user}}/">{{data.user.profile.first_name}} {{data.user.profile.last_name}}</a>{% endif %} , {{data.created}} </p>
+                            {% if not data.anonymous %}
+                            <span class="ml-5"><i class="fa fa-user-plus fa2"></i> {{data.user.profile.following.all.count}} Followers</span>
+                            {% endif %}
                             <span class="ml-5"><i class="fa fa-street-view"></i> 235K Views</span>
                             <span class="ml-5"><i class="fa fa-comment fa2"></i> {{data.quora_comment.all.count}} Comments</span>
                         </div>
@@ -51,6 +74,9 @@
                                 <i class="fa fa-thumb-tack mt-1 mr-2" style="color:#C42D63; font-size:14px; "></i>
                             {% endif %}
                             <p class="">Posted By {% if data.anonymous %}<span class="text-dark" style="font-weight: 600;">Anonymous User</span> {%else%} <a href="/profile/{{data.user}}/">{{data.user.profile.first_name}} {{data.user.profile.last_name}}</a>{% endif %} , {{data.created}} </p>
+                            {% if not data.anonymous %}
+                            <span class="ml-5"><i class="fa fa-user-plus fa2"></i> {{data.user.profile.following.all.count}} Followers</span>
+                            {% endif %}
                             <span class="ml-5"><i class="fa fa-street-view"></i> 235K Views</span>
                             <span class="ml-5"><i class="fa fa-comment fa2"></i> {{data.quora_comment.all.count}} Comments</span>
                             <span class="ml-5"><i class="fa fa-reply fa1"></i> {{data.Quora_anwsers.all.count}} Anwsers</span>
@@ -84,4 +110,19 @@
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block script %}
+<script>
+   function copyToClipboard(id) {
+    var textBox = document.getElementById(id);
+    textBox.select();
+    document.execCommand("copy");
+    var notyf = new Notyf();
+    notyf.success('Link Copied!');
+    
+}
+</script>
+</script>
+
 {% endblock %}
