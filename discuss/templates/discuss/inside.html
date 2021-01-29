@@ -41,7 +41,7 @@
                             {{data.title2}}
                         </h5>
                         <div class="text-muted d-flex justify-content-start pt-3" style="font-size: 12px;">
-                            <p class="">Posted By <a href="/profile/{{data.user}}/">{{data.user.profile.first_name}} {{data.user.profile.last_name}}</a> , {{data.created}} </p>
+                            <p class="">Posted By {% if data.anonymous %}<span class="text-dark" style="font-weight: 600;">Anonymous User</span> {%else%} <a href="/profile/{{data.user}}/">{{data.user.profile.first_name}} {{data.user.profile.last_name}}</a>{% endif %} , {{data.created}} </p>
                             <span class="ml-5"><i class="fa fa-street-view"></i> 235K Views</span>
                             <span class="ml-5"><i class="fa fa-comment fa2"></i> {{data.quora_comment.all.count}} Comments</span>
                         </div>
@@ -50,15 +50,15 @@
                             {% if data.pinned %}
                                 <i class="fa fa-thumb-tack mt-1 mr-2" style="color:#C42D63; font-size:14px; "></i>
                             {% endif %}
-                            <p class="">Posted By <a href="/profile/{{data.user}}/">{{data.user.profile.first_name}} {{data.user.profile.last_name}}</a> , {{data.created}} </p>
+                            <p class="">Posted By {% if data.anonymous %}<span class="text-dark" style="font-weight: 600;">Anonymous User</span> {%else%} <a href="/profile/{{data.user}}/">{{data.user.profile.first_name}} {{data.user.profile.last_name}}</a>{% endif %} , {{data.created}} </p>
                             <span class="ml-5"><i class="fa fa-street-view"></i> 235K Views</span>
                             <span class="ml-5"><i class="fa fa-comment fa2"></i> {{data.quora_comment.all.count}} Comments</span>
                             <span class="ml-5"><i class="fa fa-reply fa1"></i> {{data.Quora_anwsers.all.count}} Anwsers</span>
                         </div>
                         <div class="mt-2">
-                            <center>
+                            
                                 {{data.title|safe}}
-                            </center>
+                            
                         </div>
                         {% endif %}
                         
