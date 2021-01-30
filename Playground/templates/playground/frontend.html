@@ -1,0 +1,618 @@
+{% extends 'Core/snippets/base.html' %}
+
+{% block header %}
+{% if not embed %}
+{% include 'Core/snippets/header.html' %}
+{% endif %}
+{% endblock %}
+
+{% block jscss %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/ace.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/ace.min.js"></script>
+<script src="https://unpkg.com/interactjs@1.10.2/dist/interact.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.5.0/jszip.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.5.0/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/1.3.8/FileSaver.js"></script>
+<script src="https://cdn.jsdelivr.net/sharer.js/latest/sharer.min.js"></script>
+<link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+<script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
+{% endblock %}
+{% block style %}
+#editor { 
+
+   
+    right: 0;
+    bottom: 0;
+    left: 0;
+    {% if share or Live %}
+    min-height:564px;
+    {% elif embed %}
+    min-height:610px;
+    {% else %}
+    height:625px;
+    {% endif %}
+   
+}
+#editor1 { 
+    
+    right: 0;
+    bottom: 0;
+    left: 0;
+    {% if share or Live %}
+    height:564px;
+    {% elif embed %}
+    height:610px;
+    {% else %}
+    height:625px;
+    {% endif %}
+}
+#editor2 { 
+   
+    right: 0;
+    bottom: 0;
+    left: 0;
+    {% if share or Live %}
+    height:564px;
+    {% elif embed %}
+    height:610px;
+    {% else %}
+    height:625px;
+    {% endif %}
+}
+
+.nav-link1{
+    width:90px;
+    
+    display:flex; 
+    justify-content:center;
+    font-size:13px;
+}
+.nav-tabs{
+    background-color:white;
+    border:none;
+}
+.nav-item .nav-link.active{
+    border:none;
+    border-bottom:2px solid #C42D63;
+}
+.resizable {
+    width: 100%;
+    overflow: hidden;
+    background-color:#FAFAFA;
+    
+  
+    /* This makes things *much* easier */
+    _box-sizing: border-box;
+  }
+  .social a {
+    padding: 0 .2em;
+
+  }
+  .switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+  }
+  
+  .switch input { 
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+  
+  .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    -webkit-transition: .4s;
+    transition: .4s;
+  }
+  .slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+  }
+  
+  input:checked + .slider {
+    background-color: #2196F3;
+  }
+  
+  input:focus + .slider {
+    box-shadow: 0 0 1px #2196F3;
+  }
+  
+  input:checked + .slider:before {
+    -webkit-transform: translateX(26px);
+    -ms-transform: translateX(26px);
+    transform: translateX(26px);
+  }
+  
+  .slider.round {
+    border-radius: 34px;
+  }
+  
+  .slider.round:before {
+    border-radius: 50%;
+  }
+
+
+{% endblock %}
+{% block body %}
+<div class="container-fluid m-0 p-0">
+  
+    
+  
+    <div class="row {% if not embed %} mt-5 {% endif %}">
+        {% if share or Live or embed %}
+        <div class="col-12 d-flex justify-content-between" style="height:60px; background-color: white;">
+            <div class="ml-3 d-flex justify-content-start" >
+                <p class="text-muted mt-1" style="font-weight: 600; font-size: 25px;">{{file_name}}</p>
+              <a href="/profile/{{user}}/" title="See Profile" data-toggle="tooltip"><p class="mt-3 ml-2" style="font-size: 12px;"><i class="fa fa-user"></i> {{user}}</p></a>
+              {% if Live %}
+              <span style="font-size: 12px; font-weight: 600;" class="ml-2 text-warning mt-3"><i class="fa fa-bolt"></i> Live</span>
+              {% endif %}
+            </div>
+
+            <div class="d-flex align-items-center justify-content-end">
+                <span title="Comment" data-toggle="tooltip" data-placement="left">
+                <a href="#" class="btn btn-sm mr-2"data-toggle="modal" data-target="#contentmodal" ><i class="fa fa-comment"></i> Comments</a>
+                </span>
+                <a href="#" class="btn btn-sm mr-2" title="Follow" data-toggle="tooltip" data-placement="left"><i class="fa fa-plus"></i> Follow</a>
+                <a href="#" class="btn btn-sm mr-2" title="Like" data-toggle="tooltip" data-placement="left"><i class="fa fa-heart"></i> Like</a>
+                <a href="{% url 'playground' %}" class="btn btn-sm border-top border-right border-left  mr-2" title="Create your own playground" data-toggle="tooltip" data-placement="left" style="border-bottom:2px solid #C42D63"><i class="fa fa-code"></i> Create</a>
+            </div>
+        </div>
+        <div class="modal fade border-0" id="contentmodal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+              <div class="modal-content" style="height:600px; overflow-y:scroll">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  ...
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                  <button type="button" class="btn btn-primary">Save changes</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        {% endif %}
+        <div class="col-12 col-lg-6 pr-0 " id="editor_panel">
+            <div style="display: flex; justify-content:space-between; background-color: white;">
+            <ul class="nav nav-tabs" id="myTab" style="margin-top: -2px;" role="tablist">
+              
+                <li class="nav-item">
+                  <a class="nav-link nav-link1 active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">HTML</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link nav-link1" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">CSS</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link nav-link1" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">JavaScript</a>
+                </li>
+               
+
+     
+              </ul>
+              
+              <div class="mt-1 d-flex justify-content-center">
+                 <div class="dropdown show">
+                  
+                    <a style="border-bottom:2px solid #C42D63;" class="btn btn-sm dropdown-toggle border-top  border-right border-left mr-2" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Snippets
+                      </a>
+                  
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuLink" style="font-size: 13px;">
+                        {% for x in snippet %}
+                      <a class="dropdown-item" href="#" onclick="load_template('{{x}}')">{{x}}</a>
+                      {% endfor %}
+                   
+                    </div>
+           
+                  </div>
+                  {% if not share and not Live and not embed %}
+                  
+                <input id="inp" class="form-control" type="text" disabled value="{{file_name}}" onchange="savefile();">
+                <a onclick="remove()" class="btn btn-sm border ml-1 mr-1"><i class="fa fa-pencil"></i></a>
+                {% endif %}
+                <a onclick="load_template('Saved')" title="Restore Saved Code" data-toggle="tooltip"  class="btn btn-sm ml-1 pt-1 mr-1"><i class="fa fa-undo"></i></a>
+               
+                <a class="btn btn-sm ml-1 mr-1"><i class="fa fa-cog"></i></a>
+            </div>
+            
+            </div>
+              <div class="tab-content " id="myTabContent">
+                  {% csrf_token %}
+                <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                    <div id="editor" class=""></div>
+                </div>
+                <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                    <div id="editor1" class="border-right"></div>
+                </div>
+                <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
+                    <div id="editor2" class="border-right"></div>
+                </div>
+              </div>
+        </div>
+        <div class="col-12 col-lg-6" id="code_panel">
+            <div style="{% if share or Live  %}height:590px;{% elif embed %} height:640px;{% else %}height:650px;{% endif %} overflow-y: scroll;" id="code_panel_content" class="border" >
+                <div style="position: absolute; top:50%; left:50%; display: none;" id="loader">
+                    <i class="fa fa-spinner fa-spin text-muted" style="font-size: 36px;"></i>
+                </div>
+               <div id="code_data" ></div>
+            </div>
+           
+        </div>
+        <div class="col-12 p-0">
+          <div style="z-index:1000; width:100%; background-color:white; " class="border-top row">
+            <div class="d-flex justify-content-start col-12 col-lg-4 col-md-6 p-3 ml-1" id="footer-content1">
+                <button onclick="load('write')" class="btn btn-sm ml-3 pl-3 pr-2" style="font-size: 13px; background-color: #C42D63; color:white; border-radius: 25px; box-shadow:2px 2px 10px rgb(0,0,0,0.5);"><i class="fa fa-play"></i> Run Code</button>
+                {% if not share and not embed %}
+                <button onclick="load('Save')" class="btn btn-sm ml-3 pl-3 pr-3" style="font-size: 13px;  border-radius: 25px; box-shadow:2px 2px 10px rgb(0,0,0,0.3);"><i class="fa fa-cloud-upload"></i> Save Code</button>
+                {% endif %}
+                <button class="btn btn-sm ml-3" onclick ="change()" data-toggle="tooltip" title="Change Orientation" style="font-size: 13px;  border-radius: 25px; box-shadow:2px 2px 10px rgb(0,0,0,0.3);"><i class="fa fa-rotate-right"></i> Change Orientation</button>
+           
+            </div>
+            
+             
+            <div class="col-12 col-lg-7 col-md-6 d-flex justify-content-end p-3" >
+                <button onclick="downloadHTML()" title="Download Source Code" data-toggle="tooltip" class="btn btn-sm  pl-3 pr-3" style="font-size: 13px;  border-radius: 25px; box-shadow:2px 2px 10px rgb(0,0,0,0.3);"><i class="fa fa-download"></i> Export</button>
+               {% if not embed %}
+                <div class="dropup pull-left" >
+                    
+                  <button  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="btn btn-sm ml-2 pl-3 pr-3" style="font-size: 13px;border-radius: 25px; box-shadow:2px 2px 10px rgb(0,0,0,0.3);"><i class="fa fa-desktop"></i> Embed</button>
+                    <div class="dropdown-menu dropdown-menu-right mb-3 border-0 shadow" style="width:300px; height:200px; box-shadow: 2px 2px 10px rgb(0,0,0,0.1);">
+                        <!-- Dropdown menu links -->
+                      </div>
+                </div>
+                {% endif %}
+                <div class="dropup pull-left" >
+    
+                <button data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"  class="btn btn-sm ml-3 pl-3 pr-3" style="font-size: 13px;  border-radius: 25px; box-shadow:2px 2px 10px rgb(0,0,0,0.3);"><i class="fa fa-share-alt"></i> Share</button>
+                <div class="dropdown-menu dropdown-menu-right mb-3 border-0 shadow p-2" style="width:320px; height:200px; box-shadow: 2px 2px 10px rgb(0,0,0,0.1);">
+                    <div class="social ml-2">
+                        <input id="shareinput" value="{{link}}" type="text" class="form-control mr-4 mb-2" style="width:95%;">
+                        <div class="d-flex justify-content-around pt-2">
+                      <a href="#" id="share-fb" class="sharer button"><i class="fa fa-2x fa-facebook-square"></i></a>
+                      <a href="#" id="share-tw" class="sharer button"><i class="fa fa-2x fa-twitter-square"></i></a>
+                      <a href="#" id="share-li" class="sharer button"><i class="fa fa-2x fa-linkedin-square"></i></a>
+              
+                      <a href="#" id="share-em" class="sharer button"><i class="fa fa-2x fa-envelope-square"></i></a>
+                     
+                      <a href="#" id="share-copy" class="btn btn-sm" onclick="copyToClipboard('shareinput')"><i class="fa fa-2x fa-clone"></i></a>
+                    </div>
+                    <div class="mt-3">
+                      <center>
+                        <p class="text-muted " style="font-size: 12px;">
+                          Copy the link, share it with your friends and show them your skills.
+                        </p>
+                      </center>
+                      <center>
+                        <p class="text-muted " style="font-size:10px;">
+                          Note : No one can change the content of your saved playground by sharing.
+                          If you want to give permission make it live.
+                        </p>
+                      </center>
+                      
+                    </div>
+    
+                    </div>
+                  </div>
+                </div>
+                {% if not share and not Live  and not embed%}
+                <div class="dropup pull-left" >
+                <button data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="btn btn-sm ml-3 pl-3 pr-3" style="font-size: 13px;  border-radius: 25px; box-shadow:2px 2px 10px rgb(0,0,0,0.3);"><i class="fa fa-dot-circle-o"></i> Live</button>
+                <div class="dropdown-menu dropdown-menu-right mb-3 border-0 shadow p-2" style="width:320px; height:230px; box-shadow: 2px 2px 10px rgb(0,0,0,0.1);">
+                   <div class="d-flex justify-content-between align-items-center p-2">
+                     <p class="text-muted mt-2 mr-2" style="font-size: 16px;">Make It Live :</p>
+                    <label class="switch">
+                      <input type="checkbox" id="live_toggle" onchange="tooglelive()"  {% if live_status %} checked {% endif %}>
+                      <span class="slider round"></span>
+                    </label>
+                    
+                   </div>
+                   <div>
+                    <center>
+                      <p class="text-muted " style="font-size: 12px;">
+                        Live feature enables you to make your playground open source. Anyone can contribute in your saved playground by making it live.
+                      </p>
+                    </center>
+                    <input id="shareinput1" value="{{link}}" type="text" class="form-control mr-4 mb-2" style="width:95%;">
+                    <div class="d-flex justify-content-around pt-2">
+                  <a href="#" id="share-fb" class="sharer button"><i class="fa fa-2x fa-facebook-square"></i></a>
+                  <a href="#" id="share-tw" class="sharer button"><i class="fa fa-2x fa-twitter-square"></i></a>
+                  <a href="#" id="share-li" class="sharer button"><i class="fa fa-2x fa-linkedin-square"></i></a>
+          
+                  <a href="#" id="share-em" class="sharer button"><i class="fa fa-2x fa-envelope-square"></i></a>
+                 
+                  <a href="#" id="share-copy" class="btn btn-sm" onclick="copyToClipboard('shareinput1')"><i class="fa fa-2x fa-clone"></i></a>
+                </div>
+                  </div> 
+                  </div>   
+            </div>
+                {% endif %}
+            </div>
+        </div>
+        </div>
+    </div>
+  
+</div>
+{% endblock %}
+
+{% block script %}
+<script>
+     var editor = ace.edit("editor");
+    editor.setTheme("ace/theme/textmate");
+    editor.session.setMode("ace/mode/html");
+    editor.setOptions({
+
+    fontSize: "16px"
+    });
+
+    var editor1 = ace.edit("editor1");
+    editor1.setTheme("ace/theme/textmate");
+    editor1.session.setMode("ace/mode/css");
+    editor1.setOptions({
+
+fontSize: "16px"
+});
+    var editor2 = ace.edit("editor2");
+    editor2.setTheme("ace/theme/textmate");
+    editor2.session.setMode("ace/mode/javascript");
+    editor2.setOptions({
+
+fontSize: "16px"
+});
+
+    interact('.resizable')
+  .resizable({
+    edges: { top: true, left: true, bottom: true, right: true },
+    listeners: {
+      move: function (event) {
+        let { x, y } = event.target.dataset
+
+        x = (parseFloat(x) || 0) + event.deltaRect.left
+        y = (parseFloat(y) || 0) + event.deltaRect.top
+
+        Object.assign(event.target.style, {
+          width: `${event.rect.width}px`,
+          height: `${event.rect.height}px`,
+          transform: `translate(${x}px, ${y}px)`
+        })
+
+        Object.assign(event.target.dataset, { x, y })
+      }
+    }
+  })
+
+  function change(){
+      if (document.getElementById('editor_panel').classList.contains('col-lg-6')){
+          document.getElementById('editor_panel').classList.remove('col-lg-6')
+          document.getElementById('editor_panel').classList.add('pr-4');
+          document.getElementById('code_panel').classList.remove('col-lg-6');
+          document.getElementById('code_panel').style.position="absolute";
+          document.getElementById('code_panel').style.bottom="3rem";
+          document.getElementById('code_panel_content').style.height="400px";
+          document.getElementById('code_panel_content').style.marginLeft = "36px";
+          document.getElementById('code_panel_content').style.paddingLeft = "20px";
+          
+        
+      }
+      else{
+        document.getElementById('editor_panel').classList.remove('pr-4')
+          document.getElementById('editor_panel').classList.add('col-lg-6');
+          document.getElementById('editor_panel').classList.add('col-lg-6')
+          document.getElementById('code_panel').classList.add('col-lg-6');
+   
+          
+          
+          document.getElementById('code_panel').style.position="relative";
+         
+          document.getElementById('code_panel_content').style.height="650px";
+          document.getElementById('code_panel_content').style.marginLeft = "0px";
+          document.getElementById('code_panel_content').style.marginTop = "45px";
+          document.getElementById('code_panel_content').style.paddingLeft = "0px";
+      }
+  }
+
+  $(function(){
+    document.getElementById('loader').style.display = 'block';
+    load_template('Saved');
+    $("#code_data").load("/playground/frontend/load/"); 
+     document.getElementById('loader').style.display = 'none';
+   });
+   
+  function downloadHTML() {
+    var zip = new JSZip();
+    zip.file("{{file_name}}.html", editor.getValue());
+    zip.file("{{file_name}}.css", editor1.getValue());
+    zip.file("{{file_name}}.js", editor2.getValue());
+    //var img = zip.folder("images");
+    //img.file("smile.gif", imgData, {base64: true});
+    zip.generateAsync({type:"blob"})
+    .then(function(content) {
+        // see FileSaver.js
+        saveAs(content, "{{file_name}}.zip");
+    });
+}
+
+function load(method){
+    document.getElementById('loader').style.display = 'block';
+    $.ajax({
+        type:'POST',
+        url:'/playground/frontend/get/',
+        data:{
+            html:editor.getValue(),
+            css:editor1.getValue(),
+            js:editor2.getValue(),
+            csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
+            method:method,
+            id:'{{id}}',
+        },
+        success:function(json){
+            json = JSON.parse(json);
+            if (json == 'Done'){
+                $("#code_data").load("/playground/frontend/load/"); 
+                document.getElementById('loader').style.display = 'none';
+                
+            }
+            else if(json == 'Saved'){
+                $("#code_data").load("/playground/frontend/load/"); 
+                var notyf = new Notyf();
+                notyf.success('Your changes have been successfully saved!');
+                document.getElementById('loader').style.display = 'none';
+            }
+            
+        }
+    });
+}
+function load_template(method){
+    $.ajax({
+        type:'GET',
+        url:'/playground/frontend/template/load/',
+        data:{
+            template:method,
+            id:'{{id}}',
+        },
+        success:function(json){
+            json = JSON.parse(json);
+            console.log(json);
+            editor.setValue(json['html']);
+            editor1.setValue(json['css']);
+            editor2.setValue(json['js']);
+            load('write');
+            if(method == 'Saved'){
+            var notyf = new Notyf();
+            notyf.success('Your Code has been restored successfully!');
+            }
+        }
+    });
+}
+
+function remove()
+    {
+    
+       $("#inp").removeAttr('disabled'); //removes the disabled attribut from the  
+                                              //element whose id is 'date_end'
+    }
+
+    function savefile(){
+        var val = document.getElementById('inp').value;
+      
+        $.ajax({
+            type:'GET',
+            url : '/playground/savefile/{{id}}/',
+            data:{
+                file_name: val,
+            },
+            success:function(json){
+                json = JSON.parse(json);
+                document.getElementById('inp').disabled = true;
+                var notyf = new Notyf();
+                notyf.success('Your File is saved!');
+            },
+            error : function(xhr,errmsg,err) {
+        console.log(xhr.status + ": " + xhr.responseText);
+            }
+
+        });
+    }
+
+
+    // ------------------------------------------------ Social Share ----------------------------------------------------
+    document.addEventListener("DOMContentLoaded", function(event) { 
+
+// Uses sharer.js 
+//  https://ellisonleao.github.io/sharer.js/#twitter	
+   var url = '{{link}}';
+   var title = "{{file_name}}";
+   var subject = "{{file_name}}";
+   var via = "yourTwitterUsername";
+   //console.log( url );
+   //console.log( title );
+
+
+//facebook
+$('#share-fb').attr('data-url', url).attr('data-sharer', 'facebook');
+//twitter
+$('#share-tw').attr('data-url', url).attr('data-title', title).attr('data-via', via).attr('data-sharer', 'twitter');
+//linkedin
+$('#share-li').attr('data-url', url).attr('data-sharer', 'linkedin');
+
+  // email
+  title ="CodingAlphas Frontend Playground";
+  $('#share-em').attr('data-url', url).attr('data-title', title).attr('data-subject', subject).attr('data-sharer', 'email');
+
+//Prevent basic click behavior
+$( ".sharer button" ).click(function() {
+  event.preventDefault();
+});
+  
+  
+// only show whatsapp on mobile devices  
+var isMobile = false; //initiate as false
+// device detection
+if(/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|ipad|iris|kindle|Android|Silk|lge |maemo|midp|mmp|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows (ce|phone)|xda|xiino/i.test(navigator.userAgent) 
+    || /1207|6310|6590|3gso|4thp|50[1-6]i|770s|802s|a wa|abac|ac(er|oo|s\-)|ai(ko|rn)|al(av|ca|co)|amoi|an(ex|ny|yw)|aptu|ar(ch|go)|as(te|us)|attw|au(di|\-m|r |s )|avan|be(ck|ll|nq)|bi(lb|rd)|bl(ac|az)|br(e|v)w|bumb|bw\-(n|u)|c55\/|capi|ccwa|cdm\-|cell|chtm|cldc|cmd\-|co(mp|nd)|craw|da(it|ll|ng)|dbte|dc\-s|devi|dica|dmob|do(c|p)o|ds(12|\-d)|el(49|ai)|em(l2|ul)|er(ic|k0)|esl8|ez([4-7]0|os|wa|ze)|fetc|fly(\-|_)|g1 u|g560|gene|gf\-5|g\-mo|go(\.w|od)|gr(ad|un)|haie|hcit|hd\-(m|p|t)|hei\-|hi(pt|ta)|hp( i|ip)|hs\-c|ht(c(\-| |_|a|g|p|s|t)|tp)|hu(aw|tc)|i\-(20|go|ma)|i230|iac( |\-|\/)|ibro|idea|ig01|ikom|im1k|inno|ipaq|iris|ja(t|v)a|jbro|jemu|jigs|kddi|keji|kgt( |\/)|klon|kpt |kwc\-|kyo(c|k)|le(no|xi)|lg( g|\/(k|l|u)|50|54|\-[a-w])|libw|lynx|m1\-w|m3ga|m50\/|ma(te|ui|xo)|mc(01|21|ca)|m\-cr|me(rc|ri)|mi(o8|oa|ts)|mmef|mo(01|02|bi|de|do|t(\-| |o|v)|zz)|mt(50|p1|v )|mwbp|mywa|n10[0-2]|n20[2-3]|n30(0|2)|n50(0|2|5)|n7(0(0|1)|10)|ne((c|m)\-|on|tf|wf|wg|wt)|nok(6|i)|nzph|o2im|op(ti|wv)|oran|owg1|p800|pan(a|d|t)|pdxg|pg(13|\-([1-8]|c))|phil|pire|pl(ay|uc)|pn\-2|po(ck|rt|se)|prox|psio|pt\-g|qa\-a|qc(07|12|21|32|60|\-[2-7]|i\-)|qtek|r380|r600|raks|rim9|ro(ve|zo)|s55\/|sa(ge|ma|mm|ms|ny|va)|sc(01|h\-|oo|p\-)|sdk\/|se(c(\-|0|1)|47|mc|nd|ri)|sgh\-|shar|sie(\-|m)|sk\-0|sl(45|id)|sm(al|ar|b3|it|t5)|so(ft|ny)|sp(01|h\-|v\-|v )|sy(01|mb)|t2(18|50)|t6(00|10|18)|ta(gt|lk)|tcl\-|tdg\-|tel(i|m)|tim\-|t\-mo|to(pl|sh)|ts(70|m\-|m3|m5)|tx\-9|up(\.b|g1|si)|utst|v400|v750|veri|vi(rg|te)|vk(40|5[0-3]|\-v)|vm40|voda|vulc|vx(52|53|60|61|70|80|81|83|85|98)|w3c(\-| )|webc|whit|wi(g |nc|nw)|wmlb|wonu|x700|yas\-|your|zeto|zte\-/i.test(navigator.userAgent.substr(0,4))) { 
+    isMobile = true;
+}
+
+if ( isMobile == true ) {
+$("#share-wa").hide();
+}
+
+  
+  
+  
+  
+
+
+});
+function tooglelive(){
+  $.ajax({
+    type:'GET',
+    url:'/playground/switch/live/',
+
+    data:{
+      var:'{{id}}',
+    },
+    success:function(json){
+      json = JSON.parse(json);
+      var notyf = new Notyf();
+      if (json == '1'){
+        document.getElementById('live_toggle').checked = true;
+        notyf.success('Playground is live now!');
+      }
+      else{
+        document.getElementById('live_toggle').checked = false;
+        notyf.error('Playground back to normal!');
+      }
+    }
+  });
+}
+function copyToClipboard(id) {
+    var textBox = document.getElementById(id);
+    textBox.select();
+    document.execCommand("copy");
+    var notyf = new Notyf();
+    notyf.success('Link Copied!');
+    
+}
+</script>
+{% endblock %}

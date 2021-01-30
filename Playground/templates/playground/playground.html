@@ -1,0 +1,245 @@
+{% extends 'Core/snippets/base.html' %}
+{% block header %}
+{% include 'Core/snippets/header.html' %}
+{% endblock %}
+{% block style %}
+.jumbotron{
+    background: linear-gradient(-330deg, #753a88, #cc2b5e);
+    border-radius:0px;
+}
+.code2{
+    font-size:90px;
+    margin-right:10px;
+    color:#f0ad4e;
+    font-weight:600;
+    margin-top:-7px;
+}
+.code1{ 
+    font-size:60px;
+    color:white;
+    font-weight:600;
+   
+  
+}
+.code3{
+    font-size:90px;
+    margin-top:-5px;
+margin-left:10px;
+color:#f0ad4e;
+font-weight:600;    
+}
+
+.text{
+    font-size:25px;
+    font-weight:400;
+    
+}
+.card1{
+    background: linear-gradient(330deg,  #6dd5ed, #2193b0);
+    font-size:20px;
+    color:white
+    border:none;
+
+}
+.card2{
+    background: linear-gradient(330deg,  #C92C60, #7B3985);
+    font-size:20px;
+    color:white
+    border:none;
+
+}
+{% endblock %}
+{% block body %}
+<section class="jumbotron">
+<div class="container">
+    <div class="row mt-5">
+        <div class="col-12 d-flex justify-content-center">
+            <div style="display: flex; flex-direction: row;">
+               <i class="fa fa-angle-left code2"></i>
+               <span class="code1">Code</span>
+               <i class="fa fa-angle-right code3"></i>
+                
+            </div>
+        </div>
+    </div>
+    <div class="col-12 d-flex justify-content-center mt-2">
+        <div>
+            <div style="font-size: 28px;">
+                <span style="font-size: 30px; color: white;">CodingAlphas</span> Playground
+            </div>
+            <div>
+               <center> <p style="color:#f0ad4e; letter-spacing:0.5px; font-size: 16px; font-weight: 500;">Play Around With Code</p></center>
+            </div>
+    </div>
+    </div>
+    <div class="col-12 d-flex justify-content-center">
+        <button data-toggle="modal" data-target="#exampleModal" class="btn shadow  pt-2 pl-3 pr-3" style="background-color:white; color:#f0ad4e; font-size: 16px; border-radius:25px;">
+            <i class="fa fa-plus"></i>  New Playground
+          </button>
+    </div>
+</div>
+
+<!-------------------------------------------------------------------   Modals  --------------------------------------------------------->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+      <div class="modal-content">
+        
+        <div class="modal-body">
+         <div class="container">
+             <div class="row">
+             <div class="col-12">
+                <h5 class="text-muted">
+                    Console Applications
+                </h5>
+             </div>
+             <div class="col-12 col-md-6 col-xl-3 mt-3">
+                <a href="/playground/create/empty/" style="text-decoration: none; color:white;">
+
+                <div class="card card1 shadow-sm card-body border-0" style="display: flex; justify-content: center; align-items:center ;">
+                 <div>
+                    <i class="fa fa-plus"></i>  New
+                 </div>  
+
+                 </div>
+                </a>
+             </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12 mt-4">
+                   <h5 class="text-muted">
+                       Frontend Applications
+                   </h5>
+                </div>
+                <div class="col-12 col-md-6 col-xl-3 mt-3">
+                   <a href="/playground/frontend/create/empty/" style="text-decoration: none; color:white;">
+   
+                   <div class="card card2 shadow-sm card-body border-0" style="display: flex; justify-content: center; align-items:center ;">
+                    <div>
+                          Frontend
+                    </div>  
+   
+                    </div>
+                   </a>
+                </div>
+               </div>
+         </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-sm btn-outline-secondary" data-dismiss="modal">Cancel</button>
+  
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<section>
+    <div class="container">
+        <div class="row">
+            {% if play.all.count == 0%}
+            <div class="col-12">
+                <center>
+                    <h4 class="text-muted  mt-5">
+                        No Saved Playgrounds
+                    </h4>
+                </center>
+            </div>
+            {% else %}
+            {% for i in play %}
+            <div class="col-12 col-md-6 col-xl-4 mb-2">
+               <a href="{%if i.category == 'Console' %}/playground/create/{{i.id}}/{% else %}/playground/frontend/create/{{i.id}}/ {% endif %}" style="text-decoration: none;"> 
+                <div class="card border-0" style="box-shadow:2px 2px 10px rgb(0,0,0,0.1);">
+                    <div style="position: absolute; font-size: 12px; top:0.3rem; left:0.3rem;" class="text-muted"><i class="fa fa-dot-circle-o"></i> {{i.category}}</div>
+                    <div class="card-body">
+                        <div style="display: flex; flex-direction: row;" class="mt-2">
+                     
+                          <i class="fa fa-code" style="color: #f0ad4e; font-size: 25px;"></i> 
+                          <p class="text-muted ml-2" style="font-size: 20px; margin-top:-3px ;"> {{i.title}}</p>
+                                 
+                        </div>
+                        <div style="display: flex; justify-content: flex-end;">
+                            <a class="mr-2" onclick="return confirm('Are you sure you want to delete {{i.title}}');" href="/compiler/playground/delete/{{i.id}}/">
+                                <i class="fa fa-trash text-muted" ></i>
+                            </a>
+                            <a data-toggle="modal" data-target="#exampleModaledit{{i.id}}" class="mr-2" >
+                                <i class="fa fa-pencil text-muted" ></i>
+                            </a>
+                            <a  class="mr-2" data-toggle="modal" data-target="#exampleModalshare{{i.id}}">
+                                <i class="fa fa-share-alt text-muted" ></i>
+                            </a>
+                            <div class="modal fade" id="exampleModalshare{{i.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered" role="document">
+                                <div class="modal-content">
+                                    
+                                    <div class="modal-body">
+                                        <h6 class="text-muted"> 
+                                               <i class="fa fa-share-alt"></i> Share
+                                        </h6>
+
+                                        <input type="text" id ="shareinput{{i.id}}" value="{{i.link}}" class="form-control">
+                                
+                                    </div>
+                                    <div class="modal-footer">
+                                        <div id="savestatus{{i.id}}">
+
+                                        </div>
+                                        <button onclick="copyToClipboard('{{i.id}}');" class="btn btn-sm btn-outline-secondary"> <i class="fa fa-copy"></i> Copy</button>
+                                   
+                                    <button type="button" class="btn btn-sm btn-outline-secondary" data-dismiss="modal">cancel</button>
+                                  
+                                    </div>
+                      
+                                </div>
+                                </div>
+                            </div>
+
+  
+                            <!-- Modal -->
+                            <div class="modal fade" id="exampleModaledit{{i.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered" role="document">
+                                <div class="modal-content">
+                                    
+                                    <div class="modal-body">
+                                        <h6 class="text-muted"> 
+                                               <i class="fa fa-pencil"></i> Rename
+                                        </h6>
+
+                                    <form class="mt-1" action="/compiler/playground/edit/{{i.id}}/" method="POST">
+                                        {% csrf_token %}
+                                        <input type="hidden" value="{{i.id}}" name="rename_id">
+                                        <input type="text" name ="rename" value="{{i.title}}" class="form-control">
+                                
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="submit" class="btn btn-sm btn-outline-secondary"> <i class="fa fa-save"></i> Save</button>
+                                   
+                                    <button type="button" class="btn btn-sm btn-outline-secondary" data-dismiss="modal">cancel</button>
+                                  
+                                    </div>
+                                </form>
+                                </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </a>
+            </div>
+            {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+</section>
+{% endblock %}
+{% block script %}
+<script>
+    function copyToClipboard(id) {
+    var textBox = document.getElementById("shareinput"+id);
+    textBox.select();
+    document.execCommand("copy");
+    document.getElementById('savestatus'+id).innerHTML = '<span class="mt-1 p-0" style="color:#f0ad4e;" ><i class="fa fa-dot-circle-o"></i> Copied</span>';
+    $("#savestatus"+id).children().delay(5000).fadeOut(800);
+}
+</script>
+{% endblock %}
+
