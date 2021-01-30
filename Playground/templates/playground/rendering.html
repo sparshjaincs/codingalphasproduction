@@ -1,0 +1,231 @@
+{% extends 'Core/snippets/base.html'  %}
+
+{% block navbar %}
+{% include 'Core/snippets/navbar.html' %}
+{% endblock %}
+{% block jscss %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/ace.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/ace.min.js"></script>
+{% endblock %}
+{% block style %}
+#editor { 
+    position: absolute;
+    top: 3.5rem;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    height:607px;
+}
+.btn1{
+    
+    border-color:rgb(0,0,0,0.1);
+    border-bottom:3px solid #C42D63;
+    }
+    
+{% endblock %}
+
+{% block body %}
+<div class="container-fluid">
+    <div class="row mt-5 ">
+        <div style="height:50px; background-color: white; position: absolute; bottom:0; width:100%; z-index:1000;" class="pt-2 border-top d-flex justify-content-between ">
+            <div>
+            <a class="btn  border ml-2 pl-3 pr-3" style="background-color: #C42D63; color: white; border-radius: 20px; font-size: 13px;"><i class="fa fa-share-alt"></i> Share</a>
+        </div>
+        <div class="mr-3">
+            <a class="btn btn-sm btn1" onclick="show_palette();" style=""><i class="fa fa-angle-up"></i> Input</a>
+        </div>
+        </div>
+        <div class="col-12 col-lg-7 p-0 border-right" style="height:665px;">
+            <div class="border-bottom p-2 d-flex justify-content-between " style="background-color: white;">
+              <div class=" d-flex justify-content-flex-start">
+                <div>
+                <a onclick = "submit()" style="font-size: 13px; background-color: #C42D63; color:white; border-radius:20px;" class="ml-2 btn  border rounded-pill pr-3 pl-3"><i class="fa fa-play"></i> Run Code</a>
+               </div>
+               <div class="mt-1 ml-2 d-flex justify-content-flex-start">
+                   <input id="inp"  onchange="savefile();" class="form-control p-2 " value="{{file_name}}" disabled type="text" style="">
+                   <a class="btn btn-sm border ml-1 d-flex justify-content-center align-items-center"  onclick="remove()" style="font-size: 13px; height:30px;"><i class="fa fa-pencil"></i></a>
+               </div> 
+            </div>
+            <div class="d-flex justify-content-flex-start">
+                <div>
+                <button onclick="save();" class="btn   shadow-sm pl-3 pr-3" style="background-color: #C42D63; color:white; border-radius:20px; font-size: 13px;">
+                    <i class="fa fa-save"></i>  Save
+                 </button>
+                </div>
+                <div>
+                 <select name="lang" id="title" class="btn btn1 btn-sm  shadow-sm  p-2 ml-3 pl-2" style="" id="exampleFormControlSelect1">
+                    {% for i in language %}
+                    <option  value="{{i.lang}}">{{i.lang}}</option>
+                 {% endfor %}
+                  </select>
+                </div>
+                <div>
+                    <a class="btn border ml-3"><i class="fa fa-cog"></i></a>
+                </div>
+               
+            </div>
+            </div>
+            <div>
+                <div id="editor">{{instance|safe}}</div>
+            </div>
+           
+            
+
+
+
+
+            <!-- ----------------------  Editor ------------------------->
+
+            
+            
+        </div>
+        <div class="col-12 col-lg-5 p-0">
+            <div id="pallete" style="height:200px; position:absolute; bottom:2rem; width:100%; background-color: white; display: none;" class="border-top p-2">
+                <p class="text-muted m-0 mb-1" style=""> Inputs <span style="font-size: 12px;">( Enter each input in new line. )</span></p>
+                <textarea id="input_area" style="resize:none; height:87%;" class="form-control" >
+                     
+                </textarea>
+            </div>
+         <div class="d-flex justify-content-between align-items-center border-bottom" style="width: 100%;box-shadow:4px 4px 10px rgb(0,0,0,0.1);">
+             <div class=" d-flex align-items-center" style="width: 100%; height:55px;">
+                <h5 class="text-muted ml-3 mt-2">Output :<span id=""></span></h5>
+             </div>
+             <div class="p-0">
+                 <a class="btn btn-sm btn1 mr-2" onclick = "document.getElementById('outputconsole').innerHTML='';">Clear Console</a>
+             </div>
+             <div>
+
+             </div>
+         </div>
+         <div id="outputconsole" style="height:638px; overflow-y:scroll;" class="p-3">
+
+         </div>
+        </div>
+    </div>
+</div>
+{% endblock%}
+
+{% block script %}
+<script>
+    // aceeditor
+    var editor = ace.edit("editor");
+    editor.setTheme("ace/theme/textmate");
+    editor.session.setMode("ace/mode/python");
+  
+
+
+    function remove()
+    {
+    
+       $("#inp").removeAttr('disabled'); //removes the disabled attribut from the  
+                                              //element whose id is 'date_end'
+    }
+
+    function savefile(){
+        var val = document.getElementById('inp').value;
+      
+        $.ajax({
+            type:'GET',
+            url : '/playground/savefile/{{id}}/',
+            data:{
+                file_name: val,
+            },
+            success:function(json){
+                json = JSON.parse(json);
+                document.getElementById('inp').disabled = true;
+                var notyf = new Notyf();
+                notyf.success('Your changes have been successfully saved!');
+            },
+            error : function(xhr,errmsg,err) {
+        console.log(xhr.status + ": " + xhr.responseText);
+            }
+
+        });
+    }
+
+    function save(){
+        var value = editor.getValue();
+        $.ajax({
+        type:'POST',
+        url:'/playground/save/{{id}}/',
+        data:{
+            title:$('#title').val(),
+            description:value,
+            csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
+            action: 'post'
+        },
+        success:function(json){
+            json = JSON.parse(json);
+            console.log(json);
+          
+            var notyf = new Notyf({
+             
+            });
+            notyf.success('Your changes have been successfully saved!');
+            
+        
+        },
+        error : function(xhr,errmsg,err) {
+        console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
+    }
+});
+    }
+
+    $("select").mouseup(function() {
+    var code = document.getElementById('title').value;
+
+    $.ajax({
+        type:'GET',
+        url:'/playground/temp/{{id}}/',
+        data:{
+            lang:code,
+        },
+        success:function(json){
+            json = JSON.parse(json);
+            editor.session.setMode("ace/mode/java");
+            editor.setValue(json['instance']);
+            
+        }
+    });
+});
+
+function submit(){
+       
+           
+        $.ajax({
+        type:'POST',
+        url:'/playground/test/',
+        data:{
+            title:$('#title').val(),
+            description:editor.getValue(),
+            csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
+            action: 'post',
+            input:$('#input_area').val(),
+        },
+        success:function(json){
+            json = JSON.parse(json);
+            console.log(json);
+            var node = document.createElement("P");
+            
+            node.innerHTML ="<p style='color:#449D44;'> Finished in " + json['output'][1] + " ms" + "</p>"+ "<pre>" + json['output'][0] + "</pre><hr>" ;
+            document.getElementById("outputconsole").appendChild(node);
+
+            
+        },
+        error : function(xhr,errmsg,err) {
+        console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
+    }
+});
+    }
+
+    function show_palette(){
+    if (document.getElementById('pallete').style.display == 'none'){
+    document.getElementById('pallete').style.display = 'block';
+    }
+    else{
+        document.getElementById('pallete').style.display = 'none';
+    }
+}
+
+</script>
+{% endblock %}

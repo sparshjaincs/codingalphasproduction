@@ -24,4 +24,6 @@ urlpatterns = [
     path('ckeditor/',include("ckeditor_uploader.urls")),
     path("coding/",include("coding.urls")),
     path("blog/",include("blogs.urls")),
+    path("notebook/",include("Notebook.urls")),
+    path("playground/",include("Playground.urls")),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
