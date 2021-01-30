@@ -7,6 +7,7 @@ from datetime import datetime
 from ckeditor.fields import RichTextField
 from ckeditor_uploader.fields import RichTextUploadingField
 from django.contrib.contenttypes.fields import GenericRelation
+from discuss.models import *
 #from .views import current_user as cu
 # Create your models here.
 
@@ -131,7 +132,7 @@ class Profile(models.Model):
     quora = models.CharField(max_length=1000,blank=True,null=True)
     other = models.CharField(max_length=1000,blank=True,null=True)
     favourities = models.ManyToManyField(Articles,blank=True,related_name="articles_titles")
-
+    quora_discuss =  models.ManyToManyField(Quora,blank=True,related_name="discuss_titles")
     subscribe = models.ManyToManyField(User,default=None,blank=True,related_name="subscribe_title")
     mute = models.ManyToManyField(User,default=None,blank=True,related_name="mute_title")
     

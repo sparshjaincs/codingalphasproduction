@@ -3,6 +3,7 @@ from .forms import *
 from django.db.models import Q
 from django.http import HttpResponse
 import json
+from .models import *
 # Create your views here.
 def homepage(request):
     context = {}
@@ -69,6 +70,76 @@ def quora_submit(request):
 def inside(request,method,id):
     context = {}
     context['method'] = method
-    context['data'] = Quora.objects.get(id = id)
+    ins =  Quora.objects.get(id = id)
+    context['data'] =ins
+    context['like'] = True if request.user in ins.like.all() else False
+    context['dislike'] = True if request.user in ins.dislike.all() else False
+    if method == 'General':
+        form = Anwser_Form()
+        context['form'] = form
+        
+
     return render(request,'discuss/inside.html',context)
-            
+
+def anwser_submit(request):
+    if request.method == 'POST':
+        temp = request.POST.get('title')
+        anonymous = request.POST.get('anonymous')
+        ins = request.POST.get('id')
+        if anonymous == "1":
+            anonymous = True
+        else:
+            anonymous = False
+        if temp is None or temp == "":
+            return HttpResponse(json.dumps(["error","Anwser Field Can't be empty."]))
+        else:
+            try:
+                    ins = Anwsers( instance = Quora.objects.get(id = ins), user=request.user,anwser = temp,anonymous = anonymous)
+                    ins.save()
+                    data = {
+                        
+                        
+                        'status':'You successfully submited your question.',
+                    }
+                    return HttpResponse(json.dumps(data))
+
+            except Exception as exp:
+                    print(exp)
+                    return HttpResponse(json.dumps(['error','Question Already Exists.']))
+        
+def comment_submit(request):
+    if request.method == 'POST':
+        method = request.POST.get('method')
+        ty  = request.POST.get('type')
+        questionid  = request.POST.get('id')
+        anwserid  = request.POST.get('anwserid')
+        body  = request.POST.get('body')
+        proper = request.POST.get('property')
+        commentid = request.POST.get('commentid')
+        if method == 'discuss':
+            if ty == 'General':
+                if body is None or body == '':
+                    return HttpResponse(json.dumps(['error',"Comment Field Can't be empty!"]))
+                else:
+                    try:
+                        if proper == 'reply':
+                            ins = Comment(user = request.user,question = Quora.objects.get(id = questionid),post = Anwsers.objects.get(id = anwserid),body = body,parent = Comment.objects.get(id = commentid))
+                        else:
+                            ins = Comment(user = request.user,question = Quora.objects.get(id = questionid),post = Anwsers.objects.get(id = anwserid),body = body)
+                        ins.save()
+                        data = {
+                            'user':ins.user.username,
+                            'name':ins.user.profile.first_name + " " + ins.user.profile.last_name,
+                            'id':ins.id,
+                            'body':ins.body,
+                            'profile':str(ins.user.profile.avatar),
+                            'time':str(ins.created.strftime("%B. %d, %m %H:%M %p")),
+                            'replies':Comment.objects.filter(parent = ins).count(),
+
+                        }
+                        return HttpResponse(json.dumps(['success',data]))
+                        
+                    except Exception as exp:
+                        return HttpResponse(json.dumps(['error',str(exp)]))
+
+             
