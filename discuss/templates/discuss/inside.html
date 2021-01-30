@@ -237,7 +237,7 @@
                                                            
                                                                 </div>
                                                                 <div class="d-flex align-items-center">
-                                                                    <p style="font-size:12px;" class="text-muted ml-3 pt-3">Comment By <a href="/profile/{{j.user}}/">{{j.user.profile.first_name}} {{j.user.profile.last_name}}</a>, {{j.created}}</p>
+                                                                    <p style="font-size:12px;" class="text-muted ml-3 pt-3">Replied By <a href="/profile/{{j.user}}/">{{j.user.profile.first_name}} {{j.user.profile.last_name}}</a>, {{j.created}}</p>
                                                                    </div>
                                                             </div>
                                                             <div class="mt-2">
@@ -476,9 +476,11 @@ function submit(method="General"){
 function CommentSubmit(method,type,property,questionid,anwserid,value,commentid=""){
     if (property == 'reply'){
         var val = document.getElementById('replyform'+commentid).value;
+        var dfg = 'Replied';
     }
     else{
         var val = document.getElementById('commentform'+anwserid).value;
+        var dfg = 'Comment';
     }
     
     console.log(val);
@@ -503,6 +505,7 @@ function CommentSubmit(method,type,property,questionid,anwserid,value,commentid=
                             notyf.error(data[1]);
                         }
                         else{
+                            
                             var idiv = document.createElement('div');
                             idiv.style="background-color: #EEE; border-radius: 12px; margin-bottom:10px; padding:10px; padding-right:15px;";
                             idiv.class="p-2 pr-4 mb-2 pb-2";
@@ -514,7 +517,7 @@ function CommentSubmit(method,type,property,questionid,anwserid,value,commentid=
                                    
                                         </div>
                                         <div class="d-flex align-items-center">
-                                            <p style="font-size:12px;" class="text-muted ml-3 pt-3">Comment By <a href="/profile/`+data[1]['user']+`/">`+data[1]['name']+`</a>, `+data[1]['time']+`</p>
+                                            <p style="font-size:12px;" class="text-muted ml-3 pt-3">`+dfg+` By <a href="/profile/`+data[1]['user']+`/">`+data[1]['name']+`</a>, `+data[1]['time']+`</p>
                                             <a style="font-size: 12px;" class="ml-4"><i class=" fa fa-comment fa2"></i></a><span style="font-size: 12px;" class="text-muted ml-1"> `+data[1]['replies']+` Replies</span>
                                         </div>
                                     </div>
