@@ -1,7 +1,8 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 import json
-from discuss.models import *
+from discuss.models import Quora
+from discuss.models import Anwsers as AnsModel
 from Core.models import *
 # Create your views here.
 def homepage(request):
@@ -22,6 +23,19 @@ def like(request):
             status = 1
         likecount = ins.like.all().count()  
         dislikecount = ins.dislike.all().count()
+    elif method == 'discussanwser':
+        ins = AnsModel.objects.get(id=instance)
+        if request.user in ins.like.all():
+            ins.like.remove(request.user)
+            status = 0
+        else:
+            ins.like.add(request.user)
+            if request.user in ins.dislike.all():
+                ins.dislike.remove(request.user)
+            status = 1  
+        likecount = ins.like.all().count()  
+        dislikecount = ins.dislike.all().count()
+
     return HttpResponse(json.dumps([status,likecount,dislikecount]))
 
 
@@ -30,6 +44,18 @@ def dislike(request):
     instance = request.GET.get('instance')
     if method == 'discuss':
         ins = Quora.objects.get(id = instance)
+        if request.user in ins.dislike.all():
+            ins.dislike.remove(request.user)
+            status = 0
+        else:
+            ins.dislike.add(request.user)
+            if request.user in ins.like.all():
+                ins.like.remove(request.user)
+            status = 1
+        dislikecount = ins.dislike.all().count()
+        likecount = ins.like.all().count() 
+    elif method == 'discussanwser':
+        ins = AnsModel.objects.get(id = instance)
         if request.user in ins.dislike.all():
             ins.dislike.remove(request.user)
             status = 0
@@ -70,6 +96,8 @@ def mark(request):
         else:
             instance.quora_discuss.add(ins)
             status = 1
+    
+
     return HttpResponse(json.dumps([status]))
 
 

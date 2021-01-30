@@ -194,11 +194,11 @@
                                 <p class="text-muted" style="font-size: 11px; margin-bottom: 0px;">Posted by {% if not x.anonymous %}<a style="text-decoration: none;" href="/profile/{{x.user}}/">{{x.user.profile.first_name}} {{x.user.profile.last_name}}</a>{% else %}<span class="text-dark" style="font-weight: 600;">Anonymous User</span>{% endif %}, {{x.created}}</p>
                             </div>
                             <a href="/discuss/{{method}}/inbox/{{x.id}}/" style="text-decoration: none; ">
-                                <div style="width:100%; display:flex; flex-wrap:wrap; " class="mt-1 text-dark">
+                                <div style="width:100%; display:flex; flex-wrap:wrap; font-size: 14px;" class="mt-1 text-dark">
                                     {% if x.title2 %}
                                     <p class="text-dark" style=" font-size: 14px; ">{{x.title2|safe}}</p>
                                     {% else %}
-                                <p class="" style=" font-size: 14px;">{{x.title|safe}}</p>
+                                {{x.title|safe}}
                                 {% endif %}
                             </div>
                         </a>
@@ -223,8 +223,12 @@
                         
                             <a  onclick="like1('discuss','{{x.id}}','discuss_like{{x.id}}','like_count{{x.id}}','dislike_count{{x.id}}','discuss_dislike{{x.id}}')" class="btn btn-sm text-muted pr-1 ml-2   " title="Upvote" data-toggle="tooltip"><i id="discuss_like{{x.id}}" class="fa {% if request.user in x.like.all %} fa3{% else %}fa2 {% endif %} fa-thumbs-up"  style=""></i></a> <span class="text-muted " style="font-size: 14px;" id="like_count{{x.id}}">{{x.like.all.count}}</span>
                             <a  onclick="dislike1('discuss','{{x.id}}','discuss_dislike{{x.id}}','dislike_count{{x.id}}','like_count{{x.id}}','discuss_like{{x.id}}')" class="btn btn-sm text-muted ml-2 pr-1" title="Downvote" data-toggle="tooltip"><i id="discuss_dislike{{x.id}}" class="fa {% if request.user in x.dislike.all %} fa3{%else%}fa2 {% endif %} fa-thumbs-down"></i></a><span class="text-muted " style="font-size: 14px;" id="dislike_count{{x.id}}">{{x.dislike.all.count}}</span>
-                           <a href="/discuss/{{method}}/inbox/{{x.id}}/#comment"  class="btn   pr-1" style="color: #E0E0E0;"><i class="fa fa-comment fa2" style="font-size: 13px;"></i></a><span style="font-size: 14px;" class="text-muted">{{x.quora_comment.all.count}}</span>
+                           {% if method == 'General' %}
+                            <a href="/discuss/{{method}}/inbox/{{x.id}}/#comment"  title="{{x.Quora_anwsers.all.count}} Threads" data-toggle="tooltip" class="btn  pr-1" style="color: #546E7A;"><i class="fa fa-list" style="font-size: 13px;"></i></a><span style="font-size: 14px;" class="text-muted">{{x.Quora_anwsers.all.count}}</span>
+                            {%else%}
+                            <a href="/discuss/{{method}}/inbox/{{x.id}}/#comment"  title="{{x.quora_comment.all.count}} Comments" data-toggle="tooltip" class="btn  pr-1" style="color: #546E7A;"><i class="fa fa-comment fa2" style="font-size: 13px;"></i></a><span style="font-size: 14px;" class="text-muted">{{x.quora_comment.all.count}}</span>
                             
+                            {%endif%}
                         </div>
                     </div>
                 </div>
@@ -244,11 +248,11 @@
                                     <p class="text-muted" style="font-size: 11px; margin-bottom: 0px;">Posted by {% if not x.anonymous %}<a style="text-decoration: none;" href="/profile/{{x.user}}/">{{x.user.profile.first_name}} {{x.user.profile.last_name}}</a>{% else %}<span class="text-dark" style="font-weight: 600;">Anonymous User</span>{% endif %}, {{x.created}}</p>
                                 </div>
                                 <a href="/discuss/{{method}}/inbox/{{x.id}}/" style="text-decoration: none; ">
-                                    <div style="width:100%; display:flex; flex-wrap:wrap; " class="mt-1 text-dark">
+                                    <div style="width:100%; display:flex; flex-wrap:wrap; font-size: 14px; " class="mt-1 text-dark" >
                                         {% if x.title2 %}
                                         <p class="text-dark" style=" font-size: 14px; ">{{x.title2|safe}}</p>
                                         {% else %}
-                                    <p class="" style=" font-size: 14px;">{{x.title|safe}}</p>
+                                    {{x.title|safe}}
                                     {% endif %}
                                 </div>
                             </a>
@@ -272,8 +276,12 @@
                             <div style="font-size:12px;">
                                 <a  onclick="like1('discuss','{{x.id}}','discuss_like{{x.id}}','like_count{{x.id}}','dislike_count{{x.id}}','discuss_dislike{{x.id}}')" class="btn btn-sm text-muted pr-1 ml-2   " title="Upvote" data-toggle="tooltip"><i id="discuss_like{{x.id}}" class="fa {% if request.user in x.like.all %} fa3{% else %}fa2 {% endif %} fa-thumbs-up"  style=""></i></a> <span class="text-muted " style="font-size: 14px;" id="like_count{{x.id}}">{{x.like.all.count}}</span>
                                 <a  onclick="dislike1('discuss','{{x.id}}','discuss_dislike{{x.id}}','dislike_count{{x.id}}','like_count{{x.id}}','discuss_like{{x.id}}')" class="btn btn-sm text-muted ml-2 pr-1" title="Downvote" data-toggle="tooltip"><i id="discuss_dislike{{x.id}}" class="fa {% if request.user in x.dislike.all %} fa3{%else%}fa2 {% endif %} fa-thumbs-down"></i></a><span class="text-muted " style="font-size: 14px;" id="dislike_count{{x.id}}">{{x.dislike.all.count}}</span>
-                               <a href="/discuss/{{method}}/inbox/{{x.id}}/#comment" class="btn   pr-1" style="color: #E0E0E0;"><i class="fa fa-comment fa2" style="font-size: 13px;"></i></a><span style="font-size: 14px;" class="text-muted">{{x.quora_comment.all.count}}</span>
+                                {% if method == 'General' %}
+                                <a href="/discuss/{{method}}/inbox/{{x.id}}/#comment"  title="{{x.Quora_anwsers.all.count}} Threads" data-toggle="tooltip" class="btn  pr-1" style="color: #546E7A;"><i class="fa fa-list" style="font-size: 13px;"></i></a><span style="font-size: 14px;" class="text-muted">{{x.Quora_anwsers.all.count}}</span>
+                                {%else%}
+                                <a href="/discuss/{{method}}/inbox/{{x.id}}/#comment"  title="{{x.quora_comment.all.count}} Comments" data-toggle="tooltip" class="btn  pr-1" style="color: #546E7A;"><i class="fa fa-comment fa2" style="font-size: 13px;"></i></a><span style="font-size: 14px;" class="text-muted">{{x.quora_comment.all.count}}</span>
                                 
+                                {%endif%}
                             </div>
                         </div>
                     </div>

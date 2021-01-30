@@ -23,20 +23,24 @@ class Quora(models.Model):
 
 class Anwsers(models.Model):
     instance = models.ForeignKey(Quora,related_name="Quora_anwsers",to_field="title",on_delete=models.CASCADE)
+    user = models.ForeignKey(User, related_name='Anwser_User', to_field='username', on_delete=models.CASCADE,default="")
     anwser = RichTextUploadingField()
     like = models.ManyToManyField(User,related_name="anwser_like")
     dislike = models.ManyToManyField(User,related_name="anwser_dislike")
+    created = models.DateTimeField(auto_now_add=True,null=True)
+    anonymous = models.BooleanField(default = False)
+    pinned = models.BooleanField(default=False)
 
 
     def __str__(self):
-        return self.anwser
+        return self.user.username
 
 
 class Comment(models.Model):
     user = models.ForeignKey(User, related_name='comment_user', to_field='username', on_delete=models.CASCADE,default="")
     question = models.ForeignKey(Quora, related_name='quora_comment',on_delete=models.CASCADE,default="")
     post = models.ForeignKey(Anwsers, related_name='Anwser_comment',on_delete=models.CASCADE)
-    parent = models.ForeignKey('self',null=True,blank=True,on_delete=models.CASCADE)
+    parent = models.ForeignKey('self',null=True,blank=True,on_delete=models.CASCADE,related_name="replies_name")
     body = models.TextField(blank=False)
     created = models.DateTimeField(auto_now_add=True,null=True)
     active = models.BooleanField(default=True)
@@ -51,6 +55,6 @@ class Comment(models.Model):
             return False
         return True
     def __str__(self):
-        return self.post.Quora_anwsers.title
+        return self.post.user.username
 
 

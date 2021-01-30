@@ -12,3 +12,8 @@ class Other_Form(forms.ModelForm):
     class Meta:
         model = Quora
         fields = ('title2','title','tags')
+
+class Anwser_Form(forms.ModelForm):
+    class Meta:
+        model = Anwsers
+        fields = ('anwser',)

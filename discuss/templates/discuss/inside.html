@@ -8,9 +8,40 @@
 {% block jscss %}
 <script src="https://cdn.jsdelivr.net/sharer.js/latest/sharer.min.js"></script>
 {% endblock %}
+
+{% block style %}
+#div_id_anwser label{
+    display:none;
+} 
+.slider {
+    position: fixed;
+    width: 100%;
+
+    height: 55%;
+  
+    border-top:1px solid rgb(0,0,0,0.05);
+    bottom:0;
+    overflow: hidden;
+    background-color:#fff;
+    box-shadow:2px 2px 10px rgb(0,0,0,0.2);
+    transition: all 1s;
+    overflow-y:scroll;
+  }
+  
+  .slider.close {
+   bottom:0;
+    height: 0;
+  }
+{% endblock %}
 {% block body %}
 <div class="container">
     <div class="row">
+
+
+
+
+
+
         <div class="col-12 mt-5 pt-3">
             <div class="card shadow-sm border-0">
                 <div class="card-header border-0 p-2">
@@ -69,6 +100,9 @@
                             <span class="ml-5"><i class="fa fa-comment fa2"></i> {{data.quora_comment.all.count}} Comments</span>
                         </div>
                         {% else %}
+                        <button class="btn btn-sm shadow-sm trigger text-white" style="position: absolute; right:1rem; background-color: #C42D63; font-size:12px;">
+                            <i class="fa fa-plus"></i> Start Thread
+                        </button>
                         <div class="text-muted d-flex justify-content-start pt-2" style="font-size: 12px;">
                             {% if data.pinned %}
                                 <i class="fa fa-thumb-tack mt-1 mr-2" style="color:#C42D63; font-size:14px; "></i>
@@ -78,18 +112,19 @@
                             <span class="ml-5"><i class="fa fa-user-plus fa2"></i> {{data.user.profile.following.all.count}} Followers</span>
                             {% endif %}
                             <span class="ml-5"><i class="fa fa-street-view"></i> 235K Views</span>
-                            <span class="ml-5"><i class="fa fa-comment fa2"></i> {{data.quora_comment.all.count}} Comments</span>
-                            <span class="ml-5"><i class="fa fa-reply fa1"></i> {{data.Quora_anwsers.all.count}} Anwsers</span>
+                            
+                            <span class="ml-5"><i class="fa fa-list"></i> {{data.Quora_anwsers.all.count}} Threads</span>
                         </div>
                         <div class="mt-2">
                             
-                                {{data.title|safe}}
+                              <center> {{data.title|safe}}</center> 
                             
                         </div>
+                       
                         {% endif %}
                         
                     </div>
-                    <div class="pl-4 pt-3">
+                    <div class="pl-4 pt-3" style="font-size: 14px;">
                         {% if method != 'General' %}
                         {{data.title|safe}}
                         {% else %}
@@ -106,10 +141,286 @@
                         {% endif %}
                     </div>
                 </div>
+
+                <div class="card-footer border-0">
+                    {% if method == 'General' %}
+                    
+                    <div style="">
+                        {% for x in data.Quora_anwsers.all %}
+                            <div class="mb-2 border-bottom">
+                                <div  class="d-flex justify-content-between">
+                                <div class="d-flex justify-content-start align-items-center">
+                                    <div>
+                                        <img src="/media/{{x.user.profile.avatar}}" style="width:35px; height:35px; border-radius:50%;">
+                                    </div>
+                                    <div class="d-flex align-items-center">
+                                        <p style="font-size:12px;" class="text-muted ml-3 pt-3">Anwsered By {% if x.anonymous %}<span style="font-size: 12px; font-weight: 600;" class="text-dark"> Anonymous User</span> {%else%}<a href="/profile/{{x.user}}">{{x.user.profile.first_name}} {{x.user.profile.last_name}}</a>{%endif%}, {{x.created}}</p>
+                                        <a style="font-size: 12px;" class="ml-4"><i class=" fa fa-comment fa2"></i></a><span style="font-size: 12px;" class="text-muted ml-1"> {{x.Anwser_comment.all.count }} Comments</span>
+                                    </div>
+                                </div>
+                                <div>
+                                    <a onclick="like1('discussanwser','{{x.id}}','discuss_like_anwser{{x.id}}','like_count_anwser{{x.id}}','dislike_count_anwser{{x.id}}','discuss_dislike_anwser{{x.id}}')" class="btn btn-sm text-muted pr-1 ml-2   " title="Upvote" data-toggle="tooltip"><i id="discuss_like_anwser{{x.id}}" class="fa {% if request.user in x.like.all %} fa3{% else %}fa2 {% endif %} fa-thumbs-up"  style=""></i></a> <span class="text-muted " style="font-size: 14px;" id="like_count_anwser{{x.id}}">{{x.like.all.count}}</span>
+                                    <a onclick="dislike1('discussanwser','{{x.id}}','discuss_dislike_anwser{{x.id}}','dislike_count_anwser{{x.id}}','like_count_anwser{{x.id}}','discuss_like_anwser{{x.id}}')" class="btn btn-sm text-muted ml-3 pr-1" title="Downvote" data-toggle="tooltip"><i id="discuss_dislike_anwser{{x.id}}" class="fa {% if request.user in x.dislike.all %} fa3{%else%}fa2 {% endif %} fa-thumbs-down"></i></a><span class="text-muted " style="font-size: 14px;" id="dislike_count_anwser{{x.id}}">{{x.dislike.all.count}}</span>
+                                   
+                                </div>
+                            </div>
+
+                            <div style="font-size: 14px;" class="ml-5 mr-5">
+                                {{x.anwser|safe}}
+                            </div>
+
+                            <div class="pl-5 mb-3">
+                                <div style="" class="d-flex justify-content-start">
+                                    <div>
+                                        <a class="btn btn-sm border rounded-circle d-flex align-items-center justify-content-center text-white" style="width: 35px; height:35px; background-color:#546E7A">{{request.user.username|first|upper}}</a>
+                                    </div>
+                                    <div style="width: 90%;">
+                                        <input id="commentform{{x.id}}" type="text" class="form-control ml-2 " style=" font-size:12px; width: 100%; border-top-left-radius: 20px; border-bottom-left-radius:20px;">
+                                    </div>
+                                    <div>
+                                        <button onclick="CommentSubmit('discuss','{{method}}','comment','{{data.id}}','{{x.id}}','commentarea{{x.id}}')" class="btn  border ml-3 pt-2 pb-2" style="background-color: #C42D63; color:white; font-size: 12px;  border-top-right-radius: 20px; border-bottom-right-radius:20px;">  <i class="fa fa-paper-plane"></i> Post</button>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                            <div class="ml-5 mt-3" id="commentarea{{x.id}}">
+                                {% for i in x.Anwser_comment.all %}
+                                    {% if i.is_parent %}
+                                    <div style="background-color: #EEE; border-radius: 12px; margin-bottom:10px; padding:10px; padding-right:15px;" class="">
+                                        <div class="d-flex justify-content-between" >
+                                            <div class=' d-flex justify-content-start align-items-center'>
+                                                <div>
+                                                    <img src="/media/{{i.user.profile.avatar}}/" style="width:35px; height:35px; border-radius:50%;">
+                                           
+                                                </div>
+                                                <div class="d-flex align-items-center">
+                                                    <p style="font-size:12px;" class="text-muted ml-3 pt-3">Comment By <a href="/profile/{{i.user}}/">{{i.user.profile.first_name}} {{i.user.profile.last_name}}</a>, {{i.created}}</p>
+                                                    <a style="font-size: 12px;" class="ml-4"><i class=" fa fa-comment fa2"></i></a><span style="font-size: 12px;" class="text-muted ml-1"> {{i.replies_name.all.count}} Replies</span>
+                                                </div>
+                                            </div>
+                                            <div class="mt-2">
+                                                <a onclick="like1('discussanwser','{{x.id}}','discuss_like_anwser{{x.id}}','like_count_anwser{{x.id}}','dislike_count_anwser{{x.id}}','discuss_dislike_anwser{{x.id}}')" class="btn btn-sm text-muted pr-1 ml-2   " title="Upvote" data-toggle="tooltip"><i id="discuss_like_anwser{{x.id}}" class="fa {% if request.user in x.like.all %} fa3{% else %}fa2 {% endif %} fa-thumbs-up"  style=""></i></a> <span class="text-muted " style="font-size: 14px;" id="like_count_anwser{{x.id}}">{{x.like.all.count}}</span>
+                                                <a onclick="dislike1('discussanwser','{{x.id}}','discuss_dislike_anwser{{x.id}}','dislike_count_anwser{{x.id}}','like_count_anwser{{x.id}}','discuss_like_anwser{{x.id}}')" class="btn btn-sm text-muted ml-3 pr-1" title="Downvote" data-toggle="tooltip"><i id="discuss_dislike_anwser{{x.id}}" class="fa {% if request.user in x.dislike.all %} fa3{%else%}fa2 {% endif %} fa-thumbs-down"></i></a><span class="text-muted " style="font-size: 14px;" id="dislike_count_anwser{{x.id}}">{{x.dislike.all.count}}</span>
+                                               
+                                            </div>
+                                            </div>
+                                            <div class="ml-5 p-0" style="margin-top:-10px; ">
+                                                <div style="font-size: 12px;" class="ml-1">
+                                                  {{i.body}}
+                                                  </div>
+                                          
+                                            <div class="mt-1">
+                                                <div style="color:#C42D63">
+                                                        <a data-toggle="collapse" href="#collapseExamplereply{{i.id}}" role="button" aria-expanded="false" aria-controls="collapseExample" class="btn btn-sm border" style="font-size: 10px;"> <i class="fa fa-reply"></i> Reply</a>
+                                                        <a class="btn btn-sm border" style="font-size: 10px;"> <i class="fa fa-share-alt"></i> Share</a>
+                                                        <a class="btn btn-sm border" style="font-size: 10px;" title="Report" data-toggle="tooltip"> <i class="fa fa-exclamation-triangle"></i> </a>
+                                                    </div>
+                                                    <div class="collapse mt-2" id="collapseExamplereply{{i.id}}">
+                                                        <div style="" class="d-flex justify-content-start">
+                                                            <div>
+                                                                <a class="btn btn-sm border rounded-circle d-flex align-items-center justify-content-center text-white" style="width: 35px; height:35px; background-color:#546E7A">{{request.user.username|first|upper}}</a>
+                                                            </div>
+                                                            <div style="width: 90%;">
+                                                                <input id="replyform{{i.id}}" type="text" class="form-control ml-2 " style=" font-size:12px; width: 100%; border-top-left-radius: 20px; border-bottom-left-radius:20px;">
+                                                            </div>
+                                                            <div>
+                                                                <button onclick="CommentSubmit('discuss','{{method}}','reply','{{data.id}}','{{x.id}}','replyarea{{i.id}}','{{i.id}}')" class="btn  border ml-3 pt-2 pb-2" style="background-color: #C42D63; color:white; font-size: 12px;  border-top-right-radius: 20px; border-bottom-right-radius:20px;">  <i class="fa fa-paper-plane"></i> Post</button>
+                                                            </div>
+                                                        </div>
+                                                      </div>
+                                                      <div class=" mt-1" id="replyarea{{i.id}}">
+                                                         {% for j in i.children %}
+                                                         <div class="d-flex justify-content-between" >
+                                                            <div class=' d-flex justify-content-start align-items-center'>
+                                                                <div>
+                                                                    <img src="/media/{{j.user.profile.avatar}}/" style="width:35px; height:35px; border-radius:50%;">
+                                                           
+                                                                </div>
+                                                                <div class="d-flex align-items-center">
+                                                                    <p style="font-size:12px;" class="text-muted ml-3 pt-3">Comment By <a href="/profile/{{j.user}}/">{{j.user.profile.first_name}} {{j.user.profile.last_name}}</a>, {{j.created}}</p>
+                                                                   </div>
+                                                            </div>
+                                                            <div class="mt-2">
+                                                                <a onclick="like1('discussanwser','{{x.id}}','discuss_like_anwser{{x.id}}','like_count_anwser{{x.id}}','dislike_count_anwser{{x.id}}','discuss_dislike_anwser{{x.id}}')" class="btn btn-sm text-muted pr-1 ml-2   " title="Upvote" data-toggle="tooltip"><i id="discuss_like_anwser{{x.id}}" class="fa {% if request.user in x.like.all %} fa3{% else %}fa2 {% endif %} fa-thumbs-up"  style=""></i></a> <span class="text-muted " style="font-size: 14px;" id="like_count_anwser{{x.id}}">{{x.like.all.count}}</span>
+                                                                <a onclick="dislike1('discussanwser','{{x.id}}','discuss_dislike_anwser{{x.id}}','dislike_count_anwser{{x.id}}','like_count_anwser{{x.id}}','discuss_like_anwser{{x.id}}')" class="btn btn-sm text-muted ml-3 pr-1" title="Downvote" data-toggle="tooltip"><i id="discuss_dislike_anwser{{x.id}}" class="fa {% if request.user in x.dislike.all %} fa3{%else%}fa2 {% endif %} fa-thumbs-down"></i></a><span class="text-muted " style="font-size: 14px;" id="dislike_count_anwser{{x.id}}">{{x.dislike.all.count}}</span>
+                                                               
+                                                            </div>
+                                                            </div>
+                                                            <div class="ml-5 p-0" style="margin-top:-10px; ">
+                                                                <div style="font-size: 12px;" class="ml-1">
+                                                                  {{j.body}}
+                                                                  </div>
+                                                          
+                                                            <div class="mt-1">
+                                                                <div style="color:#C42D63">
+                                                                        <a data-toggle="collapse" href="#collapseExamplereply{{j.id}}" role="button" aria-expanded="false" aria-controls="collapseExample" class="btn btn-sm border" style="font-size: 10px;"> <i class="fa fa-reply"></i> Reply</a>
+                                                                        <a class="btn btn-sm border" style="font-size: 10px;"> <i class="fa fa-share-alt"></i> Share</a>
+                                                                        <a class="btn btn-sm border" style="font-size: 10px;" title="Report" data-toggle="tooltip"> <i class="fa fa-exclamation-triangle"></i> </a>
+                                                                    </div>
+                                                                    <div class="collapse mt-2" id="collapseExamplereply{{j.id}}">
+                                                                        <div style="" class="d-flex justify-content-start">
+                                                                            <div>
+                                                                                <a class="btn btn-sm border rounded-circle d-flex align-items-center justify-content-center text-white" style="width: 35px; height:35px; background-color:#546E7A">{{request.user.username|first|upper}}</a>
+                                                                            </div>
+                                                                            <div style="width: 90%;">
+                                                                                <input type="text" class="form-control ml-2 " style=" font-size:12px; width: 100%; border-top-left-radius: 20px; border-bottom-left-radius:20px;">
+                                                                            </div>
+                                                                            <div>
+                                                                                <button class="btn  border ml-3 pt-2 pb-2" style="background-color: #C42D63; color:white; font-size: 12px;  border-top-right-radius: 20px; border-bottom-right-radius:20px;">  <i class="fa fa-paper-plane"></i> Post</button>
+                                                                            </div>
+                                                                        </div>
+                                                                      </div>
+                                                            </div>
+                                                        </div>
+                                                        <hr>
+                                                         {% endfor%}
+                                                      </div>
+
+                                                      
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+
+    </div>
+
+    
+</div>
+<!--
+
+    <div class="ml-5 mt-3">
+                                    <div style="background-color: #EEE; border-radius: 12px;" class=" p-2 pr-4" >
+                                    <div class="d-flex justify-content-between" >
+                                    <div class=' d-flex justify-content-start align-items-center'>
+                                        <div>
+                                            <img src="/media/{{x.user.profile.avatar}}" style="width:35px; height:35px; border-radius:50%;">
+                                   
+                                        </div>
+                                        <div class="d-flex align-items-center">
+                                            <p style="font-size:12px;" class="text-muted ml-3 pt-3">Comment By {% if x.anonymous %}<span style="font-size: 12px; font-weight: 600;" class="text-dark"> Anonymous User</span> {%else%}<a href="/profile/{{x.user}}">{{x.user.profile.first_name}} {{x.user.profile.last_name}}</a>{%endif%}, {{x.created}}</p>
+                                            <a style="font-size: 12px;" class="ml-4"><i class=" fa fa-comment fa2"></i></a><span style="font-size: 12px;" class="text-muted ml-1"> {{x.Anwser_comment.all.count }} Replies</span>
+                                        </div>
+                                    </div>
+                                    <div class="mt-2">
+                                        <a onclick="like1('discussanwser','{{x.id}}','discuss_like_anwser{{x.id}}','like_count_anwser{{x.id}}','dislike_count_anwser{{x.id}}','discuss_dislike_anwser{{x.id}}')" class="btn btn-sm text-muted pr-1 ml-2   " title="Upvote" data-toggle="tooltip"><i id="discuss_like_anwser{{x.id}}" class="fa {% if request.user in x.like.all %} fa3{% else %}fa2 {% endif %} fa-thumbs-up"  style=""></i></a> <span class="text-muted " style="font-size: 14px;" id="like_count_anwser{{x.id}}">{{x.like.all.count}}</span>
+                                        <a onclick="dislike1('discussanwser','{{x.id}}','discuss_dislike_anwser{{x.id}}','dislike_count_anwser{{x.id}}','like_count_anwser{{x.id}}','discuss_like_anwser{{x.id}}')" class="btn btn-sm text-muted ml-3 pr-1" title="Downvote" data-toggle="tooltip"><i id="discuss_dislike_anwser{{x.id}}" class="fa {% if request.user in x.dislike.all %} fa3{%else%}fa2 {% endif %} fa-thumbs-down"></i></a><span class="text-muted " style="font-size: 14px;" id="dislike_count_anwser{{x.id}}">{{x.dislike.all.count}}</span>
+                                       
+                                    </div>
+                                    </div>
+                                    <div class="ml-5 p-0" style="margin-top:-10px; ">
+                                        <div style="font-size: 12px;" class="ml-1">
+                                            Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of "de Finibus Bonorum et Malorum" (The Extremes of Good and Evil) by Cicero, written in 45 BC. This book is a treatise on the theory of ethics, very popular during the Renaissance. The first line of Lorem Ipsum, "Lorem ipsum dolor sit amet..", comes from a line in section 1.10.32.
+                                        </div>
+                                        <div class="mt-1">
+                                            <div style="color:#C42D63">
+                                                <a data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample" class="btn btn-sm border" style="font-size: 10px;"> <i class="fa fa-reply"></i> Reply</a>
+                                                <a class="btn btn-sm border" style="font-size: 10px;"> <i class="fa fa-share-alt"></i> Share</a>
+                                                <a class="btn btn-sm border" style="font-size: 10px;" title="Report" data-toggle="tooltip"> <i class="fa fa-exclamation-triangle"></i> </a>
+                                            </div>
+                                            <div class="collapse mt-2" id="collapseExample">
+                                                <div style="" class="d-flex justify-content-start">
+                                                    <div>
+                                                        <a class="btn btn-sm border rounded-circle d-flex align-items-center justify-content-center text-white" style="width: 35px; height:35px; background-color:#546E7A">{{request.user.username|first|upper}}</a>
+                                                    </div>
+                                                    <div style="width: 90%;">
+                                                        <input type="text" class="form-control ml-2 " style=" font-size:12px; width: 100%; border-top-left-radius: 20px; border-bottom-left-radius:20px;">
+                                                    </div>
+                                                    <div>
+                                                        <button class="btn  border ml-3 pt-2 pb-2" style="background-color: #C42D63; color:white; font-size: 12px;  border-top-right-radius: 20px; border-bottom-right-radius:20px;">  <i class="fa fa-paper-plane"></i> Post</button>
+                                                    </div>
+                                                </div>
+                                              </div>
+
+                                              <div class="d-flex justify-content-between mt-1" >
+                                                <div class=' d-flex justify-content-start align-items-center'>
+                                                    <div>
+                                                        <img src="/media/{{x.user.profile.avatar}}" style="width:35px; height:35px; border-radius:50%;">
+                                               
+                                                    </div>
+                                                    <div class="d-flex align-items-center">
+                                                        <p style="font-size:12px;" class="text-muted ml-3 pt-3">Replied By {% if x.anonymous %}<span style="font-size: 12px; font-weight: 600;" class="text-dark"> Anonymous User</span> {%else%}<a href="/profile/{{x.user}}">{{x.user.profile.first_name}} {{x.user.profile.last_name}}</a>{%endif%}, {{x.created}}</p>
+                                                        <a style="font-size: 12px;" class="ml-4"><i class=" fa fa-comment fa2"></i></a><span style="font-size: 12px;" class="text-muted ml-1"> {{x.Anwser_comment.all.count }} Replies</span>
+                                                    </div>
+                                                </div>
+                                                <div class="mt-2">
+                                                    <a onclick="like1('discussanwser','{{x.id}}','discuss_like_anwser{{x.id}}','like_count_anwser{{x.id}}','dislike_count_anwser{{x.id}}','discuss_dislike_anwser{{x.id}}')" class="btn btn-sm text-muted pr-1 ml-2   " title="Upvote" data-toggle="tooltip"><i id="discuss_like_anwser{{x.id}}" class="fa {% if request.user in x.like.all %} fa3{% else %}fa2 {% endif %} fa-thumbs-up"  style=""></i></a> <span class="text-muted " style="font-size: 14px;" id="like_count_anwser{{x.id}}">{{x.like.all.count}}</span>
+                                                    <a onclick="dislike1('discussanwser','{{x.id}}','discuss_dislike_anwser{{x.id}}','dislike_count_anwser{{x.id}}','like_count_anwser{{x.id}}','discuss_like_anwser{{x.id}}')" class="btn btn-sm text-muted ml-3 pr-1" title="Downvote" data-toggle="tooltip"><i id="discuss_dislike_anwser{{x.id}}" class="fa {% if request.user in x.dislike.all %} fa3{%else%}fa2 {% endif %} fa-thumbs-down"></i></a><span class="text-muted " style="font-size: 14px;" id="dislike_count_anwser{{x.id}}">{{x.dislike.all.count}}</span>
+                                                   
+                                                </div>
+                                                </div>
+                                                <div class="ml-5">
+                                                    <div style="font-size: 12px;" class="ml-1">
+                                                        Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of "de Finibus Bonorum et Malorum" (The Extremes of Good and Evil) by Cicero, written in 45 BC. This book is a treatise on the theory of ethics, very popular during the Renaissance. The first line of Lorem Ipsum, "Lorem ipsum dolor sit amet..", comes from a line in section 1.10.32.
+                                                    </div>
+
+                                                    <div style="color:#C42D63">
+                                                        <a data-toggle="collapse" href="#collapseExample1" role="button" aria-expanded="false" aria-controls="collapseExample" class="btn btn-sm border" style="font-size: 10px;"> <i class="fa fa-reply"></i> Reply</a>
+                                                        <a class="btn btn-sm border" style="font-size: 10px;"> <i class="fa fa-share-alt"></i> Share</a>
+                                                        <a class="btn btn-sm border" style="font-size: 10px;" title="Report" data-toggle="tooltip"> <i class="fa fa-exclamation-triangle"></i> </a>
+                                                    </div>
+                                                    <div class="collapse mt-2" id="collapseExample1">
+                                                        <div style="" class="d-flex justify-content-start">
+                                                            <div>
+                                                                <a class="btn btn-sm border rounded-circle d-flex align-items-center justify-content-center text-white" style="width: 35px; height:35px; background-color:#546E7A">{{request.user.username|first|upper}}</a>
+                                                            </div>
+                                                            <div style="width: 90%;">
+                                                                <input type="text" class="form-control ml-2 " style=" font-size:12px; width: 100%; border-top-left-radius: 20px; border-bottom-left-radius:20px;">
+                                                            </div>
+                                                            <div>
+                                                                <button class="btn  border ml-3 pt-2 pb-2" style="background-color: #C42D63; color:white; font-size: 12px;  border-top-right-radius: 20px; border-bottom-right-radius:20px;">  <i class="fa fa-paper-plane"></i> Post</button>
+                                                            </div>
+                                                        </div>
+                                                      </div>
+                                                </div>
+
+                                        </div>
+
+                                    </div>
+                                </div>
+                                </div>
+-->
+<section>
+    <div class="container-fluid p-0">
+        <div class="slider close" style="z-index:1000;">
+            <div class="row">
+                <div class="col-12 d-flex justify-content-between align-items-center p-2 pr-4" style="background-color: #FAFAFA;">
+                    <div class="d-flex align-items-center">
+                       <p class="text-muted ml-5 mt-3" style="font-size: 16px; font-weight: 600;"><i class="fa fa-pencil"></i> Write Your Anwsers.</p>
+                    </div>
+                    <div class="d-flex justify-content-end align-items-center">
+                    <input type="checkbox" class="mr-1 " name="anonymous" value="1" >
+                    <p class="text-muted mr-2 pt-3" style="font-size: 12px;">Appear as an Anonymous User</p>
+                    <a onclick="submit('{{method}}')" class="btn border p-2 mr-2 text-white" style="font-size: 12px; background-color: #C42D63;"><i class="fa fa-paper-plane"></i> POST</a>
+                    <a class="btn border  p-2 cancel mr-2 text-muted" style="font-size: 12px;"><i class="fa fa-times-circle-o"></i> Close</a>
+                </div>
+                </div>
+                <div class="col-12">
+                    <div id="code_data" class="" style="width: 100%;"></div>
+                 
+                    <div class=" p-4" style="width:100%;">
+                        <form  id="compose_form" action="" method="post" enctype="multipart/form-data">
+                            {% csrf_token %}
+                                {{form|crispy}}
+                                {{form.media}}
+                            
+                        </form>
+                    </div>
+                  
+                </div>
             </div>
         </div>
     </div>
-</div>
+</section>
 {% endblock %}
 
 {% block script %}
@@ -122,7 +433,132 @@
     notyf.success('Link Copied!');
     
 }
+
+$('.trigger, .cancel').click(function() {
+  $('.slider').toggleClass('close');
+
+});
+
+
+
+function submit(method="General"){
+    for (var instance in CKEDITOR.instances)
+                CKEDITOR.instances[instance].updateElement();
+                var temp = CKEDITOR.instances[instance].getData();              
+                $.ajax({
+                    type: "POST",
+                    data: {
+                        method:method,
+                        title:temp,
+                        csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
+                        anonymous:$('input[name=anonymous]:checked').val(),
+                        id:'{{data.id}}',
+                 
+                    },
+                    url: '/discuss/anwser/quora_submit/',
+                    success: function(data) {
+                        data = JSON.parse(data);
+                        if (data[0] == 'error'){
+                            var notyf = new Notyf();
+                            notyf.error(data[1]);
+                        }
+                        else{
+                            window.location.reload();
+                            var notyf = new Notyf();
+                            notyf.success(data['status']);
+                        }
+                    }
+                });
+            
+        
+        }
+
+function CommentSubmit(method,type,property,questionid,anwserid,value,commentid=""){
+    if (property == 'reply'){
+        var val = document.getElementById('replyform'+commentid).value;
+    }
+    else{
+        var val = document.getElementById('commentform'+anwserid).value;
+    }
+    
+    console.log(val);
+    $.ajax({
+                    type: "POST",
+                    data: {
+                        method:method,
+                        type:type,
+                        csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
+                        id:questionid,
+                        anwserid:anwserid,
+                        body:val,
+                        property:property,
+                        commentid:commentid
+                 
+                    },
+                    url: '/discuss/comment/submit/',
+                    success: function(data) {
+                        data = JSON.parse(data);
+                        if (data[0] == 'error'){
+                            var notyf = new Notyf();
+                            notyf.error(data[1]);
+                        }
+                        else{
+                            var idiv = document.createElement('div');
+                            idiv.style="background-color: #EEE; border-radius: 12px; margin-bottom:10px; padding:10px; padding-right:15px;";
+                            idiv.class="p-2 pr-4 mb-2 pb-2";
+                            idiv.innerHTML = `
+                            <div class="d-flex justify-content-between" >
+                                    <div class=' d-flex justify-content-start align-items-center'>
+                                        <div>
+                                            <img src="/media/`+data[1]['profile']+`/" style="width:35px; height:35px; border-radius:50%;">
+                                   
+                                        </div>
+                                        <div class="d-flex align-items-center">
+                                            <p style="font-size:12px;" class="text-muted ml-3 pt-3">Comment By <a href="/profile/`+data[1]['user']+`/">`+data[1]['name']+`</a>, `+data[1]['time']+`</p>
+                                            <a style="font-size: 12px;" class="ml-4"><i class=" fa fa-comment fa2"></i></a><span style="font-size: 12px;" class="text-muted ml-1"> `+data[1]['replies']+` Replies</span>
+                                        </div>
+                                    </div>
+                                    <div class="mt-2">
+                                        <a onclick="like1('discussanwser','{{x.id}}','discuss_like_anwser{{x.id}}','like_count_anwser{{x.id}}','dislike_count_anwser{{x.id}}','discuss_dislike_anwser{{x.id}}')" class="btn btn-sm text-muted pr-1 ml-2   " title="Upvote" data-toggle="tooltip"><i id="discuss_like_anwser{{x.id}}" class="fa {% if request.user in x.like.all %} fa3{% else %}fa2 {% endif %} fa-thumbs-up"  style=""></i></a> <span class="text-muted " style="font-size: 14px;" id="like_count_anwser{{x.id}}">{{x.like.all.count}}</span>
+                                        <a onclick="dislike1('discussanwser','{{x.id}}','discuss_dislike_anwser{{x.id}}','dislike_count_anwser{{x.id}}','like_count_anwser{{x.id}}','discuss_like_anwser{{x.id}}')" class="btn btn-sm text-muted ml-3 pr-1" title="Downvote" data-toggle="tooltip"><i id="discuss_dislike_anwser{{x.id}}" class="fa {% if request.user in x.dislike.all %} fa3{%else%}fa2 {% endif %} fa-thumbs-down"></i></a><span class="text-muted " style="font-size: 14px;" id="dislike_count_anwser{{x.id}}">{{x.dislike.all.count}}</span>
+                                       
+                                    </div>
+                                    </div>
+                                    <div class="ml-5 p-0" style="margin-top:-10px; ">
+                                        <div style="font-size: 12px;" class="ml-1">
+                                          `+data[1]['body']+`
+                                          </div>
+                                  
+                                    <div class="mt-1">
+                                        <div style="color:#C42D63">
+                                                <a data-toggle="collapse" href="#collapseExamplereply`+data[1]['id']+`" role="button" aria-expanded="false" aria-controls="collapseExample" class="btn btn-sm border" style="font-size: 10px;"> <i class="fa fa-reply"></i> Reply</a>
+                                                <a class="btn btn-sm border" style="font-size: 10px;"> <i class="fa fa-share-alt"></i> Share</a>
+                                                <a class="btn btn-sm border" style="font-size: 10px;" title="Report" data-toggle="tooltip"> <i class="fa fa-exclamation-triangle"></i> </a>
+                                            </div>
+                                            <div class="collapse mt-2" id="collapseExamplereply`+data[1]['id']+`">
+                                                <div style="" class="d-flex justify-content-start">
+                                                    <div>
+                                                        <a class="btn btn-sm border rounded-circle d-flex align-items-center justify-content-center text-white" style="width: 35px; height:35px; background-color:#546E7A">{{request.user.username|first|upper}}</a>
+                                                    </div>
+                                                    <div style="width: 90%;">
+                                                        <input type="text" class="form-control ml-2 " style=" font-size:12px; width: 100%; border-top-left-radius: 20px; border-bottom-left-radius:20px;">
+                                                    </div>
+                                                    <div>
+                                                        <button class="btn  border ml-3 pt-2 pb-2" style="background-color: #C42D63; color:white; font-size: 12px;  border-top-right-radius: 20px; border-bottom-right-radius:20px;">  <i class="fa fa-paper-plane"></i> Post</button>
+                                                    </div>
+                                                </div>
+                                              </div>
+                                    </div>
+                                </div>
+                            `;
+                            var parent = document.getElementById(value);
+                            parent.insertBefore(idiv, parent.firstChild);
+
+                        }
+                    }
+                });
+}
 </script>
-</script>
+
 
 {% endblock %}
