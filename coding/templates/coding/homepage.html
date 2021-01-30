@@ -1,0 +1,360 @@
+{% extends 'core/snippets/base.html' %}
+{% load shortcut %}
+{% block title %}
+Coding | CodingAlphas
+{% endblock %}
+
+{% block header %}
+{% include 'core/snippets/header.html' %}
+{% endblock %}
+
+{% block jscss %}
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.23/css/dataTables.bootstrap5.min.css">
+<script src="https://cdn.datatables.net/1.10.23/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.23/js/dataTables.bootstrap5.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js"></script>
+
+{% endblock %}
+{% block style %}
+.box{
+    width:250px;
+    height:200px;
+    background-color:#fff;
+}
+.card{
+    width:160px;
+    height:110px;
+    border:none;
+    background:linear-gradient(330deg, #753a88, #cc2b5e);
+    border-radius:10px;
+    box-shadow:2px 2px 10px rgb(0,0,0,0.3);
+   
+}
+.card1{
+    width:160px;
+    height:110px;
+    border:none;
+    background:linear-gradient(330deg,  #6dd5ed, #2193b0);
+    border-radius:10px;
+    box-shadow:2px 2px 10px rgb(0,0,0,0.3);
+}
+.category:hover{
+    background-color:#E8E8E8;
+}
+tr:hover{
+    background-color:#E8E8E8;
+}
+{% endblock %}
+{% block body %}
+<div class="container">
+    <div class="row">
+        <div class="col-12 col-xl-8 mt-5 pt-5 pl-5">
+            <div class="d-flex justify-content-start">
+                <div class="card" >
+                    <span style="position: absolute; font-size: 10px;" class=" mt-1 ml-2  badge badge-sm badge-warning text-dark">
+                            {{day}}
+                    </span>
+                    <div class="card-body">
+    
+                        <div style="color:white;" class="mt-2">
+                            <center>
+                                <i style="font-size: 40px;" class="fa fa-calendar" aria-hidden="true"></i>
+                            </center>
+                        </div>
+                        <div style="color: white; " class="mt-2">
+                            <center>
+                                Daily Challange
+                            </center>
+                        </div>
+                    </div>
+                </div>
+    
+                <div class="card card1  ml-3" >
+                    <span style="position: absolute; font-size: 10px; " class=" mt-1 ml-2  badge badge-sm badge-warning text-dark">
+                           {{day}}
+                    </span>
+                    <div class="card-body">
+    
+                        <div style="color:white;" class="mt-2">
+                            <center>
+                                <i style="font-size: 40px;" class="fa fa-trophy" aria-hidden="true"></i>
+                            </center>
+                        </div>
+                        <div style="color: white; " class="mt-2">
+                            <center>
+                                Alphas Contest
+                            </center>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div style="" class="mt-4 d-flex justify-content-start">
+                   
+                <span class="badge p-2  badge-sm badge-primary d-flex align-items-center" style="border-radius: 20px; font-size: 10px; box-shadow:2px 2px 10px rgb(0,0,0,0.3);">
+                 {{data.solved}}  / {{data.total}} Solved
+                </span> 
+                <span class="badge p-2 ml-2  badge-sm badge-success d-flex align-items-center" style="border-radius: 20px; font-size: 10px; box-shadow:2px 2px 10px rgb(0,0,0,0.3);">
+                  {{data.Easy}} Easy
+                </span>
+                <span class="badge ml-2  p-2 badge-sm badge-warning d-flex align-items-center"  style="border-radius: 20px; font-size: 10px; box-shadow:2px 2px 10px rgb(0,0,0,0.3);">
+                  {{data.Medium}} Medium
+                </span>
+                <span class="badge  ml-2 p-2 badge-sm badge-danger d-flex align-items-center"  style="border-radius: 20px; font-size: 10px; box-shadow:2px 2px 10px rgb(0,0,0,0.3);">
+                  {{data.Hard}} Hard
+                </span>
+                <a class="ml-2 category btn btn-sm  btn-default border text-muted" onclick="filtering('All','All');" style="box-shadow:2px 2px 10px rgb(0,0,0,0.1); font-size: 12px;">
+                  <i class="fa fa-list" aria-hidden="true"></i> All Problems
+                </a>
+                <a style="box-shadow:2px 2px 10px rgb(0,0,0,0.1); font-size: 12px;" class="ml-2  category btn btn-sm  btn-default border text-muted" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+                  <i class="fa fa-tag" aria-hidden="true"></i> Show Tags
+                </a>
+                <div  class="dropdown  show">
+                  <a style="box-shadow:2px 2px 10px rgb(0,0,0,0.1); font-size: 12px;" class="btn category dropdown-toggle text-muted border ml-2  btn-default btn-sm" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      <i class="fa fa-sticky-note-o" aria-hidden="true"></i> Solution
+                  </a>
+                
+                  <div class="dropdown-menu" aria-labelledby="dropdownMenuLink" style="font-size: 12px;">
+                    <a onclick = "filtering('solution','Has solution')" class="dropdown-item text-muted" href="#"> Has Solution</a>
+                    <a onclick = "filtering('solution','Has video solution')" class="dropdown-item text-muted" href="#">Has video solution</a>
+                    </div>
+                </div>
+                <div  class="dropdown  show">
+                  <a style="box-shadow:2px 2px 10px rgb(0,0,0,0.1); font-size: 12px;" class="category btn dropdown-toggle text-muted border ml-2  btn-default btn-sm" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      <i class="fa fa-check" aria-hidden="true"></i> Status
+                  </a>
+                
+                  <div class="dropdown-menu" aria-labelledby="dropdownMenuLink" style="font-size: 12px;">
+                    <a onclick = "filtering('status','Todo')" class="dropdown-item text-muted" href="#"><i class="fa fa-tasks"></i> Todo</a>
+                    <a onclick = "filtering('status','Solved')" class="dropdown-item text-muted" href="#"><i class="fa fa-check" aria-hidden="true"></i> Solved</a>
+                    <a onclick = "filtering('status','Attempted')" class="dropdown-item text-muted" href="#"><i class="fa fa-hand-paper-o" aria-hidden="true"></i> Attempted</a>
+                  </div>
+                </div>
+                <div style="" class="dropdown  show">
+                  <a style=" box-shadow:2px 2px 10px rgb(0,0,0,0.1); font-size: 12px;" class="btn category dropdown-toggle text-muted border ml-2  btn-default btn-sm" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      <i class="fa fa-tag" aria-hidden="true"></i> Tags
+                  </a>
+                
+                  <div class="dropdown-menu" aria-labelledby="dropdownMenuLink" style="height:300px; overflow-y:scroll; font-size: 12px;">
+                      {% for i in category %}
+                    <a  onclick = "filtering('tags','{{i}}')" class="dropdown-item text-muted border-bottom" href="#">{{i}}</a>
+                    {% endfor %}
+                    
+                  </div>
+                </div>
+                <div>
+                <a style="box-shadow:2px 2px 10px rgb(0,0,0,0.1); font-size: 12px;" class="ml-2 category btn btn-sm  btn-default border text-muted" onclick="filtering('pick','one')">
+                  <i class="fa fa-random" aria-hidden="true"></i> Pick One
+                </a>
+            </div>
+          </div>
+
+          <div class="mt-5">
+            <table id="example" class="table" style="width:100% ; font-size: 13px;">
+                <thead> 
+                    <tr class="text-muted">
+                        <th>S.No.</th>
+                        <th style="width:70%;">Problem</th>
+                        <th>Acceptance</th>
+                        <th>Difficulty</th>
+                       
+                    </tr>
+                </thead>
+                <tbody class="text-dark">
+                    {% for x in data.ques %}
+                            <tr>
+                                <td  class=" text-muted">
+                                    <div style="display: flex; justify-content: space-between;">
+                                        {{x.id}}
+                                        <span class="">
+                                            {% if x.status == 'Solved' %}<i class="fa fa-check" style="color: green;"></i> {% elif x.status == 'Attempted' %}<i class="fa fa-question" style="color:#f0ad4e;"></i> {% else %} {% endif %}
+                                        </span>
+                                    </div>
+                                </td>
+                                <td   class=" text-muted" >
+                                    
+                                <div style="display: flex; justify-content: space-between;" >
+                                    <a href="/coding/practise/{{x.title|replace}}/{{x.id}}/" style="underline:none; text-decoration:none;">{{x.title}}</a>
+                                    
+                                </div>
+                                <div class="collapse mt-1" id="collapseExample">
+                                    {% for i in x.tags.all %}
+                                        <a href="#" style="font-size: 12px;" onclick="filtering('tags','{{i}}')" class="btn btn-sm btn-outline-warning">{{i}}</a>
+                                    {% endfor %}
+                                  </div>
+                            </td>
+                                
+                                <td class="text-muted">40%</td>
+                                <td class="text-muted">
+                                    {% if x.difficulty == 'Easy' %}
+                                    <span class="badge badge-sm badge-success">Easy</span>
+                                    {%elif x.difficulty == 'Moderate' %}
+                                    <span class="badge badge-sm badge-warning">Medium</span>
+                                     {% else %} 
+                                     <span class="badge badge-sm badge-danger">Hard</span>
+                                     {% endif %}
+                                    </td>
+                            </tr>
+                        {% endfor %}
+                </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="col-12 col-xl-4 mt-5">
+            <div class="p-5">
+                <center>
+
+                
+                <h5 class="text-muted mb-3">
+                    <i class="fa fa-area-chart" aria-hidden="true"></i> Progress
+                </h5>
+            </center>
+                <div class="pl-5 pr-5 mr-4 ml-4" style="">
+                    <canvas id="myChart" width="400" height="400"></canvas> 
+                </div>
+            </div>
+            <div  class="mr-5 ml-5 pl-3 pr-3">
+                <div style="display: flex; font-weight:500; justify-content: space-between; font-size: 13px;" class="text-muted mt-3 pl-3 pr-3">
+                    <div style="color:#753a88;">
+                      <center>  
+                        {{data.todo}}<br>
+                        Todo
+                        </center>
+                    </div>
+                    <div style="color:green;" class="ml-4">
+                        <center>  
+                          {{data.solved}} / {{data.total}}<br>
+                          Solved
+                          </center>
+                      </div>
+                      <div style="color:#f0ad4e;">
+                        <center>  
+                          {{data.Attempted}}<br>
+                          Attempted
+                          </center>
+                      </div>
+                </div>
+                <div class="border mt-3 p-0 rounded-pill " style="background-color:#E8E8E8;">
+                    <div class="card-body p-2 text-muted" style="display: flex; justify-content: space-around; font-size: 13px;">
+                        
+                        
+                        <div>
+                            <span class="mr-3">Exp:700</span>
+                            <span class="ml-3">700 <i class="fa fa-diamond" aria-hidden="true" style="color: #6dd5ed;"></i></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="ml-5 mr-5">
+              
+
+                
+                    <h5 class="text-muted mb-3 mt-5 ml-3 ">
+                        <i class="fa fa-fire" aria-hidden="true"></i> Hot Questions
+                    </h5>
+                    
+
+              
+
+            </div>
+            <div class="ml-5 mr-5 pl-3">
+              
+
+                
+                <h5 class="text-muted mb-3 mt-5 ">
+                    <i class="fa fa-bookmark-o" aria-hidden="true"></i> Topics
+                </h5>
+                <div>
+                    {% for i in category %}
+                    <a onclick = "filtering('tags','{{i}}')" href="#"> 
+                    <span class=" category btn btn-sm border  rounded-pill mb-1" style="font-size: 11px; box-shadow:2px 2px 10px rgb(0,0,0,0.1);">
+                        {{i}} <span class="badge badge-sm badge-warning">{{i.program_tags.all.count}}</span>
+                    </span>
+                    </a>
+                    {% endfor %}
+                </div>
+          
+
+        </div>
+        <div class="ml-5  pl-3">
+              
+
+                
+            <h5 class="text-muted mb-3 mt-5 ">
+                <i class="fa fa-building-o" aria-hidden="true"></i> Companies
+            </h5>
+            <div>
+                {% for i in companies %}
+                <a onclick = "filtering('company','{{i}}')" href="#">
+                <span class=" category btn btn-sm border  rounded-pill  mb-1" style="font-size: 11px; box-shadow:2px 2px 10px rgb(0,0,0,0.1);">
+                    {{i}} <span class="badge badge-sm badge-warning">{{i.program_company.all.count}}</span>
+                </span>
+                </a>
+                {% endfor %}
+            </div>
+      
+
+    
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block script %}
+<script>
+$(document).ready(function() {
+        var table = $('#example').DataTable({
+            "paging": false,
+            'language': {
+            'loadingRecords': '&nbsp;',
+            'processing': '<div class="spinner"></div>'
+            }
+        });
+        
+    } );
+
+
+    var ctx = document.getElementById('myChart').getContext('2d');
+var myChart = new Chart(ctx, {
+    type: 'pie',
+    data: {
+        labels: ['Todo', 'Solved', 'Attempted'],
+        datasets: [{
+            label: '# of Votes',
+            data: [{{data.todo}}, {{data.solved}}, {{data.Attempted}}],
+            backgroundColor: [
+            'rgba(54, 162, 235, 0.2)',
+                'rgba(255, 99, 132, 0.2)',
+                
+                'rgba(255, 206, 86, 0.2)'
+        ],
+            borderColor: [
+            'rgba(54, 162, 235, 1)',
+                'rgba(255, 99, 132, 1)',
+                
+                'rgba(255, 206, 86, 1)'
+               
+            ],
+            hoverBackgroundColor:[
+            'rgba(54, 162, 235, 0.5)',
+                'rgba(255, 99, 132, 0.5)',
+                
+                'rgba(255, 206, 86, 0.5)'
+            ],
+
+            borderWidth: 1
+        }]
+    },
+    options: {
+        legend: {
+            display: false,
+        },
+    }
+});
+</script>
+{% endblock %}

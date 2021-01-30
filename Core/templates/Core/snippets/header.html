@@ -26,7 +26,7 @@
              </li>
              <li class="nav-item"><a class="nav-link" href="#">Contest</a></li>
              <li class="nav-item"> 
-               <a class="nav-link" href="">Coding</a>
+               <a class="nav-link" href="{% url 'coding' %}">Coding</a>
              </li>
              <li class="nav-item"> 
                 <a class="nav-link" href="{% url 'discuss_homepage' %}">Discuss</a>
@@ -127,7 +127,7 @@
                    </li>
      -->
      <li class="nav-item">
-        <a class="nav-link " href="#">Blogs</a>
+        <a class="nav-link " href="{% url 'blog' %}">Blogs</a>
       </li>
                    <li class="nav-item dropdown" >
                      <a class="nav-link text-warning "  id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-shopping-cart"></i> Store</a>
@@ -230,7 +230,9 @@
                  <div class="dropdown-menu dropdown-menu-right text-dark" style="font-size: 14px; color:#546E7A; width:240px;">
                      <a class="dropdown-item  pb-2 pt-2"  href="/profile/{{user}}/"><i class="fa fa1 fa-user mr-1" ></i> Profile</a>
                      <div class="dropdown-divider"></div>
+                     <!--
                      <a class="dropdown-item  pb-2 pt-2" href="#"><i class="fa fa-certificate fa1 mr-1"></i> My Courses</a>
+                    -->
                      <a class="dropdown-item  pb-2 pt-2" href=" 'analytics' %}?target=code"><i class="fa fa-area-chart fa1 mr-1" ></i> Analytics</a>
                      
                     
@@ -241,7 +243,7 @@
                      <div class="dropdown-divider"></div>
                      <a class="dropdown-item  pb-2 pt-2" href=" 'setting' %}"><i class="fa fa1 fa-cog mr-1"></i> Settings & Privacy</a>
                      <div class="dropdown-divider"></div>
-                     <a class="dropdown-item  pb-2 pt-2" style="background-color: #EAEEF4;" href=""><center>Log out</center></a>
+                     <a class="dropdown-item  pb-2 pt-2" style="background-color: #E8E8E8;" href=""><center>Log out</center></a>
                  </div>
              </li>
              {% else %}
