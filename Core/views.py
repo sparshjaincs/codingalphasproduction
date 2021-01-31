@@ -4,6 +4,16 @@ import json
 from discuss.models import Quora
 from discuss.models import Anwsers as AnsModel
 from Core.models import *
+
+from django.contrib.auth.mixins import UserPassesTestMixin
+from django.contrib.auth.views import PasswordResetView
+class MyPasswordResetView(UserPassesTestMixin, PasswordResetView):
+    template_name = 'Core/snippets/password_reset.html'
+
+    # https://docs.djangoproject.com/en/2.2/ref/contrib/auth/#django.contrib.auth.models.User.is_anonymous
+    def test_func(self):
+        return self.request.user.is_anonymous  
+
 # Create your views here.
 def homepage(request):
     if request.user.is_authenticated:
