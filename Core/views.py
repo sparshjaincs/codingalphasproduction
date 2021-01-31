@@ -6,7 +6,10 @@ from discuss.models import Anwsers as AnsModel
 from Core.models import *
 # Create your views here.
 def homepage(request):
-    return render(request,"Core/homepage.html")
+    if request.user.is_authenticated:
+        return render(request,"Core/homepage.html")
+    else:
+        return render(request,"Core/frontend.html")
 
 def like(request):
     method = request.GET.get('method')

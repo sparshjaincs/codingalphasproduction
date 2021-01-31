@@ -1,7 +1,7 @@
 {% extends 'Core/snippets/base.html'  %}
 
-{% block navbar %}
-{% include 'Core/snippets/navbar.html' %}
+{% block header %}
+{% include 'Core/snippets/header.html' %}
 {% endblock %}
 {% block jscss %}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/ace.js"></script>
@@ -65,6 +65,7 @@
                
             </div>
             </div>
+            {% csrf_token %}
             <div>
                 <div id="editor">{{instance|safe}}</div>
             </div>
