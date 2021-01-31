@@ -1,12 +1,14 @@
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 import json
 from discuss.models import Quora
 from discuss.models import Anwsers as AnsModel
 from Core.models import *
-
+from .forms import *
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.contrib.auth.views import PasswordResetView
+from django.contrib.auth import login, authenticate
+from django.contrib import messages
 class MyPasswordResetView(UserPassesTestMixin, PasswordResetView):
     template_name = 'Core/snippets/password_reset.html'
 
@@ -15,6 +17,31 @@ class MyPasswordResetView(UserPassesTestMixin, PasswordResetView):
         return self.request.user.is_anonymous  
 
 # Create your views here.
+
+def create(request):
+    context = {}
+    if(request.method == 'POST'):
+        form = SignUpForm(request.POST) # fill it with user details
+        if form.is_valid():
+            user = form.save(commit = False)
+
+            username = form.cleaned_data.get('email').split('@')[0]
+            user.username = username
+            user.save()
+            ins = Profile.objects.get(user = user)
+            ins.first_name = form.cleaned_data.get('first_name')
+            ins.last_name = form.cleaned_data.get('last_name')
+            ins.email = form.cleaned_data.get('email')
+            ins.save()
+            raw_password = form.cleaned_data.get('password1')
+            user = authenticate(username=username, password=raw_password)
+            login(request, user)
+            return HttpResponseRedirect('/')
+        else:
+            messages.error(request,str(form.errors))
+    context['form'] = SignUpForm()
+    return render(request,'Core/snippets/createAccount.html',context)
+
 def homepage(request):
     if request.user.is_authenticated:
         return render(request,"Core/homepage.html")

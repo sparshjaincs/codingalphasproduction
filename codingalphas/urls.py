@@ -30,6 +30,7 @@ urlpatterns = [
     path("playground/",include("Playground.urls")),
     path('login/', auth_views.LoginView.as_view(template_name='Core/snippets/login.html'), name="login"),
     path('logout/', auth_views.LogoutView.as_view(template_name='users/logout.html'), name="logout"),
+    path('create', user_views.create, name='createAccount'),
     # since the logged in user can also access password reset form, we are overriding inbuilt PasswordResetView in the views.py file
     path('password_reset/', user_views.MyPasswordResetView.as_view(template_name='Core/snippets/password_reset.html'), name="password_reset"),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

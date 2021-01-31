@@ -1,0 +1,78 @@
+{% extends "Core/snippets/base.html" %}
+{% load crispy_forms_tags %}
+
+{% block body %}
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert {% if message.tags == 'error' %} alert-danger {% endif %} m-2" id="msg" role="alert">
+            {{ message }}
+        </div>
+    {% endfor %}
+{% endif %} 
+  <form action="" method="POST" enctype="multipart/form-data">
+   {% csrf_token %}
+   <fieldset class="form-group">
+     <legend class="border-bottom mb-4">
+       Profile Info
+     </legend>
+     {{ form|crispy }}
+   </fieldset>
+   <div class="form-group">
+     <button class="btn btn-outline-info" type="submit">
+       Update
+     </button>
+   </div>
+ </form>
+
+<script>
+  function alertFunction() {
+     
+          document.getElementById('id_password1').setAttribute('pattern','((?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%!^&*]).{8,20})');
+          document.getElementById("id_contact").required = true;
+          document.getElementById("id_whatsapp_contact").required = true;
+           document.getElementById('id_contact').setAttribute('pattern','^[2-9]{1}[0-9]{9}$');
+           document.getElementById('id_whatsapp_contact').setAttribute('pattern','^[2-9]{1}[0-9]{9}$');
+     
+          var para = document.createElement('p');
+          var node    =  document.getElementById('div_id_password1');
+          var str = "The Password must contain atleast  : \n 1. upercase character\n 2. lowercase character \n3. special symbol";
+          para.textContent = str;
+          node.appendChild(para);
+
+          if (document.getElementById('id_pay_type').value == 'Pay Per Task'){
+                document.getElementById('div_id_task_detail').style.display = 'block';
+                document.getElementById('id_task_detail').setAttribute("readonly", true);
+              }
+              else{
+                document.getElementById('div_id_task_detail').style.display = 'none';
+                
+              }
+              
+             
+            
+         }
+ window.onload = alertFunction;
+
+$('#id_password2').change(function(){
+   var pass1 = document.getElementById("id_password1").value;
+var pass2 = document.getElementById("id_password2").value;
+if(pass1 != pass2){ document.getElementById("id_password2").setCustomValidity("Passwords don't Match");}
+else{document.getElementById("id_password2").setCustomValidity("");}
+      
+})
+/*
+$('#id_password1').change(function(){
+  var pass1 = document.getElementById("id_password1").value.toLowerCase();
+  var name = document.getElementById('id_first_name').value.toLowerCase().split(" ")[0];
+ 
+  
+  if(pass1.includes(name)){
+    document.getElementById('id_password1').setCustomValidity("Password and name is too similar");
+  }
+  else{
+    document.getElementById('id_password1').setCustomValidity("");
+  }
+})
+*/
+</script>
+{% endblock %}
