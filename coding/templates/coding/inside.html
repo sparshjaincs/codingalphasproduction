@@ -2,12 +2,197 @@
 {% block header %}
 {% include 'Core/snippets/header.html' %}
 {% endblock %}
+
+
+{% block jscss %}
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/ace.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/ace.min.js"></script>
+{% endblock %} 
+
+
+{% block style %}
+#editor { 
+    height:631px;
+    margin-left:-14px;
+
+        
+       
+    }
+
+  .pads{
+      font-size:13px;
+      padding:0px;
+      border:none;
+      
+  }
+
+  
+  .nav .nav-tabs .nav-item{
+  
+  }
+  .pads li{
+      width:120px;
+      
+  }
+  .pads .nav-link{
+    display:flex;
+    justify-content:center;
+    color:#6C757D;
+    height:40px;
+    padding-top:10px;
+   
+    
+  }
+  
+  .nav-link.active{
+    border-radius:0px;
+    color:#C42D63
+  }
+  .my {
+    color:#C42D63;
+  }
+
+{% endblock %}
 {% block body %}
-<div class="container">
-    <div class="row">
-        <div class="col-12">
-            
+<section style="position: absolute; top:0; right:0; left:0; bottom:0;">
+    <div class="continaer-fluid p-0">
+        <div class="row p-0" style="margin-top: 46px;">
+            <div class="col-12 col-md-12 col-lg-6 p-0">
+                <div class="card border-0 p-0">
+                    <div class="card-header border-right p-0">
+                        <div class="p-0">
+                            <ul class="nav pads nav-tabs ml-3 p-0 " id="myTab" role="tablist">
+                                <li class="nav-item">
+                                  <a class="nav-link active " id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true"><i class="my fa fa-file-text-o mr-1" style="margin-top: 2px;"></i> Problem</a>
+                                </li>
+                                <li class="nav-item">
+                                  <a class="nav-link" id="profile-tab " data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false"><i class="my fa fa-check-circle-o mr-1" style="margin-top: 2px;"></i> Solution</a>
+                                </li>
+                                <li class="nav-item">
+                                  <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false"><i class="my fa fa-comments-o mr-1" style="margin-top: 2px;"></i>Discuss(Q/A)</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="sol-tab" data-toggle="tab" href="#solution" role="tab" aria-controls="contact" aria-selected="false"><i class="my fa fa-paper-plane-o mr-1" style="margin-top: 2px;"></i>Submission</a>
+                                  </li>
+                              </ul>
+                        </div>
+                    </div>
+                    <div class="card-body border-right pt-0 pr-0" style="height:631px; overflow-y:scroll">
+                        <div class="tab-content p-0 m-0" id="myTabContent">
+                            <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                                <div class="pl-4 pt-3">
+                                    <h5 style="font-weight: 600;">{{data.id}}. {{data.title}}</h5>
+                                </div>
+                                <div class="pl-4">
+                                    <a class="text-success"style="font-weight:600;color:{% if data.difficulty == 'Moderate' %} #f0ad4e{% elif data.difficulty == 'Easy' %} #5bc0de{%else%} {% endif%} ">{{data.difficulty}}</a>
+                        
+                                    <a  onclick="like1('discuss','{{x.id}}','discuss_like{{x.id}}','like_count{{x.id}}','dislike_count{{x.id}}','discuss_dislike{{x.id}}')" class="btn btn-sm text-muted pr-1 ml-2   " title="Upvote" data-toggle="tooltip"><i id="discuss_like{{x.id}}" class="fa {% if request.user in x.like.all %} fa3{% else %}fa2 {% endif %} fa-thumbs-up"  style=""></i></a> <span class="text-muted " style="font-size: 14px;" id="like_count{{x.id}}">{{x.like.all.count}}</span>
+                                    <a  onclick="dislike1('discuss','{{x.id}}','discuss_dislike{{x.id}}','dislike_count{{x.id}}','like_count{{x.id}}','discuss_like{{x.id}}')" class="btn btn-sm text-muted ml-2 pr-1" title="Downvote" data-toggle="tooltip"><i id="discuss_dislike{{x.id}}" class="fa {% if request.user in x.dislike.all %} fa3{%else%}fa2 {% endif %} fa-thumbs-down"></i></a><span class="text-muted " style="font-size: 14px;" id="dislike_count{{x.id}}">{{x.dislike.all.count}}</span>
+                                    <a onclick = "bookmark('discuss','{{data.id}}','bookmark_id')"class="btn btn-sm text-muted mt-1 ml-2" title="Bookmark" data-toggle="tooltip"><i class="fa {% if data in request.user.profile.quora_discuss.all %}fa3 {%else%}fa2 {%endif%} fa-bookmark" id='bookmark_id'></i></a>
+                                    <a onclick = ""class="btn btn-sm text-muted mt-1 ml-2" title="Share" data-toggle="tooltip"><i class="fa {% if data in request.user.profile.quora_discuss.all %}fa3 {%else%} {%endif%} fa-share-alt" id='bookmark_id'></i></a>
+                            
+                                </div>
+                                <div style="font-size: 13px;" class="pl-4 pt-0">
+
+                                    {{data.description|safe}}
+                                
+                                </div>
+                                <div class="pl-3 d-flex justify-content-start">
+                                    <p class="text-muted" style="font-size: 13px;">Accepted<span class="text-dark ml-3" style="font-size: 12px;">12345</span></p>
+                                    <p class="text-muted ml-3" style="font-size: 13px;">Submissions<span class="text-dark ml-3" style="font-size: 12px;">12345</span></p>
+                                    <p class="text-muted ml-3" style="font-size: 13px;">Acceptance Rate<span class="text-dark ml-3" style="font-size: 12px;">12345</span></p>
+                               
+                                </div>
+                                <div class="pl-3">
+                                    {% for i in data.tags.all %}
+                                        <a href="" class="btn btn-sm btn-outline-warning" style="font-size: 12px;">{{i}}</a>
+                                    {% endfor %}
+                                    {% for i in data.company.all %}
+                                        <a href="" class="btn btn-sm btn-outline-warning" style="font-size: 12px;">{{i}}</a>
+                                    {% endfor %}
+                                </div>
+                                   </div>
+                            <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">...</div>
+                            <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">...</div>
+                            <div class="tab-pane fade" id="solution" role="tabpanel" aria-labelledby="contact-tab">Solution</div>
+                          </div>
+                    </div>
+                    <div class="card-footer border-bottom p-2 pl-4 d-flex justify-content-between" >
+                        <div>
+                            <a class="btn btn-sm border text-muted" style="font-size: 12px;"><i class="fa fa-list my"></i> Problems</a>
+                        </div>
+                        <div>
+                            <a class="btn btn-sm border text-muted" style="font-size: 12px;"><i class="fa fa-random my"></i> Pick One</a>
+                       
+                            <a class="btn btn-sm  text-muted" style="font-size: 12px;" data-toggle="tooltip" title="Contribute Problems, Testcases, Interview Experience..."><i class="fa fa-plus my"></i> Contribute</a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-12 col-md-12 col-lg-6 p-0">
+                <div class="card border-0 p-0">
+                    <div class="card-header p-0 d-flex justify-content-between">
+                        <div class=" pl-2" style="padding:5px;">
+                            <select class="border rounded text-muted" style="font-size: 12px; border:none; width: 100px; padding:7px;">
+                                <option style="height:20px; font-size:12px;">
+                                    Python
+                                </option>
+                                <option>
+                                    Java
+                                </option>
+                            </select>
+                            <a  class="btn btn-sm border text-muted" style="font-size: 12px;"><i class="fa fa-cloud-upload my "></i> Save</a>
+                            <a  class="btn btn-sm border text-muted" style="font-size: 12px;" data-toggle="tooltip" title="Switch On Auto Save Mode"><i class="fa fa-save my "></i></a>
+                        
+                        </div>
+
+                        <div class="pr-4" style="padding:5px;">
+                            <a  class="btn btn-sm border text-muted" style="font-size: 12px;" data-toggle="tooltip" title="Switch On Auto Complete Mode" data-placement="left"><i class="fa fa-check my "></i> Auto Complete </a>
+                            
+                            <a  class="btn btn-sm text-muted" style="font-size: 12px;" data-toggle="tooltip" title="Restore Default Code" data-placement="left"><i class="fa fa-window-restore my "></i></a>
+                        
+                            <a  class="btn btn-sm text-muted" style="font-size: 12px;" data-toggle="tooltip" title="Restore Saved Code" data-placement="left"><i class="fa fa-code my "></i> </a>
+                            <a  class="btn btn-sm text-muted" style="font-size: 12px;" data-toggle="tooltip" title="Restore Last Submitted Code" data-placement="left"><i class="fa fa-undo my "></i> </a>
+                            
+                            <a  class="btn btn-sm text-muted" style="font-size: 12px;" data-toggle="tooltip" title="Editor Settings" data-placement="left"><i class="fa fa-cog my "></i></a>
+                        
+                        </div>
+                    </div>
+                    <div class="card-body pt-0 " style="height:631px; padding-left:12px;">
+                        <div id="editor"></div>
+                    </div>
+                    <div class="card-footer border-bottom p-2 pl-2 d-flex justify-content-between">
+                        <div>
+                            <a class="btn btn-sm border text-muted" style="font-size: 12px;"><i class="fa fa-terminal my"></i> Console</a>
+                        </div>
+                        <div class="mr-3">
+                            <a class="btn btn-sm text-white" style="font-size: 12px; background-color: #1E2D35;"><i class="fa fa-play-circle"></i> Run</a>
+                        
+                            <a class="btn btn-sm text-white" style="font-size: 12px; background-color: #C42D63;"><i class="fa fa-cogs"></i> Submit</a>
+                        </div>
+                       
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-</div>
+</section>
+{% endblock %}
+
+{% block script %}
+
+<script>
+var editor = ace.edit("editor");
+    editor.setTheme("ace/theme/textmate");
+    editor.session.setMode("ace/mode/html");
+    editor.setOptions({
+
+    fontSize: "12px"
+    });
+    // ------------------------- editor setting -------------------------------------------------
+
+  
+</script>
 {% endblock %}
