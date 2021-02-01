@@ -145,14 +145,11 @@ def template(request,id):
     lang = request.GET.get('lang')
     method = request.GET.get('method')
 
-    ins = Templates.objects.get(instance = Programming.objects.get(id = id),language = Language.objects.get(lang = lang))
-    if method == 'restore':
+    ins = Templates.objects.filter(instance = Programming.objects.get(id = id),language = Language.objects.get(lang = lang))
+    if ins.exists():
         context['instance'] = ins.temp
-    
-    elif ins.code:
-        context['instance'] = ins.code
     else:
-        context['instance'] = ins.temp
+        context['instance'] = Language.objects.get(lang = lang).template
     return HttpResponse(json.dumps(context))
 
 def save(request,id):

@@ -1,11 +1,15 @@
 {% extends 'Core/snippets/base.html' %}
+{% load shortcut %}
 {% block header %}
 {% include 'Core/snippets/header.html' %}
 {% endblock %}
 
 
 {% block jscss %}
-
+<!--<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css">-->
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.23/css/dataTables.bootstrap5.min.css">
+<script src="https://cdn.datatables.net/1.10.23/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.23/js/dataTables.bootstrap5.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/ace.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/ace.min.js"></script>
 {% endblock %} 
@@ -53,6 +57,27 @@
     color:#C42D63;
   }
 
+  .slider {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    overflow: hidden;
+    background-color:#fff;
+
+    transition: all 1s;
+  }
+  
+  .slider.close {
+    top: 100%;
+    height: 0;
+  }
+  tr{
+    font-size:13px;
+}
+.a1:hover{
+    background-color:#DCDCDC;
+}
 {% endblock %}
 {% block body %}
 <section style="position: absolute; top:0; right:0; left:0; bottom:0;">
@@ -64,16 +89,16 @@
                         <div class="p-0">
                             <ul class="nav pads nav-tabs ml-3 p-0 " id="myTab" role="tablist">
                                 <li class="nav-item">
-                                  <a class="nav-link active " id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true"><i class="my fa fa-file-text-o mr-1" style="margin-top: 2px;"></i> Problem</a>
+                                  <a class="nav-link active a1 " id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true"><i class="my fa fa-file-text-o mr-1" style="margin-top: 2px;"></i> Problem</a>
                                 </li>
                                 <li class="nav-item">
-                                  <a class="nav-link" id="profile-tab " data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false"><i class="my fa fa-check-circle-o mr-1" style="margin-top: 2px;"></i> Solution</a>
+                                  <a class="nav-link a1" id="profile-tab " data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false"><i class="my fa fa-check-circle-o mr-1" style="margin-top: 2px;"></i> Solution</a>
                                 </li>
                                 <li class="nav-item">
-                                  <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false"><i class="my fa fa-comments-o mr-1" style="margin-top: 2px;"></i>Discuss(Q/A)</a>
+                                  <a class="nav-link a1" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false"><i class="my fa fa-comments-o mr-1" style="margin-top: 2px;"></i>Discuss(Q/A)</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" id="sol-tab" data-toggle="tab" href="#solution" role="tab" aria-controls="contact" aria-selected="false"><i class="my fa fa-paper-plane-o mr-1" style="margin-top: 2px;"></i>Submission</a>
+                                    <a class="nav-link a1" id="sol-tab" data-toggle="tab" href="#solution" role="tab" aria-controls="contact" aria-selected="false"><i class="my fa fa-paper-plane-o mr-1" style="margin-top: 2px;"></i>Submission</a>
                                   </li>
                               </ul>
                         </div>
@@ -84,8 +109,8 @@
                                 <div class="pl-4 pt-3">
                                     <h5 style="font-weight: 600;">{{data.id}}. {{data.title}}</h5>
                                 </div>
-                                <div class="pl-4">
-                                    <a class="text-success"style="font-weight:600;color:{% if data.difficulty == 'Moderate' %} #f0ad4e{% elif data.difficulty == 'Easy' %} #5bc0de{%else%} {% endif%} ">{{data.difficulty}}</a>
+                                <div class="ml-4 mr-4 mt-2 ">
+                                    <a class="text-success"style="font-size:12px; font-weight:600;color:{% if data.difficulty == 'Moderate' %} #f0ad4e{% elif data.difficulty == 'Easy' %} #5bc0de{%else%} {% endif%} ">{{data.difficulty}}</a>
                         
                                     <a  onclick="like1('discuss','{{x.id}}','discuss_like{{x.id}}','like_count{{x.id}}','dislike_count{{x.id}}','discuss_dislike{{x.id}}')" class="btn btn-sm text-muted pr-1 ml-2   " title="Upvote" data-toggle="tooltip"><i id="discuss_like{{x.id}}" class="fa {% if request.user in x.like.all %} fa3{% else %}fa2 {% endif %} fa-thumbs-up"  style=""></i></a> <span class="text-muted " style="font-size: 14px;" id="like_count{{x.id}}">{{x.like.all.count}}</span>
                                     <a  onclick="dislike1('discuss','{{x.id}}','discuss_dislike{{x.id}}','dislike_count{{x.id}}','like_count{{x.id}}','discuss_like{{x.id}}')" class="btn btn-sm text-muted ml-2 pr-1" title="Downvote" data-toggle="tooltip"><i id="discuss_dislike{{x.id}}" class="fa {% if request.user in x.dislike.all %} fa3{%else%}fa2 {% endif %} fa-thumbs-down"></i></a><span class="text-muted " style="font-size: 14px;" id="dislike_count{{x.id}}">{{x.dislike.all.count}}</span>
@@ -93,7 +118,7 @@
                                     <a onclick = ""class="btn btn-sm text-muted mt-1 ml-2" title="Share" data-toggle="tooltip"><i class="fa {% if data in request.user.profile.quora_discuss.all %}fa3 {%else%} {%endif%} fa-share-alt" id='bookmark_id'></i></a>
                             
                                 </div>
-                                <div style="font-size: 13px;" class="pl-4 pt-0">
+                                <div style="font-size: 14px;" class="pl-4 pt-0 mt-4">
 
                                     {{data.description|safe}}
                                 
@@ -120,12 +145,12 @@
                     </div>
                     <div class="card-footer border-bottom p-2 pl-4 d-flex justify-content-between" >
                         <div>
-                            <a class="btn btn-sm border text-muted" style="font-size: 12px;"><i class="fa fa-list my"></i> Problems</a>
+                            <a class="btn btn-sm border text-muted trigger a1 shadow-sm" style="font-size: 12px;"><i class="fa fa-list my"></i> Problems</a>
                         </div>
                         <div>
-                            <a class="btn btn-sm border text-muted" style="font-size: 12px;"><i class="fa fa-random my"></i> Pick One</a>
+                            <a onclick="filtering('pick','one')" class="btn btn-sm border text-muted a1 shadow-sm mr-3" style="font-size: 12px;"><i class="fa fa-random my"></i> Pick One</a>
                        
-                            <a class="btn btn-sm  text-muted" style="font-size: 12px;" data-toggle="tooltip" title="Contribute Problems, Testcases, Interview Experience..."><i class="fa fa-plus my"></i> Contribute</a>
+                            <a class="btn btn-sm  text-muted a1 " style="font-size: 12px;" data-toggle="tooltip" title="Contribute Problems, Testcases, Interview Experience..."><i class="fa fa-plus my"></i> Contribute</a>
                         </div>
                     </div>
                 </div>
@@ -135,46 +160,171 @@
                 <div class="card border-0 p-0">
                     <div class="card-header p-0 d-flex justify-content-between">
                         <div class=" pl-2" style="padding:5px;">
-                            <select class="border rounded text-muted" style="font-size: 12px; border:none; width: 100px; padding:7px;">
-                                <option style="height:20px; font-size:12px;">
-                                    Python
-                                </option>
-                                <option>
-                                    Java
-                                </option>
+                            <select name="lang" id="title" class="border rounded text-muted" style="font-size: 12px; border:none; width: 100px; padding:7px;">
+                                {% for i in language %}
+                                <option  value="{{i.lang}}">{{i.lang}}</option>
+                            {% endfor %}
                             </select>
-                            <a  class="btn btn-sm border text-muted" style="font-size: 12px;"><i class="fa fa-cloud-upload my "></i> Save</a>
-                            <a  class="btn btn-sm border text-muted" style="font-size: 12px;" data-toggle="tooltip" title="Switch On Auto Save Mode"><i class="fa fa-save my "></i></a>
-                        
+                           
+
+                                
+                            <a  onclick ="saving()" class="btn btn-sm border text-muted a1" style="font-size: 12px;"><i class="fa fa-cloud-upload my "></i> Save</a>
+                            <a  class="btn btn-sm border text-muted a1" style="font-size: 12px;" data-toggle="tooltip" title="Switch On Auto Save Mode"><i class="fa fa-save my "></i></a>
+                            <div id="savestatus"> 
+
+                            </div>
                         </div>
 
                         <div class="pr-4" style="padding:5px;">
-                            <a  class="btn btn-sm border text-muted" style="font-size: 12px;" data-toggle="tooltip" title="Switch On Auto Complete Mode" data-placement="left"><i class="fa fa-check my "></i> Auto Complete </a>
+                            <a  class="btn btn-sm border text-muted a1" style="font-size: 12px;" data-toggle="tooltip" title="Switch On Auto Complete Mode" data-placement="left"><i class="fa fa-check my "></i> Auto Complete </a>
                             
-                            <a  class="btn btn-sm text-muted" style="font-size: 12px;" data-toggle="tooltip" title="Restore Default Code" data-placement="left"><i class="fa fa-window-restore my "></i></a>
+                            <a  class="btn btn-sm text-muted a1" style="font-size: 12px;" data-toggle="tooltip" title="Restore Default Code" data-placement="left"><i class="fa fa-window-restore my "></i></a>
                         
-                            <a  class="btn btn-sm text-muted" style="font-size: 12px;" data-toggle="tooltip" title="Restore Saved Code" data-placement="left"><i class="fa fa-code my "></i> </a>
-                            <a  class="btn btn-sm text-muted" style="font-size: 12px;" data-toggle="tooltip" title="Restore Last Submitted Code" data-placement="left"><i class="fa fa-undo my "></i> </a>
+                            <a  class="btn btn-sm text-muted a1" style="font-size: 12px;" data-toggle="tooltip" title="Restore Saved Code" data-placement="left"><i class="fa fa-code my "></i> </a>
                             
-                            <a  class="btn btn-sm text-muted" style="font-size: 12px;" data-toggle="tooltip" title="Editor Settings" data-placement="left"><i class="fa fa-cog my "></i></a>
+                            <a  class="btn btn-sm text-muted a1" style="font-size: 12px;" data-toggle="tooltip" title="Editor Settings" data-placement="left"><i class="fa fa-cog my "></i></a>
                         
                         </div>
                     </div>
                     <div class="card-body pt-0 " style="height:631px; padding-left:12px;">
+                        {% csrf_token %}
                         <div id="editor"></div>
                     </div>
                     <div class="card-footer border-bottom p-2 pl-2 d-flex justify-content-between">
                         <div>
-                            <a class="btn btn-sm border text-muted" style="font-size: 12px;"><i class="fa fa-terminal my"></i> Console</a>
+                            <a class="btn btn-sm border text-muted a1 shadow-sm " style="font-size: 12px;"><i class="fa fa-terminal my"></i> Console</a>
                         </div>
                         <div class="mr-3">
-                            <a class="btn btn-sm text-white" style="font-size: 12px; background-color: #1E2D35;"><i class="fa fa-play-circle"></i> Run</a>
+                            <a class="btn btn-sm text-white shadow-sm" style="font-size: 12px; background-color: #1E2D35;"><i class="fa fa-play-circle"></i> Run</a>
                         
-                            <a class="btn btn-sm text-white" style="font-size: 12px; background-color: #C42D63;"><i class="fa fa-cogs"></i> Submit</a>
+                            <a class="btn btn-sm text-white shadow-sm" style="font-size: 12px; background-color: #C42D63;"><i class="fa fa-cogs"></i> Submit</a>
                         </div>
                        
                     </div>
                 </div>
+            </div>
+        </div>
+        <div class="slider close" style="z-index:1000;">
+            <div class="row">
+                <div class="col-12 d-flex justify-content-end">
+                    <a class="btn btn-sm border btn-outline-dark  p-2 cancel m-2" style="font-size: 12px;" href="#"><i class="fa fa-close"></i> Close</a>
+                </div>
+                <div class="col-12 ">
+                   <div class="ml-5 mr-5 pl-5 pr-5">
+                      
+            <div style="" class="mt-4 d-flex justify-content-start flex-wrap">
+                   
+                <span class="badge p-2  badge-sm badge-primary d-flex align-items-center" style="border-radius: 20px; font-size: 10px; box-shadow:2px 2px 10px rgb(0,0,0,0.3);">
+                 {{problem.solved}}  / {{problem.total}} Solved
+                </span> 
+                <span class="badge p-2 ml-2  badge-sm badge-success d-flex align-items-center" style="border-radius: 20px; font-size: 10px; box-shadow:2px 2px 10px rgb(0,0,0,0.3);">
+                  {{problem.Easy}} Easy
+                </span>
+                <span class="badge ml-2  p-2 badge-sm badge-warning d-flex align-items-center"  style="border-radius: 20px; font-size: 10px; box-shadow:2px 2px 10px rgb(0,0,0,0.3);">
+                  {{problem.Medium}} Medium
+                </span>
+                <span class="badge  ml-2 p-2 badge-sm badge-danger d-flex align-items-center"  style="border-radius: 20px; font-size: 10px; box-shadow:2px 2px 10px rgb(0,0,0,0.3);">
+                  {{problem.Hard}} Hard
+                </span>
+                <a class="ml-2 category btn btn-sm  btn-default border text-muted" onclick="filtering('All','All');" style="box-shadow:2px 2px 10px rgb(0,0,0,0.1); font-size: 12px;">
+                  <i class="fa fa-list" aria-hidden="true"></i> All Problems
+                </a>
+                <a style="box-shadow:2px 2px 10px rgb(0,0,0,0.1); font-size: 12px;" class="ml-2  category btn btn-sm  btn-default border text-muted" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+                  <i class="fa fa-tag" aria-hidden="true"></i> Show Tags
+                </a>
+                <div  class="dropdown  show">
+                  <a style="box-shadow:2px 2px 10px rgb(0,0,0,0.1); font-size: 12px;" class="btn category dropdown-toggle text-muted border ml-2  btn-default btn-sm" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      <i class="fa fa-sticky-note-o" aria-hidden="true"></i> Solution
+                  </a>
+                
+                  <div class="dropdown-menu" aria-labelledby="dropdownMenuLink" style="font-size: 12px;">
+                    <a onclick = "filtering('solution','Has solution')" class="dropdown-item text-muted" href="#"> Has Solution</a>
+                    <a onclick = "filtering('solution','Has video solution')" class="dropdown-item text-muted" href="#">Has video solution</a>
+                    </div>
+                </div>
+                <div  class="dropdown  show">
+                  <a style="box-shadow:2px 2px 10px rgb(0,0,0,0.1); font-size: 12px;" class="category btn dropdown-toggle text-muted border ml-2  btn-default btn-sm" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      <i class="fa fa-check" aria-hidden="true"></i> Status
+                  </a>
+                
+                  <div class="dropdown-menu" aria-labelledby="dropdownMenuLink" style="font-size: 12px;">
+                    <a onclick = "filtering('status','Todo')" class="dropdown-item text-muted" href="#"><i class="fa fa-tasks"></i> Todo</a>
+                    <a onclick = "filtering('status','Solved')" class="dropdown-item text-muted" href="#"><i class="fa fa-check" aria-hidden="true"></i> Solved</a>
+                    <a onclick = "filtering('status','Attempted')" class="dropdown-item text-muted" href="#"><i class="fa fa-hand-paper-o" aria-hidden="true"></i> Attempted</a>
+                  </div>
+                </div>
+                <div style="" class="dropdown  show">
+                  <a style=" box-shadow:2px 2px 10px rgb(0,0,0,0.1); font-size: 12px;" class=" btn category dropdown-toggle text-muted border ml-2  btn-default btn-sm" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      <i class="fa fa-tag" aria-hidden="true"></i> Tags
+                  </a>
+                
+                  <div class="dropdown-menu" aria-labelledby="dropdownMenuLink" style="height:300px; overflow-y:scroll; font-size: 12px;">
+                      {% for i in category %}
+                    <a  onclick = "filtering('tags','{{i}}')" class="dropdown-item text-muted border-bottom" href="#">{{i}}</a>
+                    {% endfor %}
+                    
+                  </div>
+                </div>
+                <div>
+                <a style="box-shadow:2px 2px 10px rgb(0,0,0,0.1); font-size: 12px;" class="ml-2  category btn btn-sm  btn-default border text-muted" onclick="filtering('pick','one')">
+                  <i class="fa fa-random" aria-hidden="true"></i> Pick One
+                </a>
+            </div>
+          </div>
+
+          <div class="mt-5">
+            <table id="example" class="table" style="width:100% ; font-size: 13px;">
+                <thead> 
+                    <tr class="text-muted">
+                        <th>S.No.</th>
+                        <th style="width:70%;">Problem</th>
+                        <th>Acceptance</th>
+                        <th>Difficulty</th>
+                       
+                    </tr>
+                </thead>
+                <tbody class="text-dark">
+                    {% for x in problem.ques %}
+                            <tr>
+                                <td  class=" text-muted">
+                                    <div style="display: flex; justify-content: space-between;">
+                                        {{x.id}}
+                                        <span class="">
+                                            {% if x.status == 'Solved' %}<i class="fa fa-check" style="color: green;"></i> {% elif x.status == 'Attempted' %}<i class="fa fa-question" style="color:#f0ad4e;"></i> {% else %} {% endif %}
+                                        </span>
+                                    </div>
+                                </td>
+                                <td   class=" text-muted" >
+                                    
+                                <div style="display: flex; justify-content: space-between;" >
+                                    <a href="/coding/practise/{{x.title|replace}}/{{x.id}}/" style="underline:none; text-decoration:none;">{{x.title}}</a>
+                                    
+                                </div>
+                                <div class="collapse mt-1" id="collapseExample">
+                                    {% for i in x.tags.all %}
+                                        <a href="#" style="font-size: 12px;" onclick="filtering('tags','{{i}}')" class="btn btn-sm btn-outline-warning">{{i}}</a>
+                                    {% endfor %}
+                                  </div>
+                            </td>
+                                
+                                <td class="text-muted">40%</td>
+                                <td class="text-muted">
+                                    {% if x.difficulty == 'Easy' %}
+                                    <span class="badge badge-sm badge-success">Easy</span>
+                                    {%elif x.difficulty == 'Moderate' %}
+                                    <span class="badge badge-sm badge-warning">Medium</span>
+                                     {% else %} 
+                                     <span class="badge badge-sm badge-danger">Hard</span>
+                                     {% endif %}
+                                    </td>
+                            </tr>
+                        {% endfor %}
+                </tbody>
+            </table>
+          </div>
+                   </div>
+
+                </div> 
             </div>
         </div>
     </div>
@@ -184,6 +334,20 @@
 {% block script %}
 
 <script>
+    $('.trigger, .cancel').click(function() {
+        $('.slider').toggleClass('close');
+    });
+
+    $(document).ready(function() {
+        var table = $('#example').DataTable({
+            "paging": false,
+            'language': {
+            'loadingRecords': '&nbsp;',
+            'processing': '<div class="spinner"></div>'
+            }
+        });
+        
+    } );
 var editor = ace.edit("editor");
     editor.setTheme("ace/theme/textmate");
     editor.session.setMode("ace/mode/html");
@@ -192,6 +356,150 @@ var editor = ace.edit("editor");
     fontSize: "12px"
     });
     // ------------------------- editor setting -------------------------------------------------
+    // ----------------------------Filter -----------------------
+    
+function filtering(method,value){
+        $.ajax({
+            type:'GET',
+            url:'/coding/filter/ajax/table/',
+            data:{
+                'method':method,
+                'value':value,
+            },
+            success:function(json){
+                json = JSON.parse(json);
+
+                json = json['problem']
+                if (method == 'pick'){
+                    window.location.replace("/coding/practise/"+json[1]+"/"+json[0]+"/");
+                }
+                string = "";
+                var table = $('#example').DataTable();
+                table.clear().draw();
+                for(var i=0; i<json.length;i++){
+                    console.log(json[i].tags);
+                    var diff,status;
+                    if (json[i].difficulty == 'Moderate'){
+                        diff = '<span class="badge badge-sm badge-warning">'+json[i].difficulty+'</span>';
+                    }
+                    else if(json[i].difficulty == 'Easy'){
+                        diff = '<span class="badge badge-sm badge-success">'+json[i].difficulty+'</span>';
+                    }
+                    else{
+                        diff = '<span class="badge badge-sm badge-danger">'+json[i].difficulty+'</span>';
+                    }
+                    if (json[i].status == 'Solved'){
+                        status = '<i class="fa fa-check" style="color: green;"></i>';
+                    }
+                    else if(json[i].status == 'Attempted'){
+                        status = '<i class="fa fa-question" style="color: #f0ad4e;"></i>';
+                    }
+                    else{
+                        status = "";
+                    }
+                    var k = "";
+                    for(var j=0;j<json[i].tag.length;j++){
+                        k += ` <a href="#" style="font-size: 12px;" onclick="filtering('tags','`+json[i].tag[j]+`')" class="btn btn-sm btn-outline-warning">`+json[i].tag[j]+`</a>`;
+                    }
+                    
+                    
+ 
+                table.row.add( [
+                        `
+                        <div style="display: flex; justify-content: space-between;">
+                                        `+json[i].id+`
+                                        <span class="">
+                                            `+status+`
+                                         </span>
+                                    </div>
+                                    `,
+                        `
+                        <div style="display: flex; justify-content: space-between;" >
+                                    <a href="/coding/practise/`+json[i].title.toLowerCase().replace(" ","-")+`/`+json[i].id+`/">`+json[i].title+`</a>
+                                  
+                                </div>
+                                <div class="collapse mt-1" id="collapseExample">
+                                   `+k+`
+                                  </div>
+                                `,
+                       '40%',
+                        diff,
+                       
+                 ] ).draw();
+
+                }
+              
+
+            },
+
+        });
+    }
+
+
+    $("select").mouseup(function() {
+    var code = document.getElementById('title').value;
+
+    $.ajax({
+        type:'GET',
+        url:'/coding/template/ajax/{{id}}/',
+        data:{
+            lang:code,
+        },
+        success:function(json){
+            json = JSON.parse(json);
+            editor.session.setMode("ace/mode/"+code.toLowerCase());
+            //document.getElementById('editor').innerHTML = "<pre>" + json['instance'] + "</pre>";
+            editor.setValue(json['instance']);
+            
+        }
+    });
+});
+window.onload = fun('default');
+function fun(value){
+    var code = document.getElementById('title').value;
+
+    $.ajax({
+        type:'GET',
+        url:'/coding/template/ajax/{{id}}/',
+        data:{
+            lang:code,
+            method:value,
+        },
+        success:function(json){
+            json = JSON.parse(json);
+            editor.session.setMode("ace/mode/"+code.toLowerCase());
+            //document.getElementById('editor').innerHTML = "<pre>" + json['instance'] + "</pre>";
+            editor.setValue(json['instance']);
+            
+        }
+    });
+}
+
+function saving(){
+var lang = document.getElementById('title').value;
+var value = editor.getValue();
+$.ajax({
+        type:'POST',
+        url:'/coding/save/ajax/{{id}}/',
+        data:{
+            title:lang,
+            description:value,
+            csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
+            action: 'post'
+        },
+        success:function(json){
+            json = JSON.parse(json);
+            console.log(json);
+            var str = ' <span class="btn btn-sm mr-2 mt-1 btn-outline-warning  rounded-pill" style="border:none;" ><i class="fa fa-dot-circle-o"> '+ json+ '</span>'
+            document.getElementById('savestatus').innerHTML = str;
+            $("#savestatus").children().delay(5000).fadeOut(800);   
+        
+        },
+        error : function(xhr,errmsg,err) {
+        //console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
+    }
+});
+}
 
   
 </script>
