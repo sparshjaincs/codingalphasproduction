@@ -555,6 +555,7 @@ function filtering(method,value){
             editor.session.setMode("ace/mode/"+code.toLowerCase());
             //document.getElementById('editor').innerHTML = "<pre>" + json['instance'] + "</pre>";
             editor.setValue(json['instance']);
+             
             
         }
     });
@@ -575,6 +576,10 @@ function fun(value){
             editor.session.setMode("ace/mode/"+code.toLowerCase());
             //document.getElementById('editor').innerHTML = "<pre>" + json['instance'] + "</pre>";
             editor.setValue(json['instance']);
+            if(value != 'default'){
+            var notyf = new Notyf();
+            notyf.success('Code Restored successfully!');   
+            }
             
         }
     });

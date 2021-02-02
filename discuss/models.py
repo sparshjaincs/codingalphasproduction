@@ -31,7 +31,8 @@ class Anwsers(models.Model):
     anonymous = models.BooleanField(default = False)
     pinned = models.BooleanField(default=False)
 
-
+    class Meta:
+        ordering = ('-created',)
     def __str__(self):
         return self.user.username
 
@@ -54,7 +55,10 @@ class Comment(models.Model):
         if self.parent is not None:
             return False
         return True
+    @property
+    def sorting(self):
+        return Comment.objects.filter(parent = self).order_by("created")
     def __str__(self):
-        return self.post.user.username
+        return self.body
 
 

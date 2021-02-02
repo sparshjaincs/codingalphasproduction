@@ -116,14 +116,22 @@ def comment_submit(request):
         body  = request.POST.get('body')
         proper = request.POST.get('property')
         commentid = request.POST.get('commentid')
+        inputid = request.POST.get('inputid')
         if method == 'discuss':
             if ty == 'General':
                 if body is None or body == '':
                     return HttpResponse(json.dumps(['error',"Comment Field Can't be empty!"]))
                 else:
                     try:
-                        if proper == 'reply':
-                            ins = Comment(user = request.user,question = Quora.objects.get(id = questionid),post = Anwsers.objects.get(id = anwserid),body = body,parent = Comment.objects.get(id = commentid))
+                        if proper == 'reply' or proper == 'reply1' or proper == 'reply2':
+                            
+                            comm = Comment.objects.get(id = commentid)
+                            if inputid:
+                                ref = inputid
+                            else:
+                                ref = comm.id
+                            name = f"<a href='#reference{ref}' onclick='blink("+f'"reference{ref}"'+")'>@"+comm.user.profile.first_name + " " + comm.user.profile.last_name+"</a> "
+                            ins = Comment(user = request.user,question = Quora.objects.get(id = questionid),post = Anwsers.objects.get(id = anwserid),body =name + body,parent = comm)
                         else:
                             ins = Comment(user = request.user,question = Quora.objects.get(id = questionid),post = Anwsers.objects.get(id = anwserid),body = body)
                         ins.save()
