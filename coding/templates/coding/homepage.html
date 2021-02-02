@@ -94,7 +94,7 @@ tr:hover{
             </div>
 
 
-            <div style="" class="mt-4 d-flex justify-content-start">
+            <div style="" class="mt-4 d-flex justify-content-start flex-wrap">
                    
                 <span class="badge p-2  badge-sm badge-primary d-flex align-items-center" style="border-radius: 20px; font-size: 10px; box-shadow:2px 2px 10px rgb(0,0,0,0.3);">
                  {{data.solved}}  / {{data.total}} Solved
@@ -136,7 +136,7 @@ tr:hover{
                   </div>
                 </div>
                 <div style="" class="dropdown  show">
-                  <a style=" box-shadow:2px 2px 10px rgb(0,0,0,0.1); font-size: 12px;" class="btn category dropdown-toggle text-muted border ml-2  btn-default btn-sm" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <a style=" box-shadow:2px 2px 10px rgb(0,0,0,0.1); font-size: 12px;" class=" btn category dropdown-toggle text-muted border ml-2  btn-default btn-sm" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                       <i class="fa fa-tag" aria-hidden="true"></i> Tags
                   </a>
                 
@@ -148,7 +148,7 @@ tr:hover{
                   </div>
                 </div>
                 <div>
-                <a style="box-shadow:2px 2px 10px rgb(0,0,0,0.1); font-size: 12px;" class="ml-2 category btn btn-sm  btn-default border text-muted" onclick="filtering('pick','one')">
+                <a style="box-shadow:2px 2px 10px rgb(0,0,0,0.1); font-size: 12px;" class="ml-2  category btn btn-sm  btn-default border text-muted" onclick="filtering('pick','one')">
                   <i class="fa fa-random" aria-hidden="true"></i> Pick One
                 </a>
             </div>
@@ -210,7 +210,7 @@ tr:hover{
                 <center>
 
                 
-                <h5 class="text-muted mb-3">
+                <h5 class="text-muted mb-2">
                     <i class="fa fa-area-chart" aria-hidden="true"></i> Progress
                 </h5>
             </center>
@@ -219,7 +219,7 @@ tr:hover{
                 </div>
             </div>
             <div  class="mr-5 ml-5 pl-3 pr-3">
-                <div style="display: flex; font-weight:500; justify-content: space-between; font-size: 13px;" class="text-muted mt-3 pl-3 pr-3">
+                <div style="display: flex; font-weight:500; justify-content: space-between; font-size: 13px;" class="text-muted  pl-3 pr-3">
                     <div style="color:#753a88;">
                       <center>  
                         {{data.todo}}<br>
@@ -356,5 +356,83 @@ var myChart = new Chart(ctx, {
         },
     }
 });
+
+
+function filtering(method,value){
+        $.ajax({
+            type:'GET',
+            url:'/coding/filter/ajax/table/',
+            data:{
+                'method':method,
+                'value':value,
+            },
+            success:function(json){
+                json = JSON.parse(json);
+
+                json = json['problem']
+                if (method == 'pick'){
+                    window.location.replace("/coding/practise/"+json[1]+"/"+json[0]+"/");
+                }
+                string = "";
+                var table = $('#example').DataTable();
+                table.clear().draw();
+                for(var i=0; i<json.length;i++){
+                    console.log(json[i].tags);
+                    var diff,status;
+                    if (json[i].difficulty == 'Moderate'){
+                        diff = '<span class="badge badge-sm badge-warning">'+json[i].difficulty+'</span>';
+                    }
+                    else if(json[i].difficulty == 'Easy'){
+                        diff = '<span class="badge badge-sm badge-success">'+json[i].difficulty+'</span>';
+                    }
+                    else{
+                        diff = '<span class="badge badge-sm badge-danger">'+json[i].difficulty+'</span>';
+                    }
+                    if (json[i].status == 'Solved'){
+                        status = '<i class="fa fa-check" style="color: green;"></i>';
+                    }
+                    else if(json[i].status == 'Attempted'){
+                        status = '<i class="fa fa-question" style="color: #f0ad4e;"></i>';
+                    }
+                    else{
+                        status = "";
+                    }
+                    var k = "";
+                    for(var j=0;j<json[i].tag.length;j++){
+                        k += ` <a href="#" style="font-size: 12px;" onclick="filtering('tags','`+json[i].tag[j]+`')" class="btn btn-sm btn-outline-warning">`+json[i].tag[j]+`</a>`;
+                    }
+                    
+                    
+ 
+                table.row.add( [
+                        `
+                        <div style="display: flex; justify-content: space-between;">
+                                        `+json[i].id+`
+                                        <span class="">
+                                            `+status+`
+                                         </span>
+                                    </div>
+                                    `,
+                        `
+                        <div style="display: flex; justify-content: space-between;" >
+                                    <a href="/coding/practise/`+json[i].title.toLowerCase().replace(" ","-")+`/`+json[i].id+`/">`+json[i].title+`</a>
+                                  
+                                </div>
+                                <div class="collapse mt-1" id="collapseExample">
+                                   `+k+`
+                                  </div>
+                                `,
+                       '40%',
+                        diff,
+                       
+                 ] ).draw();
+
+                }
+              
+
+            },
+
+        });
+    }
 </script>
 {% endblock %}

@@ -121,7 +121,7 @@ color:white;
   }
 {% endblock %}
 {% block body %}
-<section class="section pt-3" style="height:700px;">
+<section class="section pt-3" style="height:700px; overflow-x: hidden;">
     <div class="position" style="height:250px; width:250px;background: rgba(196, 196, 196, 0.05);top:10rem; left:-13.3rem; transform:rotate(15deg);"></div>
     <div class="position" style="height:250px; width:250px;background: rgba(196, 196, 196, 0.05); top:-13.3rem; left:25rem; transform:rotate(15deg);"></div>
     <div class="position" style="height:250px; width:250px;background: rgba(196, 196, 196, 0.05); top:-8rem; right:-5rem; transform:rotate(15deg);"></div>
@@ -154,13 +154,13 @@ color:white;
                 <a class="nav-link" href="#">Developer</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#"  data-toggle="modal" data-target="#exampleModalCenter">SignIn</a>
+                <a class="nav-link" href="{% url 'login' %}"  >SignIn</a>
               </li>
           </ul>
         </div>
     </div>
       </nav>
-      <div class="container">
+      <div class="container" style="">
         <div class="row" style="height:450px;">
             <div class="col-12 col-xl-6 d-none d-xl-block" style="display: flex; align-items: center;">
               <div class="" style="">
@@ -290,7 +290,8 @@ color:white;
             </div>
         </div>
         <div class="row mt-5 pt-5 pb-5 mb-5">
-            fnwdkl
+            <embed class="p-2" type="text/html" src="http://127.0.0.1:8000/playground/embed/eyJpZCI6NiwibWV0aG9kIjoiRnJvbnRlbmQiLCJzaGFyZSI6dHJ1ZSwiZW1iZWQiOnRydWV9.J7m-ZUQEYbWha0bFnJOSLt_gPYo/"  style="width:60%; height:410px; border:1px solid rgb(0,0,0,0.1);border-radius:5px; padding:3px; box-shadow:2px 2px 10px rgb(0,0,0,0.1); ">
+          
         </div>
     </div>
     </section>
