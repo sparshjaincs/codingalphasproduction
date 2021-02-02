@@ -1,14 +1,7 @@
 from django.shortcuts import render
 from datetime import date
 from .models import *
-from django.http import HttpResponse
-import json
-from json import JSONEncoder
-#from .file import Write, Test
-# Create your views here.
-class Encoder(JSONEncoder):
-        def default(self, o):
-            return o.__dict__
+
 # Create your views here.
 def homepage(request):
     context = {}

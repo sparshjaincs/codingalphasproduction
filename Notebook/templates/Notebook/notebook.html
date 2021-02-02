@@ -78,7 +78,7 @@
                         <div class="d-flex justify-content-between">
                             <h5 class="text-muted title" id="head{{data.id}}">{{data.heading}}</h5> 
                         <div style="display: flex; justify-content: flex-end;">
-                            <a title="Delete" onclick='return confirm("Do yo want to delete this item?")' data-toggle="tooltip" class="btn-sm btn" href="/notebook/delete/{{data.id}}/"><i class="fa fa-trash"></i></a>
+                            <a title="Delete" onclick='confirm("Do yo want to delete this item?");' data-toggle="tooltip" class="btn-sm btn" href="/notebook/delete/{{data.id}}/"><i class="fa fa-trash"></i></a>
                             <a title="Edit"  data-toggle="tooltip" class=" btn-sm btn" href="/notebook/edit/{{data.id}}/"><i class="fa fa-edit "></i></a>
                             <a href="" onclick="generate('{{data.id}}')" title="Print" data-toggle="tooltip" class="btn btn-sm"><i class="fa fa-print"></i></a>
                         </div>
