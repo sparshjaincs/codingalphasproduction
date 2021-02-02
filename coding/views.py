@@ -146,8 +146,16 @@ def template(request,id):
     method = request.GET.get('method')
 
     ins = Templates.objects.filter(instance = Programming.objects.get(id = id),language = Language.objects.get(lang = lang))
-    if ins.exists():
-        context['instance'] = ins.temp
+    if method == 'restore':
+        context['instance'] = Language.objects.get(lang = lang).template
+    elif method == 'Submitted':
+        in1 = Submission.objects.filter(username = request.user,question = Programming.objects.get(id = id),language = Language.objects.get(lang = lang) )
+        if in1.exists():
+            context['instance'] = in1[0].solution
+        else:
+            context['instance'] = ins[0].code
+    elif ins.exists():
+        context['instance'] = ins[0].code
     else:
         context['instance'] = Language.objects.get(lang = lang).template
     return HttpResponse(json.dumps(context))
@@ -156,9 +164,13 @@ def save(request,id):
     if request.method == 'POST':
         title = request.POST.get('title')
         desc = request.POST.get('description')
-        instance = Templates.objects.get(instance = Programming.objects.get(id = id),language = Language.objects.get(lang = title))
-        instance.code = desc
-        instance.save()
+        if not Templates.objects.filter(instance = Programming.objects.get(id = id),language = Language.objects.get(lang = title)).exists():
+            instance = Templates(instance = Programming.objects.get(id = id),language = Language.objects.get(lang = title),code = desc)
+            instance.save()
+        else:
+            ins = Templates.objects.get(instance = Programming.objects.get(id = id),language = Language.objects.get(lang = title))
+            ins.code = desc
+            ins.save()
         return HttpResponse(json.dumps('Saved'))
 
 
@@ -172,12 +184,7 @@ def runcode(request,id):
         test = request.POST.get('case')
         ins = Templates.objects.get(instance = Programming.objects.get(id = id),language = Language.objects.get(lang = title))
         
-        instance = Write()
-        instance.file_handling(title,desc,ins.snippet)
-        instance = TestCase.objects.get(instance = Programming.objects.get(id = id))
-        from pythonrun import Checker
-        ins = Checker()
-        result = ins.checking(eval(instance.public_cases),eval(instance.public_sol_cases))
+        result=""
 
         return HttpResponse(json.dumps(result))
 
@@ -211,7 +218,6 @@ def list(request):
         else:
             instance.question.remove(program)
             flag = False
-        print(flag)
         context['information'] = [f'{instance.title}',flag]
         return HttpResponse(json.dumps(context))
     else:

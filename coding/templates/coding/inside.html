@@ -138,7 +138,59 @@
                                     {% endfor %}
                                 </div>
                                    </div>
-                            <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">...</div>
+                            <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+
+                                <div class="p-3">
+                                    <h5 class="text-muted">Summary</h5>
+                                    <div>
+                                        {{data.solution|safe}}
+                                    </div>
+                                   </div>
+                
+                                   <div class="">
+                                    <h5 class="text-muted p-3">Solution</h5>
+                                    {% for x in data.question_sol.all %}
+                                       <div class="mt-3">
+                                        <h5>
+                                            {{x.title|safe}}
+                                        </h5>
+                                        <div>
+                                            {{x.solution|safe|linebreaks}}
+                                        </div>
+                                        {% if x.video %}
+                                            <div>
+                                                {{x.video|safe}}
+                                            </div>
+                                        {% endif %}
+                                        {% if x.Sol_Snippet.all %}
+                                        <div>
+                
+                                        
+                                        <nav class="mt-4">
+                                            <div class="code_snippet nav nav-tabs" id="nav-tab" role="tablist">
+                                                {% for x1 in x.Sol_Snippet.all %}
+                                                    <a class="nav-item nav-link active" id="nav-home-tab{{x1.id}}" data-toggle="tab" href="#nav-home{{x1.id}}" role="tab" aria-controls="nav-home" aria-selected="true">{{x1.language}}</a>                                  
+                                                {% endfor %}
+                                            </div>
+                                        </nav>
+                                            <div class="tab-content" id="nav-tabContent">
+                                                {% for x1 in x.Sol_Snippet.all %}
+                                                <div class="tab-pane fade show {% if forloop.counter == 1%}active{% endif %}" id="nav-home{{x1.id}}" role="tabpanel" aria-labelledby="nav-home-tab">
+                                                    {{x1.code|safe}}
+                                                </div>
+                
+                                                </div>
+                                                {% endfor %}
+                                            </div>
+                                            {% endif %}
+                                        
+                                    </div>
+                                        
+                                     
+                                       <hr>
+                                    {% endfor %}
+                                   </div>
+                            </div>
                             <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">...</div>
                             <div class="tab-pane fade" id="solution" role="tabpanel" aria-labelledby="contact-tab">Solution</div>
                           </div>
@@ -178,9 +230,9 @@
                         <div class="pr-4" style="padding:5px;">
                             <a  class="btn btn-sm border text-muted a1" style="font-size: 12px;" data-toggle="tooltip" title="Switch On Auto Complete Mode" data-placement="left"><i class="fa fa-check my "></i> Auto Complete </a>
                             
-                            <a  class="btn btn-sm text-muted a1" style="font-size: 12px;" data-toggle="tooltip" title="Restore Default Code" data-placement="left"><i class="fa fa-window-restore my "></i></a>
+                            <a  onclick="fun('restore')" class="btn btn-sm text-muted a1" style="font-size: 12px;" data-toggle="tooltip" title="Restore Default Code" data-placement="left"><i class="fa fa-window-restore my "></i></a>
                         
-                            <a  class="btn btn-sm text-muted a1" style="font-size: 12px;" data-toggle="tooltip" title="Restore Saved Code" data-placement="left"><i class="fa fa-code my "></i> </a>
+                            <a onclick="fun('Submitted')"  class="btn btn-sm text-muted a1" style="font-size: 12px;" data-toggle="tooltip" title="Restore last submitted Code" data-placement="left"><i class="fa fa-code my "></i> </a>
                             
                             <a  class="btn btn-sm text-muted a1" style="font-size: 12px;" data-toggle="tooltip" title="Editor Settings" data-placement="left"><i class="fa fa-cog my "></i></a>
                         
@@ -189,15 +241,68 @@
                     <div class="card-body pt-0 " style="height:631px; padding-left:12px;">
                         {% csrf_token %}
                         <div id="editor"></div>
-                    </div>
+                        
+                           <div id="pallete" style="display:none; position: absolute; bottom:2.9rem; right:1rem;width:98%; height:240px; background-color: #fff;z-index:100;" class="">
+                            <ul class="nav nav-tabs" id="myTab3" role="tablist" style="font-size: 12px;">
+                                <li class="nav-item">
+                                  <a class="nav-link active text-muted" id="snippet1" data-toggle="tab" href="#snippettab1" role="tab" aria-controls="snippet1" aria-selected="true"><i class="fa fa-check-circle" aria-hidden="true"></i> Run Code Results</a>
+                                </li>
+                                <li class="nav-item">
+                                  <a class="nav-link text-muted" id="snippet2" data-toggle="tab" href="#snippettab2" role="tab" aria-controls="snippet2" aria-selected="false"><i class="fa fa-briefcase" aria-hidden="true"></i> Testcases</a>
+                                </li>
+                               
+                              </ul>
+                              <div class="tab-content" id="myTabContent3">
+                                <div class="tab-pane fade show active"  id="snippettab1" role="tabpanel" aria-labelledby="snippettab1-tab">
+                                  
+                                   <div id="temp" class="text-muted" style="width:100%; display:flex;justify-content: center; position: absolute; font-size: 20px; opacity: 0.5; font-weight: 600; margin-top: 85px;">
+                                    <center>You must run your code first</center>
+                                   </div>
+                                   
+                                   <span id="loader" class=" pt-5" style="position: absolute; display: none; left:350;"><i class=" mt-5 fa fa-spinner fa-spin text-muted" style="font-size: 30px; opacity: 0.5;"></i></span>
+                                   
+                                   <div class="mt-2" id="solpallete" style="position: absolute; display: none;">
+                                    <div style="display: flex; justify-content: flex-start;">
+                                       <p id="stat" class="ml-4" style="font-size: 20px; font-weight: 600;">Wrong Anwser</p>
+                                       <p id="time" class="ml-3 mt-1" style="font-size: 16px; opacity:0.5 ;">Runtime 32 ms</p>
+                                    </div>
+                                    
+                                    <div >
+                                        <div class="ml-4" style="display: flex; justify-content: space-between; width: 100%;">
+                                            <p class="text-muted mt-1" style="width:90px; font-size: 17px; font-weight: 600;">Your Input</p>
+                                            <input id="myinp" class="form-control " style="width:600px;" name="input" disabled>
+                                        </div>
+                                        <div class="ml-4" style="display: flex; justify-content: space-between; width: 100%;">
+                                            <p class="text-muted mt-1" style="width:90px; font-size: 17px; font-weight: 600;">Output</p>
+                                            <input id="myout" class="form-control " style="width:600px;" name="output" disabled>
+                                        </div>
+                                        <div class="ml-4" style="display: flex; justify-content: space-between; width: 100%;">
+                                            <p id="exp" class="text-muted mt-1" style="width:90px; font-size: 17px; font-weight: 600;">Expected</p>
+                                            <input class="form-control " style="width:600px;" name="expected" disabled>
+                                        </div>
+                                    </div>
+                                </div>
+                                    
+                                   </div>
+        
+                                
+                                <div class="tab-pane fade p-2" id="snippettab2" role="" aria-labelledby="snippettab2-tab">
+                                    
+                                    <textarea id="case" class="form-control " value="" style="position: absolute; resize: none; width:98%; height:180px; "></textarea>
+                                </div>
+                               
+                              </div>
+                           </div>
+                        </div>
+                    
                     <div class="card-footer border-bottom p-2 pl-2 d-flex justify-content-between">
                         <div>
-                            <a class="btn btn-sm border text-muted a1 shadow-sm " style="font-size: 12px;"><i class="fa fa-terminal my"></i> Console</a>
+                            <a onclick="show_palette()" class="btn btn-sm border text-muted a1 shadow-sm " style="font-size: 12px;"><i class="fa fa-terminal my"></i> Console</a>
                         </div>
                         <div class="mr-3">
-                            <a class="btn btn-sm text-white shadow-sm" style="font-size: 12px; background-color: #1E2D35;"><i class="fa fa-play-circle"></i> Run</a>
+                            <a onclick="runtestcode()" class="btn btn-sm text-white shadow-sm" style="font-size: 12px; background-color: #1E2D35;"><i class="fa fa-play-circle"></i> Run</a>
                         
-                            <a class="btn btn-sm text-white shadow-sm" style="font-size: 12px; background-color: #C42D63;"><i class="fa fa-cogs"></i> Submit</a>
+                            <a onclick="SubmitCode()" class="btn btn-sm text-white shadow-sm" style="font-size: 12px; background-color: #C42D63;"><i class="fa fa-cogs"></i> Submit</a>
                         </div>
                        
                     </div>
@@ -491,8 +596,10 @@ $.ajax({
             json = JSON.parse(json);
             console.log(json);
             var str = ' <span class="btn btn-sm mr-2 mt-1 btn-outline-warning  rounded-pill" style="border:none;" ><i class="fa fa-dot-circle-o"> '+ json+ '</span>'
-            document.getElementById('savestatus').innerHTML = str;
-            $("#savestatus").children().delay(5000).fadeOut(800);   
+            //document.getElementById('savestatus').innerHTML = str;
+            //$("#savestatus").children().delay(5000).fadeOut(800);
+            var notyf = new Notyf();
+            notyf.success('Your changes have been successfully saved!');   
         
         },
         error : function(xhr,errmsg,err) {
@@ -500,7 +607,53 @@ $.ajax({
     }
 });
 }
+function show_palette(){
+    if (document.getElementById('pallete').style.display == 'none'){
+    document.getElementById('pallete').style.display = 'block';
+    }
+    else{
+        document.getElementById('pallete').style.display = 'none';
+    }
+}
+function runtestcode(){
+        document.getElementById('solpallete').style.display = 'none';
+        document.getElementById('pallete').style.display = 'block';
+        document.getElementById('temp').style.display = ' none';
+        document.getElementById('loader').style.display = 'block';
+        var ca = document.getElementById('case').value;
+         var lang = document.getElementById('title').value;
+        var value = editor.getValue();
+        
+        $.ajax({
+        type:'POST',
+        url:'/coding/test/ajax/{{id}}/',
+        data:{
+            title:lang,
+            description:value,
+            ca:ca,
+            csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
+            action: 'post'
+        },
+        success:function(json){
+            json = JSON.parse(json);
+            console.log(json);
+            document.getElementById('loader').style.display = 'none';
+            document.getElementById('solpallete').style.display = 'block';
+            if (json[0] == false){
+                document.getElementById('stat').innerHTML = "<span style='color:#d9534f;'>"+json[2]+"</span>";
+            }
+            document.getElementById('time').innerHTML = "Runtime "+json[1];
 
-  
+        
+        },
+        error : function(xhr,errmsg,err) {
+        console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
+    }
+});
+    }
+
+    function SubmitCode(){
+        $('[href="#solution"]').tab('show');
+    }
 </script>
 {% endblock %}
