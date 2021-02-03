@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'blogs',
     'Notebook',
     'Playground',
+    'Explore',
 ]
 
 MIDDLEWARE = [
