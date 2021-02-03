@@ -4,6 +4,7 @@ from .models import *
 from django.http import HttpResponse
 import json
 from json import JSONEncoder
+from .compiler import Compiler
 #from .file import Write, Test
 # Create your views here.
 class Encoder(JSONEncoder):
@@ -94,7 +95,9 @@ def inside(request,title,ins):
 
     context['problem'] = data
     context['category'] = Programming_Category.objects.all().order_by('category_name')
-    context['data'] =  Programming.objects.get(id = ins)
+    ins = Programming.objects.get(id = ins)
+    context['data'] =  ins
+   
     return render(request,'coding/inside.html',context)
 
 
@@ -182,9 +185,17 @@ def runcode(request,id):
         title = request.POST.get('title')
         desc = request.POST.get('description')
         test = request.POST.get('case')
-        ins = Templates.objects.get(instance = Programming.objects.get(id = id),language = Language.objects.get(lang = title))
+        ins = Programming.objects.get(id = id)
+        if test:
+            testcase = [[ eval(i) for i in test.strip().split("\n")]]
+        else:
+            testcase = [[]]
+        cp = Compiler(title,desc,testcase,[ins.testcase_ques.all()[0].sol_cases])
+        result = cp.process()
+        result['input'] = test
+        result['solution'] = ins.testcase_ques.all()[0].sol_cases
         
-        result=""
+    
 
         return HttpResponse(json.dumps(result))
 

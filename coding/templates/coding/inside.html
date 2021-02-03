@@ -250,6 +250,9 @@
                                 <li class="nav-item">
                                   <a class="nav-link text-muted" id="snippet2" data-toggle="tab" href="#snippettab2" role="tab" aria-controls="snippet2" aria-selected="false"><i class="fa fa-briefcase" aria-hidden="true"></i> Testcases</a>
                                 </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-muted" id="snippet2" data-toggle="tab" href="#snippettab3" role="tab" aria-controls="snippet2" aria-selected="false"><i class="fa fa-code" aria-hidden="true"></i> Debug</a>
+                                  </li>
                                
                               </ul>
                               <div class="tab-content" id="myTabContent3">
@@ -261,25 +264,35 @@
                                    
                                    <span id="loader" class=" pt-5" style="position: absolute; display: none; left:350;"><i class=" mt-5 fa fa-spinner fa-spin text-muted" style="font-size: 30px; opacity: 0.5;"></i></span>
                                    
-                                   <div class="mt-2" id="solpallete" style="position: absolute; display: none;">
+                                   <div class="mt-2" id="solpallete" style="position: absolute; display: none; width:100%;">
                                     <div style="display: flex; justify-content: flex-start;">
-                                       <p id="stat" class="ml-4" style="font-size: 20px; font-weight: 600;">Wrong Anwser</p>
-                                       <p id="time" class="ml-3 mt-1" style="font-size: 16px; opacity:0.5 ;">Runtime 32 ms</p>
+                                       <p id="stat" class="ml-4" style="font-size: 16px; font-weight: 600;"></p>
+                                       <p id="time" class="ml-3 mt-1" style="font-size: 12px; opacity:0.5 ;"></p>
                                     </div>
                                     
-                                    <div >
-                                        <div class="ml-4" style="display: flex; justify-content: space-between; width: 100%;">
-                                            <p class="text-muted mt-1" style="width:90px; font-size: 17px; font-weight: 600;">Your Input</p>
-                                            <input id="myinp" class="form-control " style="width:600px;" name="input" disabled>
-                                        </div>
-                                        <div class="ml-4" style="display: flex; justify-content: space-between; width: 100%;">
-                                            <p class="text-muted mt-1" style="width:90px; font-size: 17px; font-weight: 600;">Output</p>
-                                            <input id="myout" class="form-control " style="width:600px;" name="output" disabled>
-                                        </div>
-                                        <div class="ml-4" style="display: flex; justify-content: space-between; width: 100%;">
-                                            <p id="exp" class="text-muted mt-1" style="width:90px; font-size: 17px; font-weight: 600;">Expected</p>
-                                            <input class="form-control " style="width:600px;" name="expected" disabled>
-                                        </div>
+                                    <div class="pl-2 ml-3 pr-2">
+                                        
+                                          <div class="form-group row">
+                                            <label for="inputPassword" class="col-sm-2 col-form-label text-muted">Your Input</label>
+                                            <div class="col-sm-10">
+                                              <div id="input" style="width:100%; height:40px; font-size:13px; background-color:#F7F7F7; overflow-y: scroll;" class=" pl-2"></div>
+                                            </div>
+                                          </div>
+                                          <div class="form-group row" id="outputpanel">
+                                            <label for="inputPassword" class="col-sm-2 col-form-label text-muted" id="outputlabel">Output</label>
+                                            <div class="col-sm-10">
+                                                <div id="output" style="width:100%; height:30px; font-size:13px; background-color:#F7F7F7;overflow-y: scroll;" class="pt-1 pl-2"></div>
+                                            </div>
+                                           
+                                          </div>
+                                          <div class="form-group row">
+                                            <label for="inputPassword" class="col-sm-2 col-form-label text-muted">Expected</label>
+                                            <div class="col-sm-10">
+                                                <div id="expected" style="width:100%; height:30px; font-size:13px; background-color:#F7F7F7;overflow-y: scroll;" class="pt-1 pl-2"></div>
+                                            </div>
+                                           
+                                          </div>
+                                      
                                     </div>
                                 </div>
                                     
@@ -288,9 +301,14 @@
                                 
                                 <div class="tab-pane fade p-2" id="snippettab2" role="" aria-labelledby="snippettab2-tab">
                                     
-                                    <textarea id="case" class="form-control " value="" style="position: absolute; resize: none; width:98%; height:180px; "></textarea>
+                                    <textarea id="case" class="form-control " value="" style="position: absolute; resize: none; width:98%; height:180px; ">{{data.testcase_ques.all.0.cases|safe}}</textarea>
                                 </div>
-                               
+                                <div class="tab-pane fade p-2" id="snippettab3" role="" aria-labelledby="snippettab2-tab">
+                                    
+                                   <div id="errorpanel" style="font-size: 12px;" class="text-muted p-3">
+
+                                   </div>
+                                </div>
                               </div>
                            </div>
                         </div>
@@ -383,7 +401,7 @@
                     <tr class="text-muted">
                         <th>S.No.</th>
                         <th style="width:70%;">Problem</th>
-                        <th>Acceptance</th>
+                        <th>Acceptance Rate</th>
                         <th>Difficulty</th>
                        
                     </tr>
@@ -635,7 +653,7 @@ function runtestcode(){
         data:{
             title:lang,
             description:value,
-            ca:ca,
+            case:ca,
             csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
             action: 'post'
         },
@@ -644,10 +662,31 @@ function runtestcode(){
             console.log(json);
             document.getElementById('loader').style.display = 'none';
             document.getElementById('solpallete').style.display = 'block';
-            if (json[0] == false){
-                document.getElementById('stat').innerHTML = "<span style='color:#d9534f;'>"+json[2]+"</span>";
+            if((json['flag'] == 0) && (json['status'] == 'Wrong Anwser') ){
+            document.getElementById('stat').innerHTML = "<span class='text-danger'>"+json['status']+"</span>";
             }
-            document.getElementById('time').innerHTML = "Runtime "+json[1];
+            else if(json['flag'] == 0){
+            document.getElementById('stat').innerHTML = "<span class='text-success'>"+json['status']+"</span>";
+            }
+            else if((json['flag'] == 1) && (json['status'] =='Run Time Error') ){
+                document.getElementById('stat').innerHTML = "<span class='text-danger'>"+json['status']+"</span>";
+            
+            }
+            else if((json['flag'] == 1) && (json['status'] =='Time Limit Exceed') ){
+                document.getElementById('stat').innerHTML = "<span class='text-warning'>"+json['status']+"</span>";
+            
+            }
+            else{
+                document.getElementById('stat').innerHTML = "<span class='text-warning'>"+json['status']+"</span>";
+            }
+            document.getElementById('time').innerHTML = json['runtime'];
+                document.getElementById('input').innerHTML = "<pre>"+json['input']+"</pre>";
+                document.getElementById('output').innerHTML = "<pre>"+json['output']+"</pre>";
+                document.getElementById('expected').innerHTML = "<pre>"+json['solution']+"</pre>";
+            
+            if(json['error']){
+                document.getElementById('errorpanel').innerHTML = "<pre>"+json['error']+"</pre>";
+            }
 
         
         },
