@@ -64,3 +64,31 @@ class Comment(models.Model):
         return self.body
 
 
+
+class QuoraComment(models.Model):
+    user = models.ForeignKey(User, related_name='quora_comment_user', to_field='username', on_delete=models.CASCADE,default="")
+    question = models.ForeignKey(Quora, related_name='quora_comment_ques',on_delete=models.CASCADE,default="")
+   
+    parent = models.ForeignKey('self',null=True,blank=True,on_delete=models.CASCADE,related_name="quora_replies_name")
+    body = models.TextField(blank=False)
+    created = models.DateTimeField(auto_now_add=True,null=True)
+    active = models.BooleanField(default=True)
+    like = models.ManyToManyField(User,related_name="quora_comment_like")
+    dislike = models.ManyToManyField(User,related_name="quora_comment_dislike")
+    class Meta:
+        ordering = ('-created',)
+    def children(self):
+        return QuoraComment.objects.filter(parent=self)
+
+    @property
+    def is_parent(self):
+        if self.parent is not None:
+            return False
+        return True
+    @property
+    def sorting(self):
+        return QuoraComment.objects.filter(parent = self).order_by("created")
+    def __str__(self):
+        return self.body
+
+

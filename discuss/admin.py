@@ -4,3 +4,4 @@ from .models import *
 admin.site.register(Quora)
 admin.site.register(Anwsers)
 admin.site.register(Comment)
+admin.site.register(QuoraComment)

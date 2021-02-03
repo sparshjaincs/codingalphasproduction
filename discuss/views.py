@@ -149,5 +149,39 @@ def comment_submit(request):
                         
                     except Exception as exp:
                         return HttpResponse(json.dumps(['error',str(exp)]))
+        elif method == 'notgeneral':
+            if ty == 'Experience':
+                if body is None or body == '':
+                        return HttpResponse(json.dumps(['error',"Comment Field Can't be empty!"]))
+                else:
+                    try:
+                        if proper == 'reply' or proper == 'reply1' or proper == 'reply2':
+                            
+                            comm = QuoraComment.objects.get(id = commentid)
+                            if inputid:
+                                ref = inputid
+                            else:
+                                ref = comm.id
+                            name = f"<a href='#reference{ref}' onclick='blink("+f'"reference{ref}"'+")'>@"+comm.user.profile.first_name + " " + comm.user.profile.last_name+"</a> "
+                            ins = QuoraComment(user = request.user,question = Quora.objects.get(id = questionid),body =name + body,parent = comm)
+                        else:
+                            ins = QuoraComment(user = request.user,question = Quora.objects.get(id = questionid),body = body)
+                        ins.save()
+                        data = {
+                            'user':ins.user.username,
+                            'name':ins.user.profile.first_name + " " + ins.user.profile.last_name,
+                            'id':ins.id,
+                            'body':ins.body,
+                            'profile':str(ins.user.profile.avatar),
+                            'time':str(ins.created.strftime("%B. %d, %m %H:%M %p")),
+                            'replies':QuoraComment.objects.filter(parent = ins).count(),
+
+                        }
+                        return HttpResponse(json.dumps(['success',data]))
+                    except Exception as exp:
+                        return HttpResponse(json.dumps(['error',str(exp)]))
+
+        
+
 
              

@@ -3,6 +3,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 import json
 from discuss.models import Quora
 from discuss.models import Anwsers as AnsModel
+from discuss.models import Comment as CommentSystem
 from Core.models import *
 from .forms import *
 from django.contrib.auth.mixins import UserPassesTestMixin
@@ -75,6 +76,19 @@ def like(request):
             status = 1  
         likecount = ins.like.all().count()  
         dislikecount = ins.dislike.all().count()
+    elif method == 'discusscomment':
+        ins = CommentSystem.objects.get(id=instance)
+        if request.user in ins.like.all():
+            ins.like.remove(request.user)
+            status = 0
+        else:
+            ins.like.add(request.user)
+            if request.user in ins.dislike.all():
+                ins.dislike.remove(request.user)
+            status = 1  
+        likecount = ins.like.all().count()  
+        dislikecount = ins.dislike.all().count()
+
 
     return HttpResponse(json.dumps([status,likecount,dislikecount]))
 
@@ -96,6 +110,18 @@ def dislike(request):
         likecount = ins.like.all().count() 
     elif method == 'discussanwser':
         ins = AnsModel.objects.get(id = instance)
+        if request.user in ins.dislike.all():
+            ins.dislike.remove(request.user)
+            status = 0
+        else:
+            ins.dislike.add(request.user)
+            if request.user in ins.like.all():
+                ins.like.remove(request.user)
+            status = 1
+        dislikecount = ins.dislike.all().count()
+        likecount = ins.like.all().count() 
+    elif method == 'discusscomment':
+        ins = CommentSystem.objects.get(id = instance)
         if request.user in ins.dislike.all():
             ins.dislike.remove(request.user)
             status = 0

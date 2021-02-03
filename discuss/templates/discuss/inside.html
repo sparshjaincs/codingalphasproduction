@@ -32,15 +32,36 @@
    bottom:0;
     height: 0;
   }
+
+  .slider1 {
+    position: fixed;
+    width: 30%;
+
+    height: 100%;
+  
+    border-top:1px solid rgb(0,0,0,0.05);
+    bottom:0;
+    right:0;
+    overflow: hidden;
+    background-color:#fff;
+    box-shadow:2px 2px 10px rgb(0,0,0,0.2);
+    transition: all 1s;
+    overflow-y:scroll;
+  }
+  
+  .slider1.close1 {
+   bottom:0;
+    width:0;
+  }
 .blinking{
     animation: example 5s linear;
 }
 @keyframes example {
-    0%   {background-color:#D37597;}
+    0%   {background-color:#E1A3B9;}
     25%  {background-color:#EEEEEE;}
-    50%  {background-color:#D37597;}
+    50%  {background-color:#E1A3B9;}
     75%  {background-color:#EEEEEE;}
-    100% {background-color:#D37597;}
+    100% {background-color:#E1A3B9;}
   }
 {% endblock %}
 {% block body %}
@@ -107,7 +128,7 @@
                             <span class="ml-5"><i class="fa fa-user-plus fa2"></i> {{data.user.profile.following.all.count}} Followers</span>
                             {% endif %}
                             <span class="ml-5"><i class="fa fa-street-view"></i> 235K Views</span>
-                            <span class="ml-5"><i class="fa fa-comment fa2"></i> {{data.quora_comment.all.count}} Comments</span>
+                            <a class="trigger1"><span class="ml-5"><i class="fa fa-comment fa2"></i> {{data.quora_comment.all.count}} Comments</span></a>
                         </div>
                         {% else %}
                         <button class="btn btn-sm shadow-sm trigger text-white" style="position: absolute; right:1rem; background-color: #C42D63; font-size:12px;">
@@ -210,8 +231,8 @@
                                                 </div>
                                             </div>
                                             <div class="mt-2">
-                                                <a onclick="like1('discussanwser','{{x.id}}','discuss_like_anwser{{x.id}}','like_count_anwser{{x.id}}','dislike_count_anwser{{x.id}}','discuss_dislike_anwser{{x.id}}')" class="btn btn-sm text-muted pr-1 ml-2   " title="Upvote" data-toggle="tooltip"><i id="discuss_like_anwser{{x.id}}" class="fa {% if request.user in x.like.all %} fa3{% else %}fa2 {% endif %} fa-thumbs-up"  style=""></i></a> <span class="text-muted " style="font-size: 14px;" id="like_count_anwser{{x.id}}">{{x.like.all.count}}</span>
-                                                <a onclick="dislike1('discussanwser','{{x.id}}','discuss_dislike_anwser{{x.id}}','dislike_count_anwser{{x.id}}','like_count_anwser{{x.id}}','discuss_like_anwser{{x.id}}')" class="btn btn-sm text-muted ml-3 pr-1" title="Downvote" data-toggle="tooltip"><i id="discuss_dislike_anwser{{x.id}}" class="fa {% if request.user in x.dislike.all %} fa3{%else%}fa2 {% endif %} fa-thumbs-down"></i></a><span class="text-muted " style="font-size: 14px;" id="dislike_count_anwser{{x.id}}">{{x.dislike.all.count}}</span>
+                                                <a onclick="like1('discusscomment','{{i.id}}','discuss_like_comment{{i.id}}','like_count_comment{{i.id}}','dislike_count_comment{{i.id}}','discuss_dislike_comment{{i.id}}')" class="btn btn-sm text-muted pr-1 ml-2   " title="Upvote" data-toggle="tooltip"><i id="discuss_like_comment{{i.id}}" class="fa {% if request.user in i.like.all %} fa3{% else %}fa2 {% endif %} fa-thumbs-up"  style=""></i></a> <span class="text-muted " style="font-size: 14px;" id="like_count_comment{{i.id}}">{{i.like.all.count}}</span>
+                                                <a onclick="dislike1('discusscomment','{{i.id}}','discuss_dislike_comment{{i.id}}','dislike_count_comment{{i.id}}','like_count_comment{{i.id}}','discuss_like_comment{{i.id}}')" class="btn btn-sm text-muted ml-3 pr-1" title="Downvote" data-toggle="tooltip"><i id="discuss_dislike_comment{{i.id}}" class="fa {% if request.user in i.dislike.all %} fa3{%else%}fa2 {% endif %} fa-thumbs-down"></i></a><span class="text-muted " style="font-size: 14px;" id="dislike_count_comment{{i.id}}">{{i.dislike.all.count}}</span>
                                                
                                             </div>
                                             </div>
@@ -257,11 +278,12 @@
                                                                 </div>
                                                                 <div class="d-flex align-items-center">
                                                                     <p style="font-size:12px;" class="text-muted ml-3 pt-3">Replied By <a href="/profile/{{j.user}}/">{{j.user.profile.first_name}} {{j.user.profile.last_name}}</a>, {{j.created}}</p>
+                                                                    <a style="font-size: 12px;" class="ml-4"><i class=" fa fa-comment fa2"></i></a><span style="font-size: 12px;" class="text-muted ml-1"> {{j.replies_name.all.count}} Replies</span>
                                                                    </div>
                                                             </div>
                                                             <div class="mt-2">
-                                                                <a onclick="like1('discussanwser','{{x.id}}','discuss_like_anwser{{x.id}}','like_count_anwser{{x.id}}','dislike_count_anwser{{x.id}}','discuss_dislike_anwser{{x.id}}')" class="btn btn-sm text-muted pr-1 ml-2   " title="Upvote" data-toggle="tooltip"><i id="discuss_like_anwser{{x.id}}" class="fa {% if request.user in x.like.all %} fa3{% else %}fa2 {% endif %} fa-thumbs-up"  style=""></i></a> <span class="text-muted " style="font-size: 14px;" id="like_count_anwser{{x.id}}">{{x.like.all.count}}</span>
-                                                                <a onclick="dislike1('discussanwser','{{x.id}}','discuss_dislike_anwser{{x.id}}','dislike_count_anwser{{x.id}}','like_count_anwser{{x.id}}','discuss_like_anwser{{x.id}}')" class="btn btn-sm text-muted ml-3 pr-1" title="Downvote" data-toggle="tooltip"><i id="discuss_dislike_anwser{{x.id}}" class="fa {% if request.user in x.dislike.all %} fa3{%else%}fa2 {% endif %} fa-thumbs-down"></i></a><span class="text-muted " style="font-size: 14px;" id="dislike_count_anwser{{x.id}}">{{x.dislike.all.count}}</span>
+                                                                <a onclick="like1('discusscomment','{{j.id}}','discuss_like_comment{{j.id}}','like_count_comment{{j.id}}','dislike_count_comment{{j.id}}','discuss_dislike_comment{{j.id}}')" class="btn btn-sm text-muted pr-1 ml-2   " title="Upvote" data-toggle="tooltip"><i id="discuss_like_comment{{j.id}}" class="fa {% if request.user in j.like.all %} fa3{% else %}fa2 {% endif %} fa-thumbs-up"  style=""></i></a> <span class="text-muted " style="font-size: 14px;" id="like_count_comment{{j.id}}">{{j.like.all.count}}</span>
+                                                                <a onclick="dislike1('discusscomment','{{j.id}}','discuss_dislike_comment{{j.id}}','dislike_count_comment{{j.id}}','like_count_comment{{j.id}}','discuss_like_comment{{j.id}}')" class="btn btn-sm text-muted ml-3 pr-1" title="Downvote" data-toggle="tooltip"><i id="discuss_dislike_comment{{j.id}}" class="fa {% if request.user in j.dislike.all %} fa3{%else%}fa2 {% endif %} fa-thumbs-down"></i></a><span class="text-muted " style="font-size: 14px;" id="dislike_count_comment{{j.id}}">{{j.dislike.all.count}}</span>
                                                                
                                                             </div>
                                                             
@@ -306,11 +328,12 @@
                                                                             </div>
                                                                             <div class="d-flex align-items-center">
                                                                                 <p style="font-size:12px;" class="text-muted ml-3 pt-3">Replied By <a href="/profile/{{k.user}}/">{{k.user.profile.first_name}} {{k.user.profile.last_name}}</a>, {{k.created}}</p>
-                                                                               </div>
+                                                                               
+                                                                            </div>
                                                                         </div>
                                                                         <div class="mt-2">
-                                                                            <a onclick="like1('discussanwser','{{k.id}}','discuss_like_anwser{{k.id}}','like_count_anwser{{k.id}}','dislike_count_anwser{{k.id}}','discuss_dislike_anwser{k.id}}')" class="btn btn-sm text-muted pr-1 ml-2   " title="Upvote" data-toggle="tooltip"><i id="discuss_like_anwser{{k.id}}" class="fa {% if request.user in k.like.all %} fa3{% else %}fa2 {% endif %} fa-thumbs-up"  style=""></i></a> <span class="text-muted " style="font-size: 14px;" id="like_count_anwser{{k.id}}">{{k.like.all.count}}</span>
-                                                                            <a onclick="dislike1('discussanwser','{{k.id}}','discuss_dislike_anwser{{kk.id}}','dislike_count_anwser{{k.id}}','like_count_anwser{{k.id}}','discuss_like_anwser{{k.id}}')" class="btn btn-sm text-muted ml-3 pr-1" title="Downvote" data-toggle="tooltip"><i id="discuss_dislike_anwser{{k.id}}" class="fa {% if request.user in k.dislike.all %} fa3{%else%}fa2 {% endif %} fa-thumbs-down"></i></a><span class="text-muted " style="font-size: 14px;" id="dislike_count_anwser{{k.id}}">{{k.dislike.all.count}}</span>
+                                                                            <a onclick="like1('discusscomment','{{k.id}}','discuss_like_comment{{k.id}}','like_count_comment{{k.id}}','dislike_count_comment{{k.id}}','discuss_dislike_comment{{k.id}}')" class="btn btn-sm text-muted pr-1 ml-2   " title="Upvote" data-toggle="tooltip"><i id="discuss_like_comment{{k.id}}" class="fa {% if request.user in k.like.all %} fa3{% else %}fa2 {% endif %} fa-thumbs-up"  style=""></i></a> <span class="text-muted " style="font-size: 14px;" id="like_count_comment{{k.id}}">{{k.like.all.count}}</span>
+                                                                            <a onclick="dislike1('discusscomment','{{k.id}}','discuss_dislike_comment{{k.id}}','dislike_count_comment{{k.id}}','like_count_comment{{k.id}}','discuss_like_comment{{k.id}}')" class="btn btn-sm text-muted ml-3 pr-1" title="Downvote" data-toggle="tooltip"><i id="discuss_dislike_comment{{k.id}}" class="fa {% if request.user in k.dislike.all %} fa3{%else%}fa2 {% endif %} fa-thumbs-down"></i></a><span class="text-muted " style="font-size: 14px;" id="dislike_count_comment{{k.id}}">{{k.dislike.all.count}}</span>
                                                                            
                                                                         </div>
                                                                         </div>
@@ -399,6 +422,34 @@
                 </div>
             </div>
         </div>
+        {% if method != 'General' %}
+        <div class="slider1 close1" style="z-index:1000;">
+            <div class="row d-flex justify-content-between p-3 align-items-center">
+                <h5 class="ml-4 pt-2">
+                    <i class="fa fa-comment-o"></i> Comment ({{data.quora_comment.all.count}})
+                </h5>
+                <a class="btn p-2 cancel1 mr-4 text-muted" style="font-size: 14px;"><i class="fa fa-times"></i></a>
+            </div>
+            <div class="p-3 row" style="width: 100%;">
+               
+                <div style="width: 100%;" class="d-flex justify-content-start ml-4">
+                    <div>
+                        <a class="btn btn-sm border rounded-circle d-flex align-items-center justify-content-center text-white" style="width: 35px; height:35px; background-color:#546E7A">{{request.user.username|first|upper}}</a>
+                    </div>
+                    <div style="width: 90%;">
+                        <input id="commentform{{data.id}}" type="text" class="form-control ml-2 " style=" font-size:12px; width: 100%; border-top-left-radius: 20px; border-bottom-left-radius:20px;">
+                    </div>
+                    <div>
+                        <button onclick="CommentSubmit('notgeneral','{{method}}','comment','{{data.id}}','{{data.id}}','quoracommentarea{{data.id}}')" class="btn  border ml-3 pt-2 pb-2" style="background-color: #C42D63; color:white; font-size: 12px;  border-top-right-radius: 20px; border-bottom-right-radius:20px;">  <i class="fa fa-paper-plane"></i> Post</button>
+                    </div>
+                </div>
+                <div id="quoracommentarea{{data.id}}">
+
+                </div>
+            </div>
+        
+    </div>
+{% endif %}
     </div>
 </section>
 {% endblock %}
@@ -430,6 +481,10 @@ $('.trigger, .cancel').click(function() {
 
 });
 
+$('.trigger1, .cancel1').click(function() {
+  $('.slider1').toggleClass('close1');
+
+});
 
 
 function submit(method="General"){
