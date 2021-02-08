@@ -2,43 +2,60 @@
 <html>
     <head>
         <meta charset="utf-8">
-            <style>body{
-    overflow-x:hidden;
-}
-.heading{
-    position:absolute;
-    top:50%;
-    font-size:40px;
-    left:33%;
-    color:#C42D63;
-    animation:example 10s infinite;
-}
-@keyframes example {
-    0%{
-        top:20%;
-    }
-    50%{
-        top:80%;
-    }
-    100%{
-        top:20%;
-        transform:rotateX(360deg);
-    }
-
-  }
+            <style>
             </style>
             
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta http-header="X-Frame-Options" value="ALLOWALL">
 	    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.css">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js"></script>
     </head>
     <body>
         <div class="heading">
-            <p>CodingAlphas</p>
+           <canvas id="myChart"></canvas>
         </div>
     
             <script>
-            
+            var ctx = document.getElementById('myChart').getContext('2d');
+var myChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+        datasets: [{
+            label: '# of Votes',
+            data: [12, 19, 3, 5, 2, 3],
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(255, 206, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(255, 159, 64, 0.2)'
+            ],
+            borderColor: [
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(255, 159, 64, 1)'
+            ],
+            borderWidth: 1
+        }]
+    },
+    options: {
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero: true
+                }
+            }]
+        }
+    }
+});
             </script>
             
 </html>

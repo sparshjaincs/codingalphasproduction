@@ -17,11 +17,11 @@ class ContestChapter(models.Model):
 class ContestContent(models.Model):
     instance = models.ForeignKey(DailyContest,related_name="contestcontent",to_field="title",on_delete=models.CASCADE)
     chapter_instance = models.ForeignKey(ContestChapter,related_name="chaptercontent",to_field="title",on_delete=models.CASCADE)
-    title = models.CharField(max_length = 1000,unique = True)
+    #title = models.CharField(max_length = 1000,unique = True)
     question = models.ForeignKey(Programming,related_name="contentquestion",to_field="title",on_delete = models.CASCADE)
     created = models.DateTimeField(auto_now_add=True,null=True)
     def __str__(self):
-        return self.chapter_instance.title
+        return self.question.title
     
 
 

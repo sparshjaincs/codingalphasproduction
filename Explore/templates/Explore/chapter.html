@@ -1,0 +1,186 @@
+{% extends 'Core/snippets/base.html'  %}
+{% load static %}
+{% load shortcut %}
+{% block header %}
+{% include 'Core/snippets/header.html' %}
+{% endblock %}
+{% block style %}
+.jumbotron{
+    background:linear-gradient(180deg,rgb(0,0,0),rgb(20,34,43)50%);
+    height:350px;
+    border-radius:0px;
+  
+}
+.overview .nav-link{
+    
+    color:#25364C;
+    font-size:16px;
+    font-weight:600; 
+    letter-spacing:0.5px;
+    padding:20px;
+    
+}
+
+
+.nav-link.active{
+    border:none;
+    background-color:rgb(201,44,96,0.3);
+    border-radius:0px;
+    border-left:3px solid #C92C60;
+}
+.ques:hover{
+    background-color:#F9F9F9;
+}
+{% endblock %}
+{% block body %}
+<section class="jumbotron">
+   
+    <!--undraw_happy_announcement_ac67-->
+   
+<div class="container">
+    <div class="row mt-3">
+        <div class="col-12 d-flex justify-content-between">
+            <a class="btn btn-sm" style="color:#D5D7D8;" href="{% url 'explore' %}">
+                <i class="fa fa-angle-left mr-1"></i> Back To Explore
+            </a>
+            <a class="mt-1" style="color:#D5D7D8; font-size:13px;">
+                <i class="fa fa-calendar"></i> {{date}}
+            </a>
+        </div>
+        <div class="col-12 mt-3">
+            <div style="">
+              <center><img src="{% static 'svg/undraw_happy_announcement_ac67.svg' %}" style="width: 150px; " class=""></center>  
+            </div>
+            
+            <div style="font-size: 28px; color:#D5D7D8; letter-spacing: 1px; " class="mt-4 d-flex justify-content-center">
+                <div class="mr-3 mt-1" style="font-size: 40px;">
+                    <i class="fa fa-bullhorn" style="transform: rotate(-30deg);" aria-hidden="true"></i>
+                </div>
+               <div>
+                   <div style="font-size: 18px;">
+                       Welcome To
+                   </div>
+                   <div>
+                       {{data.title}}
+                   </div>
+               </div>
+            </div>
+        </div>
+
+    
+    </div>
+</div>
+</section>
+<section>
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                
+                  
+            </div>
+
+            <div class="col-12 mt-4">
+                <div class="row">
+                    <div class="col-12  col-md-3 col-lg-4">
+                        <ul class="nav overview shadow-sm border rounded p-0" id="myTab" role="tablist" style="display: block; border:none; background-color: white;">
+                            <li class="nav-item border-bottom">
+                            
+                              <a class="nav-link active d-flex justify-content-start" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">
+                                <div class="mr-2">
+                                    <i class="fa fa-file-text"></i>
+                                </div>
+                                    <div>
+                                        Inroduction
+                                        <div style="font-size: 12px; font-weight:200; " class="text-muted">
+                                            Read the instructions carefully and start this {{data.title}}.
+                                        </div>
+                                </div>
+                              </a>
+                        
+                             
+                            </li>
+                            {% for i in content %}
+                            <li class="nav-item border-bottom">
+                                <a class="nav-link" id="profile-tab{{i.id}}" data-toggle="tab" href="#profile{{i.id}}" role="tab" aria-controls="profile" aria-selected="false">{{i.title}}
+                                   
+                                    <span style="font-size:8px;" class="badge p-1 badge-sm{% if i.status == 'Expired' %} badge-dark {% elif i.status == 'Active'%} badge-success {% else %} badge-warning {% endif %} ">{{i.status}}</span>
+                                  
+                                    <div style="font-size: 12px; font-weight:200; " class="text-muted">
+                                        Problem appears at mid-night. You will have one day to solve it correctly.
+                                    </div>
+                                    <div style="font-size: 12px; font-weight:200;" class="text-muted mt-3">
+                                        Completed : 0%
+                                    </div>
+                                    <div class="progress mt-1" style="height:3px;">
+                                       
+                                        <div   class="progress-bar" role="progressbar" style="width: 0%;background-color: #C92C60;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                                      </div>
+                                </a>
+
+                                
+                            </li>
+                            {% endfor %}
+                            
+                            <li class="nav-item">
+                              <a class="nav-link d-flex justify-content-start" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">
+                                <div class="mr-2">
+                                    <i class="fa fa-comments-o"></i>
+                                </div> 
+                                <div>
+                                    Discuss
+                                    <div class="text-muted" style="font-size: 12px; font-weight: 200;">
+                                        Share your ideas and discuss your doubts.
+                                    </div>
+                                </div> 
+                                </a>
+                            </li>
+                          </ul>
+                    </div>
+                    <div class="col-12 col-md col-lg pl-5 ">
+                        <div class="tab-content" id="myTabContent">
+                            <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                                <h3 style="color:#25364C;">
+                                    <i class="fa fa-file-text"></i> Introduction
+                                </h3>
+                            </div>
+                            {% for i in content %}
+                            <div class="tab-pane fade" id="profile{{i.id}}" role="tabpanel" aria-labelledby="profile-tab">
+                                <h3 style="color:#25364C;">
+                                    <i class="fa fa-trophy"></i> {{i.title}}
+                                </h3>
+
+                                <div class="mt-2">
+                                    {% if i.status == 'Active' or i.status == 'Expired' %}
+                                    <div class="card shadow-sm " style="color:#25364C;">
+                                    {% for j in i.question %}
+                                        {% if j.instance %}
+                                        <div class="card-body border p-2 ques d-flex justify-content-between align-items-center" style="font-size: 14px;">
+                                           <div >
+                                            {% if j.flag %}
+                                            <a href="/explore/dailycontest/{{i.id}}/{{j.instance.question.title|replace}}/{{j.id}}/" class="btn btn-sm  rounded-circle mr-2" style="font-size: 18x;"><i class="fa fa-play-circle"></i></a> 
+                                            {{j.instance}}
+                                            {% else %}
+                                            <a class="btn btn-sm  rounded-circle mr-2" style="font-size: 18x;"><i class="fa fa-play-circle"></i></a> 
+                                             <strike>{{j.instance}}</strike>
+                                            {% endif %}
+                                           </div>
+                                           <div style="font-size: 12px;"> 
+                                              +10 <i class="fa fa-diamond" style="color:#C92C60; font-size: 14px;"></i>
+                                           </div>
+                                         </div>
+                                    {% endif %}
+                                    {% endfor %}
+                                </div>
+                                {% endif %}
+                                </div>
+                            </div>
+                            {% endfor %}
+                            <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">...</div>
+                          </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
