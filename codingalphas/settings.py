@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'Notebook',
     'Playground',
     'Explore',
+    'contest',
 ]
 
 MIDDLEWARE = [

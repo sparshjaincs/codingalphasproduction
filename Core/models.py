@@ -31,7 +31,7 @@ class Articles(models.Model):
     author = models.CharField(max_length=50,blank=True)
     date_Publish = models.DateField(default=datetime.now)
     date_updated = models.DateField(default=datetime.now)
-    category = models.ForeignKey(Categories,related_name = 'category', to_field='category_name',on_delete=models.CASCADE,default=" ")
+    #category = models.ForeignKey(Categories,related_name = 'category', to_field='category_name',on_delete=models.CASCADE,default=" ")
     image = models.ImageField(upload_to='users/images',blank=True,default='',null=True)
     video= models.FileField(upload_to='users/video', null=True,blank=True ,verbose_name="Video")
     image2 = models.CharField(max_length=1000,blank=True,null=True)

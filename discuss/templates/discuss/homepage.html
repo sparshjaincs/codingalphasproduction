@@ -170,7 +170,11 @@
                     <div  class="d-flex justify-content-end pt-2 pb-2 pr-2" >
                         <input  class="form-control mr-2" type="text" style="width:200px; height:35px; font-size: 12px;" placeholder="Search Tags, Keywords ... ">
                         <div>
+                            {% if method != 'Blogs' %}
                             <a class="btn btn-sm border text-white trigger p-2" style="font-size: 12px; background-color: #C42D63;" ><i class="fa fa-plus"></i> New</a>
+                            {% else %}
+                            <a href="{% url 'create' %}" class="btn btn-sm border text-white p-2" style="font-size: 12px; background-color: #C42D63;" ><i class="fa fa-plus"></i> New</a>
+                            {% endif %}
                         </div>
                         </div>
                 

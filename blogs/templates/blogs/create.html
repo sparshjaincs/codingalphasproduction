@@ -1,0 +1,147 @@
+{% extends 'Core/snippets/base.html' %}
+{% load crispy_forms_tags %}
+{% block header %}
+{% include 'Core/snippets/header.html' %}
+
+{% endblock %}
+{% block style %}
+.button{
+    background-color:#C92C60;
+    
+}
+.button:hover{
+ background-color:#97274C;
+}
+#div_id_title label{
+    display:none;
+}
+#div_id_tags label{
+    display:none;
+}
+#div_id_content label{
+    display:none;
+}
+#div_id_image label{
+    display:none;
+}
+#div_id_image{
+    width:150px;
+    height:50px;
+   box-shadow:2px 2px 10px rgb(0,0,0,0.1);
+  cursor:pointer;
+  background-color:#DAE0E5;
+
+}
+#div_id_image input{
+    width:150px;
+    height:50px;
+    opacity:0;
+    cursor:pointer;
+    background-color:#DAE0E5;
+}
+#div_id_video label{
+    display:none;
+}
+#div_id_video{
+    width:150px;
+    height:50px;
+   box-shadow:2px 2px 10px rgb(0,0,0,0.1);
+  cursor:pointer;
+  background-color:#DAE0E5;
+
+}
+#div_id_video input{
+    width:150px;
+    height:50px;
+    opacity:0;
+    cursor:pointer;
+    background-color:#DAE0E5;
+}
+#div_id_facebook label{
+    display:none;
+}
+#div_id_medium label{
+    display:none;
+}
+#div_id_instagram label{
+    display:none;
+}
+#div_id_twitter label{
+    display:none;
+}
+#div_id_quora label{
+    display:none;
+}
+#div_id_other label{
+    display:none;
+}
+
+{% endblock %}
+{% block body %}
+<div class="container">
+    
+    <div class="row mt-5" >
+        <div class="col-12 mt-5">
+            <form action="" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="mb-2 d-flex justify-content-between">
+                    <div style="font-size: 20px; font-weight: 600; color:#202C33" class="ml-5 pl-5">
+                        <i class="fa fa-file-text"></i> Write Blogs
+                    </div>
+                    <div class="mr-5 pr-5">
+                        <a style="font-size: 12px;color:white;" class="btn btn-sm border shaodw-sm button"><i class="fa fa-paper-plane"></i> Post</a>
+                        <a  style="font-size: 12px;" class="btn btn-sm border shaodw-sm bg-light"><i class="fa fa-eye"></i> Preview</a>
+                        <a  style="font-size: 12px; color:white;" class="btn btn-sm border btn-dark shaodw-sm "><i class="fa fa-cloud-upload"></i> Draft</a>
+                    </div>
+                </div>
+                <div class="mr-5 ml-5 pl-5 pr-5" style="">
+                    <div class="form-row border-top pt-5">
+                        <div class="form-group col-12 col-md-3 col-lg-2 mb-0">
+                            <div style="position: absolute; top:1rem; left:0.9rem; color:#202C33; font-size: 14px; font-weight: 600;">
+                               <i class="fa fa-image"></i> Image Thumbnail
+                            </div>
+                            {{ form.image|as_crispy_field }}
+                        
+                          </div>
+
+                          <div class="form-group col-12 col-md-3 col-lg-2 mb-0">
+                            <div style="position: absolute; top:1rem; left:1rem; color:#202C33; font-size: 14px; font-weight: 600;">
+                               <i class="fa fa-video-camera"></i> Video Thumbnail
+                            </div>
+                            {{ form.video|as_crispy_field }}
+                        
+                          </div>
+                          <div class="form-group col-12 col-md col-lg mb-0 mt-1 d-flex justify-content-end">
+                             <div class="dropdown show">
+                               
+                                <a title="Add Social Links" data-toggle="dropdown" href="#" class="btn btn-sm  d-flex align-items-center shadow justify-content-center rounded-circle button text-white" style="width:40px; height:40px; "><i class="fa fa-link"></i></a>
+                           
+                              
+                                <div class="dropdown-menu border-0 shadow dropdown-menu-right p-2" aria-labelledby="dropdownMenuLink" style="width:300px;">
+                                     {{ form.medium|as_crispy_field }}
+                                    {{ form.facebook|as_crispy_field }}
+                                    {{ form.instagram|as_crispy_field }}
+                                    {{ form.twitter|as_crispy_field }}
+                                    {{ form.quora|as_crispy_field }}
+                                    {{ form.other|as_crispy_field }}
+                                </div>
+                              </div>
+                          </div>
+                        <div class="form-group col-12 mb-0">
+                          {{ form.title|as_crispy_field }}
+                        </div>
+                        <div class="form-group col-12 mb-0">
+                          {{ form.tags|as_crispy_field }}
+                        </div>
+                        <div class="form-group col-12 mb-0">
+                            {{ form.content|as_crispy_field }}
+                          </div>
+                          {{form.media}}
+                      </div>
+                    
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
