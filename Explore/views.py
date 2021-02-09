@@ -57,7 +57,7 @@ every_monday_morning()
 def daily(request,title,id):
     context = {}
     data = DailyContest.objects.get(id = id)
-    context['data'] = data.title
+    context['data'] = data
     n = int(date.today().strftime("%d"))
 
     if n%7 == 0:
@@ -98,4 +98,11 @@ def daily(request,title,id):
 
 
     return render(request,'Explore/chapter.html',context)
+
+def dailytest(request,id,title,quesid):
+    context = {}
+    context['title'] = ContestChapter.objects.get(id = id)
+    context['problem'] = Programming.objects.get(id = quesid)
+    context['language'] = Language.objects.all()
+    return render(request,'Explore/dailytest.html',context)
 

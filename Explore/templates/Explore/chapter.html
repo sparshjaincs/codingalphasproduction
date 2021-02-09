@@ -43,8 +43,9 @@
             <a class="btn btn-sm" style="color:#D5D7D8;" href="{% url 'explore' %}">
                 <i class="fa fa-angle-left mr-1"></i> Back To Explore
             </a>
-            <a class="mt-1" style="color:#D5D7D8; font-size:13px;">
-                <i class="fa fa-calendar"></i> {{date}}
+            <a class="mt-1 d-flex justify-content-start" style="color:#D5D7D8; font-size:13px;">
+                <i class="fa fa-calendar mr-1"></i> {{date}} <i class="fa fa-clock-o ml-2 mr-1" style="margin-top: 2px;"></i>
+                <div id="txt"></div>
             </a>
         </div>
         <div class="col-12 mt-3">
@@ -122,7 +123,7 @@
                             {% endfor %}
                             
                             <li class="nav-item">
-                              <a class="nav-link d-flex justify-content-start" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">
+                              <a href="/discuss/?method=General&topic={{data.title|replace}}&pid={{data}}" class="nav-link d-flex justify-content-start" id="contact-tab" >
                                 <div class="mr-2">
                                     <i class="fa fa-comments-o"></i>
                                 </div> 
@@ -137,6 +138,9 @@
                           </ul>
                     </div>
                     <div class="col-12 col-md col-lg pl-5 ">
+                        <h4>
+
+                        </h4>
                         <div class="tab-content" id="myTabContent">
                             <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
                                 <h3 style="color:#25364C;">
@@ -160,7 +164,7 @@
                                             <a href="/explore/dailycontest/{{i.id}}/{{j.instance.question.title|replace}}/{{j.id}}/" class="btn btn-sm  rounded-circle mr-2" style="font-size: 18x;"><i class="fa fa-play-circle"></i></a> 
                                             {{j.instance}}
                                             {% else %}
-                                            <a class="btn btn-sm  rounded-circle mr-2" style="font-size: 18x;"><i class="fa fa-play-circle"></i></a> 
+                                            <a href="/explore/dailycontest/{{i.id}}/{{j.instance.question.title|replace}}/{{j.id}}/" class="btn btn-sm  rounded-circle mr-2" style="font-size: 18x;"><i class="fa fa-play-circle"></i></a> 
                                              <strike>{{j.instance}}</strike>
                                             {% endif %}
                                            </div>
@@ -183,4 +187,26 @@
         </div>
     </div>
 </section>
+{% endblock %}
+
+{% block script %}
+
+<script>
+    window.onload = startTime();
+    function startTime() {
+  var today = new Date();
+  var h = today.getHours();
+  var m = today.getMinutes();
+  var s = today.getSeconds();
+  m = checkTime(m);
+  s = checkTime(s);
+  document.getElementById('txt').innerHTML =
+  h + ":" + m + ":" + s;
+  var t = setTimeout(startTime, 500);
+}
+function checkTime(i) {
+  if (i < 10) {i = "0" + i};  // add zero in front of numbers < 10
+  return i;
+}
+</script>
 {% endblock %}
