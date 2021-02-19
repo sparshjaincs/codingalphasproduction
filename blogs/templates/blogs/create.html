@@ -82,19 +82,25 @@
     
     <div class="row mt-5" >
         <div class="col-12 mt-5">
-            <form action="" method="POST" enctype="multipart/form-data">
-                {% csrf_token %}
+            
                 <div class="mb-2 d-flex justify-content-between">
                     <div style="font-size: 20px; font-weight: 600; color:#202C33" class="ml-5 pl-5">
                         <i class="fa fa-file-text"></i> Write Blogs
                     </div>
                     <div class="mr-5 pr-5">
-                        <a style="font-size: 12px;color:white;" class="btn btn-sm border shaodw-sm button"><i class="fa fa-paper-plane"></i> Post</a>
+                        <a id="submiting" onclick="Submit()" style="font-size: 12px;color:white;" class="btn btn-sm border shaodw-sm button"><i class="fa fa-paper-plane"></i> Post</a>
                         <a  style="font-size: 12px;" class="btn btn-sm border shaodw-sm bg-light"><i class="fa fa-eye"></i> Preview</a>
                         <a  style="font-size: 12px; color:white;" class="btn btn-sm border btn-dark shaodw-sm "><i class="fa fa-cloud-upload"></i> Draft</a>
                     </div>
                 </div>
                 <div class="mr-5 ml-5 pl-5 pr-5" style="">
+                    {% if error %}
+                    <div class="alert alert-danger">
+                        {{error}}
+                    </div>
+                    {% endif %}
+                    <form id="form" action="" method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
                     <div class="form-row border-top pt-5">
                         <div class="form-group col-12 col-md-3 col-lg-2 mb-0">
                             <div style="position: absolute; top:1rem; left:0.9rem; color:#202C33; font-size: 14px; font-weight: 600;">
@@ -138,10 +144,31 @@
                           </div>
                           {{form.media}}
                       </div>
+                    </form>
                     
                 </div>
-            </form>
+           
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block script %}
+<script>
+    document.getElementById('id_medium').placeholder = "Medium Link";
+    document.getElementById('id_medium').style.fontSize = "13px";
+    document.getElementById('id_other').placeholder = "Other Link";
+    document.getElementById('id_other').style.fontSize = "13px";
+    document.getElementById('id_facebook').placeholder = "Facebook Link";
+    document.getElementById('id_facebook').style.fontSize = "13px";
+    document.getElementById('id_quora').placeholder = "Quora Link";
+    document.getElementById('id_quora').style.fontSize = "13px";
+    document.getElementById('id_instagram').placeholder = "Instagram Link";
+    document.getElementById('id_instagram').style.fontSize = "13px";
+    document.getElementById('id_twitter').placeholder = "Twitter Link";
+    document.getElementById('id_twitter').style.fontSize = "13px";
+    function Submit(){
+        document.getElementById("form").submit();
+    }
+</script>
 {% endblock %}

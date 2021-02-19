@@ -26,7 +26,7 @@ class Articles(models.Model):
     METHOD_CHOICES = (
 		('blog', 'blog'),('design', 'design'),('editor','editor'),('learn','learn'))
     user_name2 = models.ForeignKey(User, related_name='project_username_2', to_field='username', on_delete=models.CASCADE)
-    title = RichTextField(default=" ",blank=False,unique=True)
+    title = models.CharField(max_length = 10000,default=" ",blank=False,unique=True)
     project_name = models.CharField(max_length=100, blank=False , null=False)
     author = models.CharField(max_length=50,blank=True)
     date_Publish = models.DateField(default=datetime.now)
@@ -47,12 +47,12 @@ class Articles(models.Model):
     
    
     template = models.CharField(max_length=1000,blank=True,null=True)
-    quora = models.CharField(max_length=1000,blank=True,null=True)
-    medium= models.CharField(max_length=1000,blank=True,null=True)
-    facebook = models.CharField(max_length=1000,blank=True,null=True)
-    instagram = models.CharField(max_length=1000,blank=True,null=True)
-    twitter = models.CharField(max_length=1000,blank=True,null=True)
-    other= models.CharField(max_length=1000,blank=True,null=True)
+    quora = models.CharField(max_length=1000,blank = True,default="")
+    medium= models.CharField(max_length=1000,blank = True,default="")
+    facebook = models.CharField(max_length=1000,blank = True,default="")
+    instagram = models.CharField(max_length=1000,blank = True,default="")
+    twitter = models.CharField(max_length=1000,blank = True,default="")
+    other= models.CharField(max_length=1000,blank = True,default="")
 
     question_field =  models.BooleanField(default=False)
     

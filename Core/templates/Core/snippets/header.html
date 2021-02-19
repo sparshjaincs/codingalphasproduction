@@ -21,8 +21,10 @@
      <div class="navbar-collapse collapse" style="display: flex; justify-content: space-between;">
          <ul class="navbar-nav">
          
-             <li class="nav-item">
-               <a class="nav-link" href="{% url 'explore' %}">Explore</a>
+             <li class="nav-item d-flex justify-content-start">
+                <a class="nav-link" href="{% url 'explore' %}">Explore</a>
+                 <div style=" margin-left:-30px; margin-top: -5px;z-index:-1;"><span class="badge badge-sm badge-danger rounded" style="font-size: 8px;">Day {{days}}</span></div>
+               
              </li>
              <li class="nav-item"><a class="nav-link" href="{% url 'contestpage' %}">Contest</a></li>
              <li class="nav-item"> 
@@ -145,8 +147,11 @@
          <ul class="navbar-nav ">
             {% if request.user.is_authenticated %}
              <li class="nav-item mr-2 mt-2">
-                 <a class="btn p-1 pb-2 pr-2 pl-2 btn-sm btn-outline-warning" style="font-size: 12px;"  href=" 'premium' %}"><i class="fa fa-star "></i> Premium</a>
+                 <a class="btn btn-sm btn-outline-warning anchor" style="font-size: 12px;"  href=" 'premium' %}"><i class="fa fa-star "></i> Premium</a>
              </li>
+             <li class="nav-item mr-2 mt-2">
+                <a class="btn shadow-sm btn-sm  anchor text-white" style="font-size: 12px; font-weight: 600; background-color: #202C33;"  href="{% url 'playground' %}" data-toggle="tooltip" title="Playground"><i class="fa fa-code "></i></a>
+            </li>
  
              
  
@@ -224,7 +229,7 @@
      <i class="align-middle" data-feather="settings"></i>
    </a>
  
-                 <a class="nav-link dropdown-toggle d-none d-sm-inline-block" href="#" data-toggle="dropdown">
+                 <a class="nav-link dropdown-toggle d-none d-sm-inline-block anc" href="#" data-toggle="dropdown">
      <img src="/media/{{user.profile.avatar}}" class="avatar img-fluid  mr-1 rounded-circle"  style="width:30px;"/> <span class="text-dark">{{user.username}}</span>
    </a>
                  <div class="dropdown-menu dropdown-menu-right text-dark" style="font-size: 14px; color:#546E7A; width:240px;">

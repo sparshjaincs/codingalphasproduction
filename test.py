@@ -8,6 +8,3 @@ j = len(nums)-1
 sd = nums
 nums.sort()
 print([0,1])
-        
-        
-    

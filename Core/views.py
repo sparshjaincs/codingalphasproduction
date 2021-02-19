@@ -166,4 +166,5 @@ def mark(request):
 
     return HttpResponse(json.dumps([status]))
 
-
+def profile(request,user):
+    return render(request,'Core/profile.html')

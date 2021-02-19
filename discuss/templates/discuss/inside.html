@@ -105,6 +105,10 @@
                                         
                                     </div>
                             </span>
+                            <a class="btn btn-sm text-muted mt-1 ml-2" title="Edit" data-toggle="tooltip"><i class="fa fa-pencil"></i></a>
+
+                            <a class="btn btn-sm text-muted mt-1 ml-2" title="Delete" data-toggle="tooltip"><i class="fa  fa-trash"></i></a>
+
                             <a class="btn btn-sm text-muted mt-1 ml-2" title="Report" data-toggle="tooltip"><i class="fa  fa-exclamation-triangle"></i></a>
 
                         </div>
@@ -178,7 +182,7 @@
                     
                     <div style="">
                         {% for x in data.Quora_anwsers.all %}
-                            <div id=""class="mb-2 border-bottom">
+                            <div id=""class="mb-2">
                                 <div  class="d-flex justify-content-between">
                                 <div class="d-flex justify-content-start align-items-center">
                                     <div>
@@ -192,7 +196,13 @@
                                 <div>
                                     <a onclick="like1('discussanwser','{{x.id}}','discuss_like_anwser{{x.id}}','like_count_anwser{{x.id}}','dislike_count_anwser{{x.id}}','discuss_dislike_anwser{{x.id}}')" class="btn btn-sm text-muted pr-1 ml-2   " title="Upvote" data-toggle="tooltip"><i id="discuss_like_anwser{{x.id}}" class="fa {% if request.user in x.like.all %} fa3{% else %}fa2 {% endif %} fa-thumbs-up"  style=""></i></a> <span class="text-muted " style="font-size: 14px;" id="like_count_anwser{{x.id}}">{{x.like.all.count}}</span>
                                     <a onclick="dislike1('discussanwser','{{x.id}}','discuss_dislike_anwser{{x.id}}','dislike_count_anwser{{x.id}}','like_count_anwser{{x.id}}','discuss_like_anwser{{x.id}}')" class="btn btn-sm text-muted ml-3 pr-1" title="Downvote" data-toggle="tooltip"><i id="discuss_dislike_anwser{{x.id}}" class="fa {% if request.user in x.dislike.all %} fa3{%else%}fa2 {% endif %} fa-thumbs-down"></i></a><span class="text-muted " style="font-size: 14px;" id="dislike_count_anwser{{x.id}}">{{x.dislike.all.count}}</span>
-                                    <a class="rounded-circle pl-3 pr-3" href="#"><i class="fa fa-ellipsis-v"></i></a>
+                                    <a class="btn btn-sm text-muted mt-1 ml-2" title="Edit" data-toggle="tooltip"><i class="fa fa-pencil"></i></a>
+
+                                    <a class="btn btn-sm text-muted mt-1 ml-2" title="Delete" data-toggle="tooltip"><i class="fa  fa-trash"></i></a>
+                                    <a class="btn btn-sm text-muted mt-1 ml-2" title="Report" data-toggle="tooltip"><i class="fa fa-exclamation-triangle"></i></a>
+
+                                   
+                                    
                                 </div>
                             </div>
 
@@ -217,7 +227,7 @@
                             <div class="ml-5 mt-3" id="commentarea{{x.id}}">
                                 {% for i in x.Anwser_comment.all %}
                                     {% if i.is_parent %}
-                                    <div  style="background-color: #EEE; border-radius: 12px; margin-bottom:10px; padding:10px; padding-right:15px;" class="">
+                                    <div  style="background-color: rgb(238,238,238,0.5); border-radius: 12px; margin-bottom:10px; padding:10px; padding-right:15px;" class="">
                                        <div id="reference{{i.id}}" class="p-2 rounded">
                                         <div  class="d-flex justify-content-between" >
                                             <div class=' d-flex justify-content-start align-items-center'>
@@ -243,7 +253,12 @@
                                                     <div style="color:#C42D63" class="mt-1">
                                                         <a data-toggle="collapse" href="#collapseExamplereply{{i.id}}" role="button" aria-expanded="false" aria-controls="collapseExample" class="btn btn-sm border" style="font-size: 10px;"> <i class="fa fa-reply"></i> Reply</a>
                                                         <a class="btn btn-sm border" style="font-size: 10px;"> <i class="fa fa-share-alt"></i> Share</a>
+                                                        <a class="btn btn-sm border" style="font-size: 10px;" title="Edit" data-toggle="tooltip"> <i class="fa fa-pencil"></i></a>
+                                                        
+                                                        <a class="btn btn-sm border" style="font-size: 10px;" title="Delete" data-toggle="tooltip"> <i class="fa fa-trash"></i> </a>
+                                                        
                                                         <a class="btn btn-sm border" style="font-size: 10px;" title="Report" data-toggle="tooltip"> <i class="fa fa-exclamation-triangle"></i> </a>
+                                                        
                                                     </div>
                                             </div>
                                     </div>
@@ -295,6 +310,10 @@
                                                                   <div style="color:#C42D63" class="mt-1">
                                                                     <a data-toggle="collapse" href="#collapseExamplereply{{j.id}}" role="button" aria-expanded="false" aria-controls="collapseExample" class="btn btn-sm border" style="font-size: 10px;"> <i class="fa fa-reply"></i> Reply</a>
                                                                     <a class="btn btn-sm border" style="font-size: 10px;"> <i class="fa fa-share-alt"></i> Share</a>
+                                                                    <a class="btn btn-sm border" style="font-size: 10px;" title="Edit" data-toggle="tooltip"> <i class="fa fa-pencil"></i></a>
+                                                                    
+                                                                    <a class="btn btn-sm border" style="font-size: 10px;" title="Delete" data-toggle="tooltip"> <i class="fa fa-trash"></i> </a>
+                                                                    
                                                                     <a class="btn btn-sm border" style="font-size: 10px;" title="Report" data-toggle="tooltip"> <i class="fa fa-exclamation-triangle"></i> </a>
                                                                 </div>
                                                             </div>
@@ -345,6 +364,9 @@
                                                                                 <div style="color:#C42D63">
                                                                                         <a data-toggle="collapse" href="#collapseExamplereply{{k.id}}" role="button" aria-expanded="false" aria-controls="collapseExample" class="btn btn-sm border" style="font-size: 10px;"> <i class="fa fa-reply"></i> Reply</a>
                                                                                         <a class="btn btn-sm border" style="font-size: 10px;"> <i class="fa fa-share-alt"></i> Share</a>
+                                                                                        <a class="btn btn-sm border" style="font-size: 10px;" title="Edit" data-toggle="tooltip"> <i class="fa fa-pencil"></i></a>
+                                                                                        
+                                                                                        <a class="btn btn-sm border" style="font-size: 10px;" title="Delete" data-toggle="tooltip"> <i class="fa fa-trash"></i> </a>
                                                                                         <a class="btn btn-sm border" style="font-size: 10px;" title="Report" data-toggle="tooltip"> <i class="fa fa-exclamation-triangle"></i> </a>
                                                                                     </div>
                                                                                     <div class="collapse mt-2" id="collapseExamplereply{{k.id}}">
@@ -367,7 +389,7 @@
                                                                     </div>
                                                             </div>
                                                         </div>
-                                                        <hr>
+                                                   
                                                          {% endfor%}
                                                       </div>
 
